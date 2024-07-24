@@ -28,8 +28,8 @@ namespace H.Xperiments.CLI.UI
                     while (!ctx.IsFinished)
                     {
                         await Task.Delay(100);
-                        t1.Increment(.1);
-                        t2.Increment(.13);
+                        t1.Increment(1);
+                        t2.Increment(1.3);
                     }
                 });
 
