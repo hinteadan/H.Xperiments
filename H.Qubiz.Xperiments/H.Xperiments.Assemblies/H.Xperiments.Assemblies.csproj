@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Compile Include="..\H.Qubiz.Xperiments.CLI\🤝Friends.cs" Link="🤝Friends.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="H.Necessaire.Runtime.CLI" Version="2.35.2" />
+	</ItemGroup>
+
+</Project>

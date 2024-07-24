@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net8.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="H.Necessaire.CLI" Version="2.35.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\H.Qubiz.Xperiments.RavenDb\H.Qubiz.Xperiments.RavenDb.csproj" />
+	  <ProjectReference Include="..\H.Qubiz.Xperiments.SQLite\H.Qubiz.Xperiments.SQLite.csproj" />
+	  <ProjectReference Include="..\H.Xperiments.Assemblies\H.Xperiments.Assemblies.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="**/*.cfg.txt">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+</Project>

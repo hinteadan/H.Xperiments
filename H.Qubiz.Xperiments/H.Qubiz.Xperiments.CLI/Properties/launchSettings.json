@@ -1,0 +1,41 @@
+{
+  "profiles": {
+
+    "CLI - cli": {
+      "commandName": "Project",
+      "commandLineArgs": "cli"
+    },
+
+
+    "CLI - raven serve-embedded open-studio": {
+      "commandName": "Project",
+      "commandLineArgs": "raven serve-embedded open-studio"
+    },
+
+    "CLI - raven serve-embedded": {
+      "commandName": "Project",
+      "commandLineArgs": "raven serve-embedded"
+    },
+
+    "CLI - debug": {
+      "commandName": "Project",
+      "commandLineArgs": "debug"
+    },
+    "CLI - nugetversion - consolidate-deps": {
+      "commandName": "Project",
+      "commandLineArgs": "nugetversion consolidate-deps"
+    },
+    "CLI - nugetversion - patch": {
+      "commandName": "Project",
+      "commandLineArgs": "nugetversion update H.Qubiz.Xperiments.CLI=patch"
+    },
+    "CLI - nugetversion - minor": {
+      "commandName": "Project",
+      "commandLineArgs": "nugetversion update H.Qubiz.Xperiments.CLI=minor"
+    },
+    "CLI - nugetversion - major": {
+      "commandName": "Project",
+      "commandLineArgs": "nugetversion update H.Qubiz.Xperiments.CLI=major"
+    }
+  }
+}
