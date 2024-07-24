@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Qubiz.Xperiments.RavenDb"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Qubiz.Xperiments.SQLite", "H.Qubiz.Xperiments.SQLite\H.Qubiz.Xperiments.SQLite.csproj", "{2D19F43B-23B5-480C-BE2C-245ECF2393A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.Xperiments.Assemblies", "H.Xperiments.Assemblies\H.Xperiments.Assemblies.csproj", "{4565054E-5FDA-4392-82B9-6843709696EE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Xperiments.Assemblies", "H.Xperiments.Assemblies\H.Xperiments.Assemblies.csproj", "{4565054E-5FDA-4392-82B9-6843709696EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.Xperiments.CLI.UI", "H.Xperiments.CLI.UI\H.Xperiments.CLI.UI.csproj", "{381AFAF6-AA00-4E98-A99F-E65A31750157}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{4565054E-5FDA-4392-82B9-6843709696EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4565054E-5FDA-4392-82B9-6843709696EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4565054E-5FDA-4392-82B9-6843709696EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{381AFAF6-AA00-4E98-A99F-E65A31750157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{381AFAF6-AA00-4E98-A99F-E65A31750157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{381AFAF6-AA00-4E98-A99F-E65A31750157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{381AFAF6-AA00-4E98-A99F-E65A31750157}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

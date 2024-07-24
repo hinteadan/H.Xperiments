@@ -13,6 +13,7 @@
 	  <ProjectReference Include="..\H.Qubiz.Xperiments.RavenDb\H.Qubiz.Xperiments.RavenDb.csproj" />
 	  <ProjectReference Include="..\H.Qubiz.Xperiments.SQLite\H.Qubiz.Xperiments.SQLite.csproj" />
 	  <ProjectReference Include="..\H.Xperiments.Assemblies\H.Xperiments.Assemblies.csproj" />
+	  <ProjectReference Include="..\H.Xperiments.CLI.UI\H.Xperiments.CLI.UI.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

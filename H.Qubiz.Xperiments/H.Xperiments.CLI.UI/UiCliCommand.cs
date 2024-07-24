@@ -1,14 +1,8 @@
 ﻿using H.Necessaire;
 using H.Necessaire.Runtime.CLI.Commands;
 using Spectre.Console;
-using System.Threading;
-using System.Threading.Tasks;
-using Spectre.Console.Json;
-using System.Text;
-using H.Necessaire.Serialization;
-using System;
 
-namespace H.Qubiz.Xperiments.CLI.Commands
+namespace H.Xperiments.CLI.UI
 {
     [ID("ui")]
     internal class UiCliCommand : CommandBase
@@ -25,7 +19,8 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         new RemainingTimeColumn(),      // Remaining time
         new SpinnerColumn(),            // Spinner
     })
-                .StartAsync(async ctx => {
+                .StartAsync(async ctx =>
+                {
 
                     var t1 = ctx.AddTask("[yellow]Task 1[/]");
                     var t2 = ctx.AddTask("[green]Task 2[/]");
