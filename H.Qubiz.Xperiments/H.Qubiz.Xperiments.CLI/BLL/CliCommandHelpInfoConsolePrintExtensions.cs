@@ -1,0 +1,83 @@
+﻿using H.Necessaire;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace H.Qubiz.Xperiments.CLI.BLL
+{
+    internal static class CliCommandHelpInfoConsolePrintExtensions
+    {
+        public static CliCommandHelpInfo PrintToConsole(this CliCommandHelpInfo commandHelpInfo)
+        {
+            if (commandHelpInfo == null)
+            {
+                return null;
+            }
+
+            using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Green, Console.ResetColor))
+            {
+                Console.WriteLine($"{commandHelpInfo.Name}");
+                Console.WriteLine();
+            }
+
+            string preferredSyntax = commandHelpInfo.GetPreferredCommandSyntax();
+            string[] otherSyntaxes = commandHelpInfo.GetAllCommandSyntaxes()?.Where(x => !x.Is(preferredSyntax)).ToArrayNullIfEmpty();
+
+            if (!preferredSyntax.Is(commandHelpInfo.Name))
+            {
+                using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Yellow, Console.ResetColor))
+                {
+                    Console.WriteLine(preferredSyntax);
+                }
+            }
+
+            if (otherSyntaxes?.Any() == true)
+            {
+                using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Gray, Console.ResetColor))
+                {
+                    Console.WriteLine(string.Join(" | ", otherSyntaxes));
+                }
+            }
+
+            string[] usageSyntaxes = commandHelpInfo.UsageSyntaxes?.Where(x => !x.IsEmpty()).ToArrayNullIfEmpty();
+            if (usageSyntaxes?.Any() == true)
+            {
+                Console.WriteLine();
+
+                using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Cyan, Console.ResetColor))
+                {
+                    Console.WriteLine("Usage Syntax:");
+                    Console.WriteLine("=============");
+                }
+
+                using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Gray, Console.ResetColor))
+                {
+                    foreach (string usageSyntax in usageSyntaxes)
+                    {
+                        Console.WriteLine(usageSyntax);
+                    }
+                }
+
+                Console.WriteLine();
+            }
+
+            return commandHelpInfo;
+        }
+
+        public static TCliCommandHelpInfoCollection PrintToConsole<TCliCommandHelpInfoCollection>(this TCliCommandHelpInfoCollection commandHelpInfos)
+            where TCliCommandHelpInfoCollection : IEnumerable<CliCommandHelpInfo>
+        {
+            if (commandHelpInfos?.Any() != true)
+                return commandHelpInfos;
+
+            foreach (CliCommandHelpInfo commandHelpInfo in commandHelpInfos)
+            {
+                commandHelpInfo.PrintToConsole();
+                Console.WriteLine("------");
+                Console.WriteLine();
+            }
+
+            return commandHelpInfos;
+        }
+    }
+}

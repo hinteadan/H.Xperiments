@@ -109,68 +109,13 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             return await RunCliCommand(userInput?.Split(" ", StringSplitOptions.RemoveEmptyEntries) ?? []);
         }
 
-        private async Task<OperationResult> RunCliHelpCommand()
+        private Task<OperationResult> RunCliHelpCommand()
         {
             CliCommandHelpInfo[] commandsToShowHelpFor = CliCommandsIndexer.AllKnownCliCommands;
 
-            foreach (CliCommandHelpInfo commandHelpInfo in commandsToShowHelpFor)
-            {
-                PrintCommandHelpInfo(commandHelpInfo);
-                Console.WriteLine("------");
-                Console.WriteLine();
-            }
+            commandsToShowHelpFor.PrintToConsole();
 
-            return OperationResult.Win();
-        }
-
-        private void PrintCommandHelpInfo(CliCommandHelpInfo commandHelpInfo)
-        {
-            using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Green, Console.ResetColor))
-            {
-                Console.WriteLine($"{commandHelpInfo.Name}");
-                Console.WriteLine();
-            }
-
-            string preferredSyntax = commandHelpInfo.GetPreferredCommandSyntax();
-            string[] otherSyntaxes = commandHelpInfo.GetAllCommandSyntaxes()?.Where(x => !x.Is(preferredSyntax)).ToArrayNullIfEmpty();
-
-            if (!preferredSyntax.Is(commandHelpInfo.Name))
-            {
-                using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Yellow, Console.ResetColor))
-                {
-                    Console.WriteLine(preferredSyntax);
-                }
-            }
-
-            if (otherSyntaxes?.Any() == true)
-            {
-                using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Gray, Console.ResetColor))
-                {
-                    Console.WriteLine(string.Join(" | ", otherSyntaxes));
-                }
-            }
-
-            string[] usageSyntaxes = commandHelpInfo.UsageSyntaxes?.Where(x => !x.IsEmpty()).ToArrayNullIfEmpty();
-            if (usageSyntaxes?.Any() == true)
-            {
-                Console.WriteLine();
-
-                using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Cyan, Console.ResetColor))
-                {
-                    Console.WriteLine("Usage Syntax:");
-                    Console.WriteLine("=============");
-                }
-
-                using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Gray, Console.ResetColor))
-                {
-                    foreach (string usageSyntax in usageSyntaxes)
-                    {
-                        Console.WriteLine(usageSyntax);
-                    }
-                }
-
-                Console.WriteLine();
-            }
+            return OperationResult.Win().AsTask();
         }
 
         private static bool IsExitCommand(string userInput) => IsCommand(userInput, exitCommands);
