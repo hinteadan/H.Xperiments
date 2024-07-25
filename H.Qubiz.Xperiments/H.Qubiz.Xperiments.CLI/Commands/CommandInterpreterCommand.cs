@@ -78,12 +78,8 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         {
             Task.Run(
                 async () => {
-                    (int Left, int Top) prevCursorPosition = Console.GetCursorPosition();
-
                     string userInput = await Console.In.ReadLineAsync(cancellationToken);
                     await OnUserInput(userInput);
-
-                    (int Left, int Top) newCursorPosition = Console.GetCursorPosition();
 
                     if (!IsExitCommand(userInput))
                         await Console.Out.WriteAsync(cliMarker);
