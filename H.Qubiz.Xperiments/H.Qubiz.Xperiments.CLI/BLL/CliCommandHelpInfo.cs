@@ -12,6 +12,7 @@ namespace H.Qubiz.Xperiments.CLI.BLL
         public string ID { get; set; }
         public string[] Aliases { get; set; }
         public string[] Categories { get; set; }
+        public string[] UsageSyntaxes { get; set; }
 
         public string GetPreferredCommandSyntax()
         {

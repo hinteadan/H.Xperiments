@@ -5,13 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks.Dataflow;
 
 namespace H.Qubiz.Xperiments.CLI.BLL
 {
     internal class CliCommandsIndexer
     {
         static readonly string[] commandTypeNameEndings = ["UseCase", "Command", "CliCommand", "CommandUseCase", "UseCaseCommand", "CliCommandUseCase", "CliUseCaseCommand"];
-        static readonly MethodInfo methodInfo = typeof(CommandBase).GetMethod("GetUsageSyntaxes");
         static readonly Lazy<CliCommandHelpInfo[]> allKnownCliCommands = new Lazy<CliCommandHelpInfo[]>(IndexAllKnownCliCommands);
 
         public static CliCommandHelpInfo[] AllKnownCliCommands => allKnownCliCommands.Value;
@@ -40,6 +40,7 @@ namespace H.Qubiz.Xperiments.CLI.BLL
                     ID = cliCommandConcreteType.GetID(),
                     Aliases = cliCommandConcreteType.GetAliases(),
                     Categories = cliCommandConcreteType.GetCategories(),
+                    UsageSyntaxes = BuildUsageSyntaxes(cliCommandConcreteType),
                 };
         }
 
@@ -58,6 +59,27 @@ namespace H.Qubiz.Xperiments.CLI.BLL
             }
 
             return commandName.ToLowerInvariant();
+        }
+
+        static string[] BuildUsageSyntaxes(Type cliCommandConcreteType)
+        {
+            string[] result = null;
+
+            new Action(() => {
+
+                object commandInstance = Activator.CreateInstance(cliCommandConcreteType);
+                var method = cliCommandConcreteType.GetRuntimeMethods().Single(x => x.Name == "GetUsageSyntaxes");
+                result = method?.Invoke(commandInstance, null) as string[];
+                result = result?.Where(x => !x.IsEmpty()).ToArrayNullIfEmpty();
+
+            }).TryOrFailWithGrace();
+
+            if (result?.Any() == true)
+                return result;
+
+            //TODO: Try to smartly build usage syntaxes
+
+            return result;
         }
     }
 }
