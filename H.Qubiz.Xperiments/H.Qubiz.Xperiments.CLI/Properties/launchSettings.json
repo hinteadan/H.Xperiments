@@ -6,6 +6,11 @@
       "commandLineArgs": "cli"
     },
 
+    "CLI - assembly debug": {
+      "commandName": "Project",
+      "commandLineArgs": "ass debug"
+    },
+
 
     "CLI - raven serve-embedded open-studio": {
       "commandName": "Project",
