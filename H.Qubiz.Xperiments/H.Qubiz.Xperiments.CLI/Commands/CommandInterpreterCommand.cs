@@ -1,7 +1,10 @@
 ﻿using H.Necessaire;
+using H.Necessaire.CLI.Commands;
 using H.Necessaire.Runtime.CLI.Commands;
+using H.Qubiz.Xperiments.CLI.BLL;
 using System;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -107,6 +110,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
 
         private async Task<OperationResult> RunCliHelpCommand()
         {
+            CliCommandHelpInfo[] allKnownCommands = CliCommandsIndexer.AllKnownCliCommands;
             return OperationResult.Win();
         }
 
