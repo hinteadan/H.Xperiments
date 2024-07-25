@@ -16,6 +16,37 @@ namespace H.Qubiz.Xperiments.CLI.BLL
 
         public static CliCommandHelpInfo[] AllKnownCliCommands => allKnownCliCommands.Value;
 
+        public static CliCommandHelpInfo[] FindCliCommands(string searchKey)
+        {
+            if (searchKey.IsEmpty())
+                return AllKnownCliCommands;
+
+            CliCommandHelpInfo[] commandsStartingWithSearchKey
+                = AllKnownCliCommands
+                .Where(x => x.GetPreferredCommandSyntax().StartsWith(searchKey, StringComparison.InvariantCultureIgnoreCase))
+                .Union(
+                    AllKnownCliCommands
+                    .Where(x => x.GetAllCommandSyntaxes()?.Any(s => s.StartsWith(searchKey, StringComparison.InvariantCultureIgnoreCase)) == true)
+                )
+                .ToArray()
+                ;
+
+            if (commandsStartingWithSearchKey.Any())
+                return commandsStartingWithSearchKey;
+
+            CliCommandHelpInfo[] commandsContainingSearchKey
+                = AllKnownCliCommands
+                .Where(x => x.GetPreferredCommandSyntax().Contains(searchKey, StringComparison.InvariantCultureIgnoreCase))
+                .Union(
+                    AllKnownCliCommands
+                    .Where(x => x.GetAllCommandSyntaxes()?.Any(s => s.Contains(searchKey, StringComparison.InvariantCultureIgnoreCase)) == true)
+                )
+                .ToArray()
+                ;
+
+            return commandsContainingSearchKey;
+        }
+
         static CliCommandHelpInfo[] IndexAllKnownCliCommands()
         {
             Type[] allKnownCommands = typeof(ImACliCommand).GetAllImplementations();
