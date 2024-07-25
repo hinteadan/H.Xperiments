@@ -17,9 +17,16 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         const string cliMarker = "(> ";
         static readonly string[] exitCommands = ["exit", "quit", "bye"];
         readonly CancellationTokenSource commandCancelTokenSource = new CancellationTokenSource();
+        static readonly object runLocker = new object();
+        static bool isAlreadyInCliMode = false;
 
         public override async Task<OperationResult> Run()
         {
+            if (isAlreadyInCliMode)
+                return OperationResult.Fail("Already running in CLI mode");
+
+            isAlreadyInCliMode = true;
+
             Log("Starting Command Interpreter...");
             using (new TimeMeasurement(x => Log($"DONE Starting Command Interpreter in {x}")))
             {
