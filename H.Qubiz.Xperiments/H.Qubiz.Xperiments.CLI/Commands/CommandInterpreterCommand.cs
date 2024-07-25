@@ -16,7 +16,6 @@ namespace H.Qubiz.Xperiments.CLI.Commands
     {
         const string cliMarker = "(> ";
         static readonly string[] exitCommands = ["exit", "quit", "bye"];
-        static readonly string[] helpCommands = ["help", "?"];
         readonly CancellationTokenSource commandCancelTokenSource = new CancellationTokenSource();
 
         public override async Task<OperationResult> Run()
@@ -96,11 +95,6 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 return OperationResult.Win();
             }
 
-            if (IsHelpCommand(userInput))
-            {
-                return await RunCliHelpCommand();
-            }
-
             if (userInput.IsEmpty())
             {
                 return OperationResult.Win();
@@ -109,17 +103,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             return await RunCliCommand(userInput?.Split(" ", StringSplitOptions.RemoveEmptyEntries) ?? []);
         }
 
-        private Task<OperationResult> RunCliHelpCommand()
-        {
-            CliCommandHelpInfo[] commandsToShowHelpFor = CliCommandsIndexer.AllKnownCliCommands;
-
-            commandsToShowHelpFor.PrintToConsole();
-
-            return OperationResult.Win().AsTask();
-        }
-
         private static bool IsExitCommand(string userInput) => IsCommand(userInput, exitCommands);
-        private static bool IsHelpCommand(string userInput) => IsCommand(userInput, helpCommands);
 
         private static bool IsCommand(string userInput, params string[] commandsToMatch)
         {
