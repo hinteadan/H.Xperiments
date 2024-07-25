@@ -17,7 +17,6 @@ namespace H.Qubiz.Xperiments.CLI.BLL
             using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Green, Console.ResetColor))
             {
                 Console.WriteLine($"{commandHelpInfo.Name}");
-                Console.WriteLine();
             }
 
             string preferredSyntax = commandHelpInfo.GetPreferredCommandSyntax();
@@ -57,8 +56,6 @@ namespace H.Qubiz.Xperiments.CLI.BLL
                         Console.WriteLine(usageSyntax);
                     }
                 }
-
-                Console.WriteLine();
             }
 
             return commandHelpInfo;
@@ -73,8 +70,11 @@ namespace H.Qubiz.Xperiments.CLI.BLL
             foreach (CliCommandHelpInfo commandHelpInfo in commandHelpInfos)
             {
                 commandHelpInfo.PrintToConsole();
-                Console.WriteLine("~~~~~~~~~~~~");
-                Console.WriteLine();
+                using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.DarkBlue, Console.ResetColor))
+                {
+                    Console.WriteLine("~~~~~~~~~~~~");
+                    Console.WriteLine();
+                }
             }
 
             return commandHelpInfos;
