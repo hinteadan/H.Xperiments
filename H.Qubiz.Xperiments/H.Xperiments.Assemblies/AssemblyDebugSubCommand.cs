@@ -5,7 +5,8 @@ using System.Runtime.Loader;
 
 namespace H.Xperiments.Assemblies
 {
-    internal class DebugSubCommand : SubCommandBase
+    [ID("debug")]
+    internal class AssemblyDebugSubCommand : SubCommandBase
     {
         public override async Task<OperationResult> Run(params Note[] args)
         {

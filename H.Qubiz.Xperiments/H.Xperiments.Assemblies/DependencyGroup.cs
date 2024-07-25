@@ -8,7 +8,7 @@ namespace H.Xperiments.Assemblies
         {
             dependencyRegistry
                 .RegisterAlwaysNew<AssemblyCommand>(() => new AssemblyCommand())
-                .RegisterAlwaysNew<DebugSubCommand>(() => new DebugSubCommand())
+                .RegisterAlwaysNew<AssemblyDebugSubCommand>(() => new AssemblyDebugSubCommand())
                 ;
         }
     }
