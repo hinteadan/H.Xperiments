@@ -2,6 +2,7 @@
 using H.Necessaire.CLI.Commands;
 using H.Necessaire.Runtime.CLI.Commands;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
@@ -56,7 +57,7 @@ namespace H.Qubiz.Xperiments.CLI.BLL
                 break;
             }
 
-            return commandName;
+            return commandName.ToLowerInvariant();
         }
     }
 
@@ -70,21 +71,31 @@ namespace H.Qubiz.Xperiments.CLI.BLL
 
         public string GetPreferredCommandSyntax()
         {
-            if (!ID.IsEmpty())
-                return ID;
+            return GetAllCommandSyntaxes(isFullTypeNameIncluded: true).First();
+        }
 
-            if (Aliases?.Any(a => !a.IsEmpty()) == true)
-                return Aliases.First(a => !a.IsEmpty());
+        public string[] GetAllCommandSyntaxes(bool isFullTypeNameIncluded = false)
+        {
+            List<string> allSyntaxes = new List<string>();
+
+            if (!ID.IsEmpty())
+                allSyntaxes.Add(ID);
+
+            if (Aliases != null)
+                allSyntaxes.AddRange(Aliases.Where(a => !a.IsEmpty()));
 
             if (!Name.IsEmpty())
-                return Name;
+                allSyntaxes.Add(Name);
 
-            return ConcreteType.Name;
+            if (isFullTypeNameIncluded && !Name.Is(ConcreteType.Name))
+                allSyntaxes.Add(ConcreteType.Name);
+
+            return allSyntaxes.ToArray();
         }
 
         public override string ToString()
         {
-            return $"{GetPreferredCommandSyntax()} [{ConcreteType.TypeName()}]";
+            return $"{string.Join(" | ", GetAllCommandSyntaxes())} [{ConcreteType.TypeName()}]";
         }
     }
 }
