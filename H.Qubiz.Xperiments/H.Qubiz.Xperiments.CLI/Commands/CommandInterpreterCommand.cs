@@ -1,6 +1,7 @@
 ﻿using H.Necessaire;
 using H.Necessaire.Runtime.CLI.Commands;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -11,6 +12,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
     {
         const string cliMarker = "(> ";
         static readonly string[] exitCommands = ["exit", "quit", "bye"];
+        static readonly string[] helpCommands = ["help", "?"];
         readonly CancellationTokenSource commandCancelTokenSource = new CancellationTokenSource();
 
         public override async Task<OperationResult> Run()
@@ -62,8 +64,6 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             }
         }
 
-        
-
         private void WaitForUserInput(CancellationToken cancellationToken)
         {
             Task.Run(
@@ -92,6 +92,11 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 return OperationResult.Win();
             }
 
+            if (IsHelpCommand(userInput))
+            {
+                return await RunCliHelpCommand();
+            }
+
             if (userInput.IsEmpty())
             {
                 return OperationResult.Win();
@@ -100,9 +105,20 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             return await RunCliCommand(userInput?.Split(" ", StringSplitOptions.RemoveEmptyEntries) ?? []);
         }
 
-        private static bool IsExitCommand(string userInput)
+        private async Task<OperationResult> RunCliHelpCommand()
         {
-            return userInput.In(exitCommands, (input, item) => input.Is(item));
+            return OperationResult.Win();
+        }
+
+        private static bool IsExitCommand(string userInput) => IsCommand(userInput, exitCommands);
+        private static bool IsHelpCommand(string userInput) => IsCommand(userInput, helpCommands);
+
+        private static bool IsCommand(string userInput, params string[] commandsToMatch)
+        {
+            if (commandsToMatch?.Any() != true)
+                return false;
+
+            return userInput.In(commandsToMatch, (input, item) => input.Is(item));
         }
 
         private void CancelKeyPress(object sender, ConsoleCancelEventArgs e)
