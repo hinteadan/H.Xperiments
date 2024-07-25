@@ -85,7 +85,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
 
                     (int Left, int Top) newCursorPosition = Console.GetCursorPosition();
 
-                    if (!IsExitCommand(userInput) && prevCursorPosition != newCursorPosition)
+                    if (!IsExitCommand(userInput))
                         await Console.Out.WriteAsync(cliMarker);
 
                     WaitForUserInput(cancellationToken);
