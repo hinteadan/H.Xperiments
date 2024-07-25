@@ -36,6 +36,9 @@ namespace H.Qubiz.Xperiments.CLI.BLL
                 {
                     ConcreteType = cliCommandConcreteType,
                     Name = MapCommandName(cliCommandConcreteType),
+                    ID = cliCommandConcreteType.GetID(),
+                    Aliases = cliCommandConcreteType.GetAliases(),
+                    Categories = cliCommandConcreteType.GetCategories(),
                 };
         }
 
@@ -61,10 +64,27 @@ namespace H.Qubiz.Xperiments.CLI.BLL
     {
         public Type ConcreteType { get; set; }
         public string Name { get; set; }
+        public string ID { get; set; }
+        public string[] Aliases { get; set; }
+        public string[] Categories { get; set; }
+
+        public string GetPreferredCommandSyntax()
+        {
+            if (!ID.IsEmpty())
+                return ID;
+
+            if (Aliases?.Any(a => !a.IsEmpty()) == true)
+                return Aliases.First(a => !a.IsEmpty());
+
+            if (!Name.IsEmpty())
+                return Name;
+
+            return ConcreteType.Name;
+        }
 
         public override string ToString()
         {
-            return $"{Name} [{ConcreteType.TypeName()}]";
+            return $"{GetPreferredCommandSyntax()} [{ConcreteType.TypeName()}]";
         }
     }
 }
