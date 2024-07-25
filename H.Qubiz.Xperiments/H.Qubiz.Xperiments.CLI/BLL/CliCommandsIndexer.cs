@@ -74,11 +74,6 @@ namespace H.Qubiz.Xperiments.CLI.BLL
 
             }).TryOrFailWithGrace();
 
-            if (result?.Any() == true)
-                return result;
-
-            //TODO: Try to smartly build usage syntaxes
-
             return result;
         }
     }
