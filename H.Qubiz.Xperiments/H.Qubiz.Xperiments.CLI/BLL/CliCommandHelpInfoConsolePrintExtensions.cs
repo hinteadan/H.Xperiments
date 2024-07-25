@@ -21,7 +21,7 @@ namespace H.Qubiz.Xperiments.CLI.BLL
             }
 
             string preferredSyntax = commandHelpInfo.GetPreferredCommandSyntax();
-            string[] otherSyntaxes = commandHelpInfo.GetAllCommandSyntaxes()?.Where(x => !x.Is(preferredSyntax)).ToArrayNullIfEmpty();
+            string[] otherSyntaxes = commandHelpInfo.GetAllCommandSyntaxes()?.Where(x => !x.Is(preferredSyntax) && !x.Is(commandHelpInfo.Name)).ToArrayNullIfEmpty();
 
             if (!preferredSyntax.Is(commandHelpInfo.Name))
             {
@@ -33,7 +33,7 @@ namespace H.Qubiz.Xperiments.CLI.BLL
 
             if (otherSyntaxes?.Any() == true)
             {
-                using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.Gray, Console.ResetColor))
+                using (new ScopedRunner(() => Console.ForegroundColor = ConsoleColor.DarkYellow, Console.ResetColor))
                 {
                     Console.WriteLine(string.Join(" | ", otherSyntaxes));
                 }
@@ -73,7 +73,7 @@ namespace H.Qubiz.Xperiments.CLI.BLL
             foreach (CliCommandHelpInfo commandHelpInfo in commandHelpInfos)
             {
                 commandHelpInfo.PrintToConsole();
-                Console.WriteLine("------");
+                Console.WriteLine("~~~~~~~~~~~~");
                 Console.WriteLine();
             }
 
