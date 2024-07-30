@@ -14,7 +14,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
     internal class AzureFunctionsCommand : CommandBase
     {
         static readonly string[] usageSyntax = [
-            "azf|azurefunctions start|run|run-host|host|runhost [port=8898] [verbose]",
+            "azf|azurefunctions start|run|run-host|host|runhost [port=8898] [verbose] [no-new-window]",
             "azf|azurefunctions stop|end|kill|stop-host|stophost",
             "azf|azurefunctions call debug",
         ];
@@ -94,6 +94,8 @@ namespace H.Qubiz.Xperiments.CLI.Commands
 
                 bool isVerbose = args?.Any(a => a.ID.Is("verbose")) == true;
 
+                bool isSameWindow = args?.Any(a => a.ID.Is("no-new-window")) == true;
+
                 string projectDirPath = Path.Combine(GetCodebaseFolderPath(), "H.Xperiments.Azf.Runtime.Debug");
 
                 OperationResult result = OperationResult.Win();
@@ -104,16 +106,18 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                         Arguments = $"start --port {port}{(isVerbose ? " --verbose" : "")}",
                         FileName = $"func",
                         WorkingDirectory = projectDirPath,
-                        //RedirectStandardOutput = true,
-                        //RedirectStandardError = true,
-                        UseShellExecute = true,
-                        CreateNoWindow = false,
-                        WindowStyle = ProcessWindowStyle.Normal,
+                        RedirectStandardOutput = isSameWindow,
+                        RedirectStandardError = isSameWindow,
+                        UseShellExecute = !isSameWindow,
+                        CreateNoWindow = isSameWindow,
+                        WindowStyle = isSameWindow ? ProcessWindowStyle.Hidden : ProcessWindowStyle.Normal,
                     }).And(process => {
-                        //process.OutputDataReceived += (sender, args) => Log($"AZF: {args.Data}");
-                        //process.ErrorDataReceived += (sender, args) => Log($"AZF: {args.Data}");
-                        //process.BeginOutputReadLine();
-                        //process.BeginErrorReadLine();
+                        if (!isSameWindow)
+                            return;
+                        process.OutputDataReceived += (sender, args) => Log($"AZF: {args.Data}");
+                        process.ErrorDataReceived += (sender, args) => Log($"AZF: {args.Data}");
+                        process.BeginOutputReadLine();
+                        process.BeginErrorReadLine();
                     });
                 })
                 .TryOrFailWithGrace(onFail: ex => result = OperationResult.Fail(ex, $"Error occurred while trying to host the Azure Functions App. Message: {ex.Message}")); 
