@@ -1,5 +1,6 @@
 ﻿using H.Necessaire;
 using H.Necessaire.Runtime.CLI.Commands;
+using H.Necessaire.Serialization;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -44,19 +45,37 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             [ID("debug")]
             class DebugSubCommand : SubCommandBase
             {
+                const int numberOfRequests = 10;
                 static readonly HttpClient httpClient = new HttpClient();
                 public override async Task<OperationResult> Run(params Note[] args)
                 {
                     if (!State.IsRunning)
                         return OperationResult.Fail("AZF not running");
 
-                    string url = $"{State.AzureFunctionsBaseApiUrl}/debug";
+                    (int Index, int ConstructionCount, int RunCount)[] debugCallResults = await Task.WhenAll(
+                        Enumerable.Range(0, numberOfRequests)
+                        .Select(CallDebug)
+                    ).ConfigureAwait(false);
 
-                    using HttpResponseMessage response = await httpClient.GetAsync(url);
-
-                    string responseContent = await response.Content.ReadAsStringAsync();
+                    var maxRunCount = debugCallResults.MaxBy(x => x.RunCount);
+                    var maxConstructCount = debugCallResults.MaxBy(x => x.ConstructionCount);
 
                     return OperationResult.Win();
+                }
+
+                async Task<(int Index, int ConstructionCount, int RunCount)> CallDebug(int index)
+                {
+                    string url = $"{State.AzureFunctionsBaseApiUrl}/debug";
+
+                    using HttpResponseMessage response = (await httpClient.GetAsync(url).ConfigureAwait(false)).EnsureSuccessStatusCode();
+
+                    string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                    dynamic json = responseContent.JsonToObject<dynamic>();
+                    int constructionCount = (int)json.constructionCount;
+                    int runCount = (int)json.runCount;
+
+                    return (index, constructionCount, runCount);
                 }
             }
         }
