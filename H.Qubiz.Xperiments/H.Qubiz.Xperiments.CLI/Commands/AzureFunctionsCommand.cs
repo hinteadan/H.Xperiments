@@ -20,13 +20,27 @@ namespace H.Qubiz.Xperiments.CLI.Commands
 
         public override Task<OperationResult> Run() => RunSubCommand();
 
+        static class State
+        {
+            public static Process AzureFunctionsHostProcess = null;
+        }
+
 
         [Alias("stop", "end", "kill", "stop-host")]
         class StopHostSubCommand : SubCommandBase
         {
             public override Task<OperationResult> Run(params Note[] args)
             {
-                throw new NotImplementedException();
+                if (State.AzureFunctionsHostProcess is null)
+                    return OperationResult.Win("AZF not running").AsTask();
+
+                new Action(() => { 
+                    State.AzureFunctionsHostProcess?.Kill(entireProcessTree: true);
+                    State.AzureFunctionsHostProcess = null;
+                    Log("AZF Host stopped");
+                }).TryOrFailWithGrace(onFail: ex => Log($"Error occurred while trying to stop AZF Host. Message: {ex.Message}"));
+
+                return OperationResult.Win().AsTask();
             }
         }
 
@@ -36,6 +50,9 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             private static readonly string srcFolderRelativePath = $"{Path.DirectorySeparatorChar}H.Qubiz.Xperiments{Path.DirectorySeparatorChar}";
             public override Task<OperationResult> Run(params Note[] args)
             {
+                if (State.AzureFunctionsHostProcess is not null)
+                    return OperationResult.Fail("Already running AZF").AsTask();
+
                 string port = args?.Get("port", ignoreCase: true);
                 port ??= "7277";
 
@@ -43,11 +60,10 @@ namespace H.Qubiz.Xperiments.CLI.Commands
 
                 string projectDirPath = Path.Combine(GetCodebaseFolderPath(), "H.Xperiments.Azf.Runtime.Debug");
 
-                Process azureFunctionsHostProcess = null;
                 OperationResult result = OperationResult.Win();
                 new Action(() =>
                 {
-                    azureFunctionsHostProcess = Process.Start(new ProcessStartInfo
+                    State.AzureFunctionsHostProcess = Process.Start(new ProcessStartInfo
                     {
                         Arguments = $"start --port {port}{(isVerbose ? " --verbose" : "")}",
                         FileName = $"func",
@@ -65,8 +81,10 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 .TryOrFailWithGrace(onFail: ex => result = OperationResult.Fail(ex, $"Error occurred while trying to host the Azure Functions App. Message: {ex.Message}")); 
 
                 AppDomain.CurrentDomain.ProcessExit += (sender, args) => {
-                    new Action(() => azureFunctionsHostProcess.Dispose())
-                    .TryOrFailWithGrace(onFail: ex => azureFunctionsHostProcess.Kill(entireProcessTree: true));
+                    new Action(() => {
+                        State.AzureFunctionsHostProcess?.Kill(entireProcessTree: true);
+                        State.AzureFunctionsHostProcess = null;
+                    }).TryOrFailWithGrace();
                 };
 
                 return result.AsTask();

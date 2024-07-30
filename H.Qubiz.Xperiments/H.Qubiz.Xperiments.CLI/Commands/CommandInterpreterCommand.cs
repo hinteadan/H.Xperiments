@@ -17,7 +17,6 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         const string cliMarker = "(> ";
         static readonly string[] exitCommands = ["exit", "quit", "bye"];
         readonly CancellationTokenSource commandCancelTokenSource = new CancellationTokenSource();
-        static readonly object runLocker = new object();
         static bool isAlreadyInCliMode = false;
 
         public override async Task<OperationResult> Run()
