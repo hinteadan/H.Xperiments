@@ -52,7 +52,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                     if (!State.IsRunning)
                         return OperationResult.Fail("AZF not running");
 
-                    (int Index, int ConstructionCount, int RunCount)[] debugCallResults = await Task.WhenAll(
+                    DebugResponse[] debugCallResults = await Task.WhenAll(
                         Enumerable.Range(0, numberOfRequests)
                         .Select(CallDebug)
                     ).ConfigureAwait(false);
@@ -63,7 +63,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                     return OperationResult.Win();
                 }
 
-                async Task<(int Index, int ConstructionCount, int RunCount)> CallDebug(int index)
+                async Task<DebugResponse> CallDebug(int index)
                 {
                     string url = $"{State.AzureFunctionsBaseApiUrl}/debug";
 
@@ -71,11 +71,24 @@ namespace H.Qubiz.Xperiments.CLI.Commands
 
                     string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                    dynamic json = responseContent.JsonToObject<dynamic>();
-                    int constructionCount = (int)json.constructionCount;
-                    int runCount = (int)json.runCount;
+                    DebugResponse debugResponse = responseContent.JsonToObject<DebugResponse>();
 
-                    return (index, constructionCount, runCount);
+                    return debugResponse;
+                }
+
+                class DebugResponse
+                {
+                    public int ConstructionCount { get; set; }
+                    public int RunCount { get; set; }
+                    public ServiceInfo SingletonService { get; set; }
+                    public ServiceInfo ScopedService { get; set; }
+                    public ServiceInfo TransientService { get; set; }
+
+                    public class ServiceInfo
+                    {
+                        public int InstanceID { get; set; }
+                        public int InjectionCount { get; set; }
+                    }
                 }
             }
         }
