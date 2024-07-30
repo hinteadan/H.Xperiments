@@ -5,16 +5,16 @@ using Microsoft.Extensions.Logging;
 
 namespace H.Xperiments.Azf.Runtime.Debug
 {
-    public class Function1
+    public class Debug
     {
-        private readonly ILogger<Function1> _logger;
+        private readonly ILogger<Debug> _logger;
 
-        public Function1(ILogger<Function1> logger)
+        public Debug(ILogger<Debug> logger)
         {
             _logger = logger;
         }
 
-        [Function("Function1")]
+        [Function(nameof(Debug))]
         public IActionResult Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequest req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");

@@ -4,6 +4,7 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -15,6 +16,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         static readonly string[] usageSyntax = [
             "azf|azurefunctions start|run|run-host|host|runhost [port=8898] [verbose]",
             "azf|azurefunctions stop|end|kill|stop-host|stophost",
+            "azf|azurefunctions call debug",
         ];
         protected override string[] GetUsageSyntaxes() => usageSyntax;
 
@@ -23,6 +25,40 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         static class State
         {
             public static Process AzureFunctionsHostProcess = null;
+            public static string AzureFunctionsBaseApiUrl = null;
+
+            public static bool IsRunning => AzureFunctionsHostProcess is not null;
+
+            public static void Clear()
+            {
+                AzureFunctionsHostProcess = null;
+                AzureFunctionsBaseApiUrl = null;
+            }
+        }
+
+        [ID("call")]
+        class CallSubCommand : SubCommandBase
+        {
+            public override Task<OperationResult> Run(params Note[] args) => RunSubCommand(["".NoteAs("call"), ..args]);
+
+            [ID("debug")]
+            class DebugSubCommand : SubCommandBase
+            {
+                static readonly HttpClient httpClient = new HttpClient();
+                public override async Task<OperationResult> Run(params Note[] args)
+                {
+                    if (!State.IsRunning)
+                        return OperationResult.Fail("AZF not running");
+
+                    string url = $"{State.AzureFunctionsBaseApiUrl}/debug";
+
+                    using HttpResponseMessage response = await httpClient.GetAsync(url);
+
+                    string responseContent = await response.Content.ReadAsStringAsync();
+
+                    return OperationResult.Win();
+                }
+            }
         }
 
 
@@ -31,12 +67,12 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         {
             public override Task<OperationResult> Run(params Note[] args)
             {
-                if (State.AzureFunctionsHostProcess is null)
+                if (!State.IsRunning)
                     return OperationResult.Win("AZF not running").AsTask();
 
                 new Action(() => { 
                     State.AzureFunctionsHostProcess?.Kill(entireProcessTree: true);
-                    State.AzureFunctionsHostProcess = null;
+                    State.Clear();
                     Log("AZF Host stopped");
                 }).TryOrFailWithGrace(onFail: ex => Log($"Error occurred while trying to stop AZF Host. Message: {ex.Message}"));
 
@@ -50,7 +86,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             private static readonly string srcFolderRelativePath = $"{Path.DirectorySeparatorChar}H.Qubiz.Xperiments{Path.DirectorySeparatorChar}";
             public override Task<OperationResult> Run(params Note[] args)
             {
-                if (State.AzureFunctionsHostProcess is not null)
+                if (State.IsRunning)
                     return OperationResult.Fail("Already running AZF").AsTask();
 
                 string port = args?.Get("port", ignoreCase: true);
@@ -68,14 +104,16 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                         Arguments = $"start --port {port}{(isVerbose ? " --verbose" : "")}",
                         FileName = $"func",
                         WorkingDirectory = projectDirPath,
-                        RedirectStandardOutput = true,
-                        RedirectStandardError = true,
-                        UseShellExecute = false,
+                        //RedirectStandardOutput = true,
+                        //RedirectStandardError = true,
+                        UseShellExecute = true,
+                        CreateNoWindow = false,
+                        WindowStyle = ProcessWindowStyle.Normal,
                     }).And(process => {
-                        process.OutputDataReceived += (sender, args) => Log($"AZF: {args.Data}");
-                        process.ErrorDataReceived += (sender, args) => Log($"AZF: {args.Data}");
-                        process.BeginOutputReadLine();
-                        process.BeginErrorReadLine();
+                        //process.OutputDataReceived += (sender, args) => Log($"AZF: {args.Data}");
+                        //process.ErrorDataReceived += (sender, args) => Log($"AZF: {args.Data}");
+                        //process.BeginOutputReadLine();
+                        //process.BeginErrorReadLine();
                     });
                 })
                 .TryOrFailWithGrace(onFail: ex => result = OperationResult.Fail(ex, $"Error occurred while trying to host the Azure Functions App. Message: {ex.Message}")); 
@@ -83,9 +121,11 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 AppDomain.CurrentDomain.ProcessExit += (sender, args) => {
                     new Action(() => {
                         State.AzureFunctionsHostProcess?.Kill(entireProcessTree: true);
-                        State.AzureFunctionsHostProcess = null;
+                        State.Clear();
                     }).TryOrFailWithGrace();
                 };
+
+                State.AzureFunctionsBaseApiUrl = $"http://localhost:{port}/api";
 
                 return result.AsTask();
             }
