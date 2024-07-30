@@ -7,11 +7,12 @@ var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureServices(services =>
     {
+        services.AddApplicationInsightsTelemetryWorkerService();
+        services.ConfigureFunctionsApplicationInsights();
+
         services.AddKeyedScoped<InstanceCountingService>("ScopedInstanceCountingService");
         services.AddKeyedSingleton<InstanceCountingService>("SingletonInstanceCountingService");
         services.AddKeyedTransient<InstanceCountingService>("TransientInstanceCountingService");
-        services.AddApplicationInsightsTelemetryWorkerService();
-        services.ConfigureFunctionsApplicationInsights();
     })
     .Build();
 

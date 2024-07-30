@@ -65,19 +65,22 @@ namespace H.Qubiz.Xperiments.CLI.Commands
 
                 async Task<DebugResponse> CallDebug(int index)
                 {
+                    await Task.Delay(Random.Shared.Next(500, 2000));
+
                     string url = $"{State.AzureFunctionsBaseApiUrl}/debug";
 
                     using HttpResponseMessage response = (await httpClient.GetAsync(url).ConfigureAwait(false)).EnsureSuccessStatusCode();
 
                     string responseContent = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
 
-                    DebugResponse debugResponse = responseContent.JsonToObject<DebugResponse>();
+                    DebugResponse debugResponse = responseContent.JsonToObject<DebugResponse>().And(x => x.Index = index);
 
                     return debugResponse;
                 }
 
                 class DebugResponse
                 {
+                    public int Index { get; set; } = -1;
                     public int ConstructionCount { get; set; }
                     public int RunCount { get; set; }
                     public ServiceInfo SingletonService { get; set; }
