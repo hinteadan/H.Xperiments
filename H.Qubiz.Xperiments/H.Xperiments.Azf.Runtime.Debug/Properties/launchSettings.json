@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "H.Xperiments.Azf.Runtime.Debug": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7198",
+      "launchBrowser": false
+    }
+  }
+}

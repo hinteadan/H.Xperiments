@@ -11,9 +11,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Qubiz.Xperiments.SQLite",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Xperiments.Assemblies", "H.Xperiments.Assemblies\H.Xperiments.Assemblies.csproj", "{4565054E-5FDA-4392-82B9-6843709696EE}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Xperiments.CLI.UI", "H.Xperiments.CLI.UI\H.Xperiments.CLI.UI.csproj", "{381AFAF6-AA00-4E98-A99F-E65A31750157}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Xperiments.Azf.Runtime.Debug", "H.Xperiments.Azf.Runtime.Debug\H.Xperiments.Azf.Runtime.Debug.csproj", "{DD072A40-7C8A-4806-A0D2-E3C131B886CB}"
+<<<<<<< Updated upstream
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.Xperiments.CLI.UI", "H.Xperiments.CLI.UI\H.Xperiments.CLI.UI.csproj", "{381AFAF6-AA00-4E98-A99F-E65A31750157}"
+=======
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.Xperiments.Azf.Runtime.Debug", "H.Xperiments.Azf.Runtime.Debug\H.Xperiments.Azf.Runtime.Debug.csproj", "{997DB4A9-222D-42EC-B059-6946719D12D2}"
+>>>>>>> Stashed changes
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,14 +39,17 @@ Global
 		{4565054E-5FDA-4392-82B9-6843709696EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4565054E-5FDA-4392-82B9-6843709696EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4565054E-5FDA-4392-82B9-6843709696EE}.Release|Any CPU.Build.0 = Release|Any CPU
+<<<<<<< Updated upstream
 		{381AFAF6-AA00-4E98-A99F-E65A31750157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{381AFAF6-AA00-4E98-A99F-E65A31750157}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{381AFAF6-AA00-4E98-A99F-E65A31750157}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{381AFAF6-AA00-4E98-A99F-E65A31750157}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DD072A40-7C8A-4806-A0D2-E3C131B886CB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DD072A40-7C8A-4806-A0D2-E3C131B886CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DD072A40-7C8A-4806-A0D2-E3C131B886CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DD072A40-7C8A-4806-A0D2-E3C131B886CB}.Release|Any CPU.Build.0 = Release|Any CPU
+=======
+		{997DB4A9-222D-42EC-B059-6946719D12D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{997DB4A9-222D-42EC-B059-6946719D12D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{997DB4A9-222D-42EC-B059-6946719D12D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{997DB4A9-222D-42EC-B059-6946719D12D2}.Release|Any CPU.Build.0 = Release|Any CPU
+>>>>>>> Stashed changes
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
