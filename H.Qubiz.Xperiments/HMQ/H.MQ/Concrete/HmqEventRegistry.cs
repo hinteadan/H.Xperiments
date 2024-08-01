@@ -8,7 +8,7 @@ namespace H.MQ.Concrete
     internal class HmqEventRegistry : ImAnHmqEventRegistry, ImADependency
     {
         ImAStorageService<Guid, HmqEvent> eventStore;
-        ImAStorageBrowserService<HmqEvent, HmqEventFilter> eventBrowser; 
+        ImAStorageBrowserService<HmqEvent, HmqEventFilter> eventBrowser;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             eventStore = dependencyProvider.Get<ImAStorageService<Guid, HmqEvent>>();
@@ -20,7 +20,13 @@ namespace H.MQ.Concrete
             if (hmqEvent is null)
                 return OperationResult.Fail("Event is NULL");
 
-            return await eventStore.Save(hmqEvent.Map());
+            HmqEvent eventToSave = hmqEvent.Map();
+            eventToSave.Attributes = hmqEvent.Attributes.AddOrReplace(
+                $"{true}".NoteAs("IsPersisted"),
+                "PersistentStore".NoteAs("Source")
+            );
+
+            return await eventStore.Save(eventToSave);
         }
 
         public async Task<OperationResult<IDisposableEnumerable<ImAnHmqEvent>>> Stream(HmqEventFilter filter)

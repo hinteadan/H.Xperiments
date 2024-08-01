@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace H.MQ.Abstractions
 {
-    public interface ImAnHmqActor
+    public interface ImAnHmqActor : ImAnHmqActorIdentity
     {
         Task<OperationResult> Raise(ImAnHmqEvent hmqEvent);
     }
