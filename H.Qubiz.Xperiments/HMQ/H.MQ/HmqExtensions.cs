@@ -1,5 +1,4 @@
 ﻿using H.MQ.Abstractions;
-using H.MQ.Concrete;
 using H.Necessaire;
 using System;
 
@@ -21,10 +20,28 @@ namespace H.MQ
                     Assembly = dataType.Assembly.FullName,
                     Type = dataType.FullName,
                     Name = dataType.Name,
-                    
+
                     Attributes = attributes.NullIfEmpty(),
 
                     Data = data,
+                };
+        }
+
+        public static HmqEvent Map(this ImAnHmqEvent hmqEvent)
+        {
+            if (hmqEvent is null)
+                return null;
+
+            return
+                new HmqEvent
+                {
+                    ID = hmqEvent.ID,
+                    Assembly = hmqEvent.Assembly,
+                    Type = hmqEvent.Type,
+                    Attributes = hmqEvent.Attributes,
+                    Data = hmqEvent.Data,
+                    HappenedAt = hmqEvent.HappenedAt,
+                    Name = hmqEvent.Name,
                 };
         }
 

@@ -1,3 +1,4 @@
+using H.MQ;
 using H.Necessaire;
 
 namespace H.Qubiz.Xperiments.CLI
@@ -7,6 +8,9 @@ namespace H.Qubiz.Xperiments.CLI
         public void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {
             dependencyRegistry
+
+                .WithHmq()
+
                 .Register<RavenDb.DependencyGroup>(() => new RavenDb.DependencyGroup())
                 .Register<SQLite.DependencyGroup>(() => new SQLite.DependencyGroup())
                 .Register<BLL.CliCommandsIndexer>(() => new BLL.CliCommandsIndexer())

@@ -14,6 +14,8 @@
 	  <ProjectReference Include="..\H.Qubiz.Xperiments.SQLite\H.Qubiz.Xperiments.SQLite.csproj" />
 	  <ProjectReference Include="..\H.Xperiments.Assemblies\H.Xperiments.Assemblies.csproj" />
 	  <ProjectReference Include="..\H.Xperiments.CLI.UI\H.Xperiments.CLI.UI.csproj" />
+	  <ProjectReference Include="..\HMQ\H.MQ.Abstractions\H.MQ.Abstractions.csproj" />
+	  <ProjectReference Include="..\HMQ\H.MQ\H.MQ.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -8,24 +8,32 @@ namespace H.MQ.Concrete
     internal class HmqEventRegistry : ImAnHmqEventRegistry, ImADependency
     {
         ImAStorageService<Guid, HmqEvent> eventStore;
+        ImAStorageBrowserService<HmqEvent, HmqEventFilter> eventBrowser; 
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             eventStore = dependencyProvider.Get<ImAStorageService<Guid, HmqEvent>>();
+            eventBrowser = dependencyProvider.Get<ImAStorageBrowserService<HmqEvent, HmqEventFilter>>();
         }
 
-        public Task<OperationResult> Append(ImAnHmqEvent hmqEvent)
+        public async Task<OperationResult> Append(ImAnHmqEvent hmqEvent)
         {
-            throw new System.NotImplementedException();
+            if (hmqEvent is null)
+                return OperationResult.Fail("Event is NULL");
+
+            return await eventStore.Save(hmqEvent.Map());
         }
 
-        public Task<OperationResult<IDisposableEnumerable<ImAnHmqEvent>>> Stream(HmqEventFilter filter)
+        public async Task<OperationResult<IDisposableEnumerable<ImAnHmqEvent>>> Stream(HmqEventFilter filter)
         {
-            throw new System.NotImplementedException();
+            OperationResult<IDisposableEnumerable<HmqEvent>> streamResult = await eventBrowser.Stream(filter);
+            return streamResult?.WithPayload(streamResult?.Payload?.ProjectTo(x => x as ImAnHmqEvent));
         }
 
-        public Task<OperationResult<IDisposableEnumerable<ImAnHmqEvent>>> StreamAll()
+        public async Task<OperationResult<IDisposableEnumerable<ImAnHmqEvent>>> StreamAll()
         {
-            throw new System.NotImplementedException();
+            OperationResult<IDisposableEnumerable<HmqEvent>> streamResult = await eventBrowser.StreamAll();
+            return streamResult?.WithPayload(streamResult?.Payload?.ProjectTo(x => x as ImAnHmqEvent));
+
         }
     }
 }
