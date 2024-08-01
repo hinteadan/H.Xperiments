@@ -1,6 +1,4 @@
-﻿using H.MQ.Concrete.Storage;
-using H.Necessaire;
-using System;
+﻿using H.Necessaire;
 
 namespace H.MQ
 {
@@ -10,11 +8,8 @@ namespace H.MQ
         {
             dependencyRegistry
 
-                .Register<HmqEventStorageService>(() => new HmqEventStorageService())
-                .Register<ImAStorageService<Guid, HmqEvent>>(() => dependencyRegistry.Get<HmqEventStorageService>())
-                .Register<ImAStorageBrowserService<HmqEvent, HmqEventFilter>>(() => dependencyRegistry.Get<HmqEventStorageService>())
+                .Register<Concrete.DependencyGroup>(() => new Concrete.DependencyGroup())
 
-                .Register<ImAnHmqEventRegistry>(() => new Concrete.HmqEventRegistry())
                 ;
         }
     }
