@@ -2,9 +2,9 @@
 using H.Necessaire;
 using System;
 
-namespace H.MQ.Concrete
+namespace H.MQ
 {
-    internal class HmqEvent : ImAnHmqEvent
+    public class HmqEvent : ImAnHmqEvent
     {
         public Guid ID { get; set; } = Guid.NewGuid();
 

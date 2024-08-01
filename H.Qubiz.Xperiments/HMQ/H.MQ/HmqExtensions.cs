@@ -27,5 +27,11 @@ namespace H.MQ
                     Data = data,
                 };
         }
+
+        public static T WithHmq<T>(this T dependencyRegistry) where T : ImADependencyRegistry
+        {
+            dependencyRegistry.Register<HmqDependencyGroup>(() => new HmqDependencyGroup());
+            return dependencyRegistry;
+        }
     }
 }
