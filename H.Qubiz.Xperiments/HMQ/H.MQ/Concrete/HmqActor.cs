@@ -1,5 +1,6 @@
 ﻿using H.MQ.Abstractions;
 using H.Necessaire;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace H.MQ.Concrete
@@ -21,7 +22,11 @@ namespace H.MQ.Concrete
             if (!appendResult.IsSuccessful)
                 return appendResult;
 
-            var raiseResults = await eventRiser.Raise(hmqEvent);
+            OperationResult<ImAnHmqReActor>[] raiseResults = await eventRiser.Raise(hmqEvent);
+
+            OperationResult globalRaiseResult = raiseResults.Merge(globalReasonIfNecesarry: "Some of the HMQ ReActors failed to handle the event. Check payload for details.").WithPayload(raiseResults.Where(x => !x.IsSuccessful).ToArrayNullIfEmpty());
+
+            return globalRaiseResult;
         }
     }
 }
