@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Xperiments.CLI.UI", "H.Xp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Xperiments.Azf.Runtime.Debug", "H.Xperiments.Azf.Runtime.Debug\H.Xperiments.Azf.Runtime.Debug.csproj", "{DD072A40-7C8A-4806-A0D2-E3C131B886CB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "HMQ", "HMQ", "{1C96C0C4-BB5F-4D6B-AE09-F67158938D13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.MQ.Abstractions", "HMQ\H.MQ.Abstractions\H.MQ.Abstractions.csproj", "{125BF389-623C-4228-A9E5-B63FC0447BAB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,9 +49,16 @@ Global
 		{DD072A40-7C8A-4806-A0D2-E3C131B886CB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD072A40-7C8A-4806-A0D2-E3C131B886CB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD072A40-7C8A-4806-A0D2-E3C131B886CB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{125BF389-623C-4228-A9E5-B63FC0447BAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{125BF389-623C-4228-A9E5-B63FC0447BAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{125BF389-623C-4228-A9E5-B63FC0447BAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{125BF389-623C-4228-A9E5-B63FC0447BAB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{125BF389-623C-4228-A9E5-B63FC0447BAB} = {1C96C0C4-BB5F-4D6B-AE09-F67158938D13}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D1C2BA0F-DC65-4EA6-BEDD-DA2182F47671}
