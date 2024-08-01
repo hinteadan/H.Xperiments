@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="H.Necessaire" Version="2.35.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\H.MQ.Abstractions\H.MQ.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>
