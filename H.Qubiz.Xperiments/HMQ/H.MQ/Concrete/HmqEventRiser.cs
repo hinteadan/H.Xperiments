@@ -21,27 +21,27 @@ namespace H.MQ.Concrete
                 ;
         }
 
-        public async Task<OperationResult> Raise(ImAnHmqEvent hmqEvent)
+        public async Task<OperationResult<ImAnHmqReActor>[]> Raise(ImAnHmqEvent hmqEvent)
         {
             if (allKnownReactors?.Any() != true)
-                return OperationResult.Win();
+                return Array.Empty<OperationResult<ImAnHmqReActor>>();
 
-            OperationResult[] results = await Task.WhenAll(allKnownReactors.Select(r => Raise(hmqEvent, r)));
+            OperationResult<ImAnHmqReActor>[] results = await Task.WhenAll(allKnownReactors.Select(r => Raise(hmqEvent, r)));
 
-            return results.Merge();
+            return results;
         }
 
-        async Task<OperationResult> Raise(ImAnHmqEvent hmqEvent, ImAnHmqReActor reactor)
+        async Task<OperationResult<ImAnHmqReActor>> Raise(ImAnHmqEvent hmqEvent, ImAnHmqReActor reactor)
         {
-            OperationResult result = OperationResult.Fail("Not yet started");
+            OperationResult<ImAnHmqReActor> result = OperationResult.Fail("Not yet started").WithPayload(reactor);
 
             await
                 new Func<Task>(async () =>
                 {
-                    result = await reactor.Handle(hmqEvent);
+                    result = (await reactor.Handle(hmqEvent)).WithPayload(reactor);
                 })
                 .TryOrFailWithGrace(
-                    onFail: ex => result = OperationResult.Fail(ex, $"Error occurred while trying to handle {hmqEvent.Name}({hmqEvent.ID}) that happened on {hmqEvent.HappenedAt.PrintDateAndTime()}. Message: {ex.Message}")
+                    onFail: ex => result = OperationResult.Fail(ex, $"Error occurred while trying to handle {hmqEvent.Name}({hmqEvent.ID}) that happened on {hmqEvent.HappenedAt.PrintDateAndTime()}. Message: {ex.Message}").WithPayload(reactor)
                 );
 
             return result;

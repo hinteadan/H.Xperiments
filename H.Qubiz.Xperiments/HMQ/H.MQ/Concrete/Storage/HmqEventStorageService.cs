@@ -9,6 +9,9 @@ namespace H.MQ.Concrete.Storage
     {
         protected override IEnumerable<HmqEvent> ApplyFilter(IEnumerable<HmqEvent> stream, HmqEventFilter filter)
         {
+            if (filter?.IDs?.Any() == true)
+                stream = stream.Where(x => x.ID.In(filter.IDs));
+
             if (filter?.From != null)
                 stream = stream.Where(x => x.HappenedAt >= filter.From);
 

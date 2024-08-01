@@ -13,6 +13,8 @@ namespace H.MQ
             nameof(HmqEvent.Type),
         };
 
+        public Guid[] IDs { get; set; }
+
         public DateTime? From { get; set; }
         public DateTime? To { get; set; }
 
