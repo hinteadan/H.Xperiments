@@ -4,7 +4,7 @@ using System;
 
 namespace H.MQ.Concrete.Storage.Model
 {
-    internal class HmqEventReactionEntry : IGuidIdentity
+    public class HmqEventReactionLog : IGuidIdentity
     {
         public Guid ID { get; set; } = Guid.NewGuid();
         public DateTime AsOf { get; set; } = DateTime.UtcNow;
@@ -12,6 +12,10 @@ namespace H.MQ.Concrete.Storage.Model
         public HmqEvent Event { get; set; }
         public Guid EventID => Event?.ID ?? Guid.Empty;
 
+        public ImAnHmqActorIdentity ActorIdentity { get; set; }
+        public string ActorID => ActorIdentity?.ID;
 
+        public OperationResult OperationResult { get; set; }
+        public bool IsSuccessful => OperationResult?.IsSuccessful == true;
     }
 }
