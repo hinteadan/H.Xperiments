@@ -11,7 +11,10 @@ namespace H.MQ.Concrete
 
                 .Register<Storage.DependencyGroup>(() => new Storage.DependencyGroup())
 
-                .Register<ImAnHmqEventRegistry>(() => new HmqEventRegistry())
+                .Register<HmqEventRegistry>(() => new HmqEventRegistry())
+                .Register<ImAnHmqEventRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
+                .Register<ImAnHmqEventReActingRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
+
                 .Register<ImAnHmqEventRiser>(() => new HmqEventRiser())
 
                 .Register<ImAnHmqActor>(() => new HmqActor())

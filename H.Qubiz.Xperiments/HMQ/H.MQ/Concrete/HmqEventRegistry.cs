@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace H.MQ.Concrete
 {
-    internal class HmqEventRegistry : ImAnHmqEventRegistry, ImADependency
+    internal class HmqEventRegistry : ImAnHmqEventRegistry, ImAnHmqEventReActingRegistry, ImADependency
     {
         ImAStorageService<Guid, HmqEvent> eventStore;
         ImAStorageBrowserService<HmqEvent, HmqEventFilter> eventBrowser;
@@ -40,6 +40,11 @@ namespace H.MQ.Concrete
             OperationResult<IDisposableEnumerable<HmqEvent>> streamResult = await eventBrowser.StreamAll();
             return streamResult?.WithPayload(streamResult?.Payload?.ProjectTo(x => x as ImAnHmqEvent));
 
+        }
+
+        public async Task<OperationResult> LogEventReAction(ImAnHmqEvent hmqEvent, OperationResult<ImAnHmqActorIdentity>[] hmqReActorResults)
+        {
+            throw new NotImplementedException();
         }
     }
 }

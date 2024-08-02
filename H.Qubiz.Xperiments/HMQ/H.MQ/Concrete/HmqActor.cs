@@ -1,7 +1,6 @@
 ﻿using H.MQ.Abstractions;
 using H.Necessaire;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,6 +9,7 @@ namespace H.MQ.Concrete
     internal class HmqActor : ImAnHmqActor, ImADependency
     {
         ImAnHmqEventRegistry eventRegistry;
+        ImAnHmqEventReActingRegistry eventReActingRegistry;
         ImAnHmqEventRiser eventRiser;
 
         public Note[] IdentityAttributes { get; set; }
@@ -19,6 +19,7 @@ namespace H.MQ.Concrete
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             eventRegistry = dependencyProvider.Get<ImAnHmqEventRegistry>();
+            eventReActingRegistry = dependencyProvider.Get<ImAnHmqEventReActingRegistry>();
             eventRiser = dependencyProvider.Get<ImAnHmqEventRiser>();
         }
 
@@ -31,7 +32,10 @@ namespace H.MQ.Concrete
 
             OperationResult<ImAnHmqReActor>[] raiseResults = await eventRiser.Raise(hmqEvent);
 
-            await 
+            OperationResult logResult = await eventReActingRegistry.LogEventReAction(hmqEvent, raiseResults.Select(x => x.WithPayload(x.Payload as ImAnHmqActorIdentity)).ToArray());
+
+            if (!logResult.IsSuccessful)
+                return logResult;
 
             OperationResult<OperationResult<ImAnHmqReActor>[]> globalRaiseResult = raiseResults.Merge(globalReasonIfNecesarry: "Some of the HMQ ReActors failed to handle the event. Check payload for details.").WithPayload(raiseResults.Where(x => !x.IsSuccessful).ToArrayNullIfEmpty());
 
@@ -39,6 +43,12 @@ namespace H.MQ.Concrete
                 await HandleRaiseFailures(hmqEvent, globalRaiseResult.Payload.Select(x => x.Payload).ToArray());
 
             return globalRaiseResult;
+        }
+
+        private Task HandleRaiseFailures(ImAnHmqEvent hmqEvent, ImAnHmqReActor[] imAnHmqReActors)
+        {
+            //TODO: Handle raise failures if necessary
+            return Task.CompletedTask;
         }
     }
 }
