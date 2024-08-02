@@ -1,0 +1,43 @@
+﻿using H.MQ.Abstractions;
+using H.MQ.Concrete;
+using H.Necessaire;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace H.MQ
+{
+    public static class HmqActorAndReActorExtensions
+    {
+        public static ImAnHmqActor GetHmqActor(this ImADependencyProvider dependencyProvider, string id, params Note[] idAttrs)
+        {
+            if (id.IsEmpty())
+                throw new ArgumentException($"HMQ Actor ID must be specified", nameof(id));
+
+            ImAnHmqActorAndReActorBookkeeper actorAndReActorBookkeeper = dependencyProvider.Get<ImAnHmqActorAndReActorBookkeeper>();
+
+            ImAnHmqActor actor = actorAndReActorBookkeeper.GetOrAddActor(id, i => dependencyProvider.Get<HmqActor>().And(a => {
+                a.ID = i;
+                a.IdentityAttributes = idAttrs?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
+            }));
+
+            return actor;
+        }
+
+        public static ImAnHmqReActor GetHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, params Note[] idAttrs)
+        {
+            if (id.IsEmpty())
+                throw new ArgumentException($"HMQ ReActor ID must be specified", nameof(id));
+
+            ImAnHmqActorAndReActorBookkeeper actorAndReActorBookkeeper = dependencyProvider.Get<ImAnHmqActorAndReActorBookkeeper>();
+
+            ImAnHmqReActor reActor = actorAndReActorBookkeeper.GetOrAddReActor(id, i => dependencyProvider.Get<HmqReActor>().And(r => {
+                r.ID = i;
+                r.IdentityAttributes = idAttrs?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
+                r.Handler = handler;
+            }));
+
+            return reActor;
+        }
+    }
+}
