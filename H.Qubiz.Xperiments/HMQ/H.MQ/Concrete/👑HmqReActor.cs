@@ -25,28 +25,7 @@ namespace H.MQ.Concrete
 
         public async Task<OperationResult> Handle(HmqEvent hmqEvent)
         {
-            if (Handler is null)
-                return OperationResult.Win();
-
-            if (hmqEvent is null)
-                return OperationResult.Win();
-
-            if (!IsHandlingInternalEvents && !IsHandlingExternalEvents)
-                return OperationResult.Win();
-
-            if (hmqEvent.IsInternal() && !IsHandlingInternalEvents)
-                return OperationResult.Win();
-
-            if (hmqEvent.IsExternal() && !IsHandlingExternalEvents)
-                return OperationResult.Win();
-
-            if (SpecificHandledSourceIDs?.Any() == true && hmqEvent.RaisedByID.NotIn(SpecificHandledSourceIDs))
-                return OperationResult.Win();
-
-            if (SpecificHandledEventNames?.Any() == true && hmqEvent.Name.NotIn(SpecificHandledEventNames))
-                return OperationResult.Win();
-
-            if (SpecificHandledEventTypes?.Any() == true && hmqEvent.Type.NotIn(SpecificHandledEventTypes))
+            if (!CanHandle(hmqEvent))
                 return OperationResult.Win();
 
             OperationResult result = OperationResult.Fail("Not yet started");
@@ -66,6 +45,35 @@ namespace H.MQ.Concrete
                 .TryOrFailWithGrace(onFail: ex => result = OperationResult.Fail(ex, $"Error ocurred in {ID} ReActor while handling {hmqEvent.Name} event. Message: {ex.Message}"));
 
             return result;
+        }
+
+        internal bool CanHandle(HmqEvent hmqEvent)
+        {
+            if (Handler is null)
+                return false;
+
+            if (hmqEvent is null)
+                return false;
+
+            if (!IsHandlingInternalEvents && !IsHandlingExternalEvents)
+                return false;
+
+            if (hmqEvent.IsInternal() && !IsHandlingInternalEvents)
+                return false;
+
+            if (hmqEvent.IsExternal() && !IsHandlingExternalEvents)
+                return false;
+
+            if (SpecificHandledSourceIDs?.Any() == true && hmqEvent.RaisedByID.NotIn(SpecificHandledSourceIDs))
+                return false;
+
+            if (SpecificHandledEventNames?.Any() == true && hmqEvent.Name.NotIn(SpecificHandledEventNames))
+                return false;
+
+            if (SpecificHandledEventTypes?.Any() == true && hmqEvent.Type.NotIn(SpecificHandledEventTypes))
+                return false;
+
+            return true;
         }
     }
 }

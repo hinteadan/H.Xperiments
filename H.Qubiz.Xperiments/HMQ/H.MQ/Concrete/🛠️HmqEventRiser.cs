@@ -24,13 +24,19 @@ namespace H.MQ.Concrete
         {
             ImAnHmqReActor[] allKnownReactors = actorAndReActorBookkeeper.GetAllReActors();
 
-            if (allKnownReactors?.Any() != true)
+            ImAnHmqReActor[] candidateReactors
+                = allKnownReactors
+                .Where(x => (x as HmqReActor)?.CanHandle(hmqEvent) != false)
+                .ToArrayNullIfEmpty()
+                ;
+
+            if (candidateReactors?.Any() != true)
                 return Array.Empty<OperationResult<ImAnHmqReActor>>();
 
             ImAnHmqActorIdentity[] reactorsToIgnore = await DetermineReactorsToIgnore(hmqEvent);
             string[] reactorIDsToIgnore = reactorsToIgnore?.Select(x => x.ID.NullIfEmpty()).ToNoNullsArray();
 
-            ImAnHmqReActor[] reActorsToRaise = allKnownReactors;
+            ImAnHmqReActor[] reActorsToRaise = candidateReactors;
             if (reactorIDsToIgnore?.Any() == true)
             {
                 reActorsToRaise
