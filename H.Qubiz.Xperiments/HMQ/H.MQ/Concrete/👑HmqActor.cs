@@ -1,20 +1,16 @@
 ﻿using H.MQ.Abstractions;
 using H.Necessaire;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace H.MQ.Concrete
 {
-    internal class HmqActor : ImAnHmqActor, ImADependency
+    internal class HmqActor : HmqActorIdentity, ImAnHmqActor, ImADependency
     {
+        private ImAnHmqActorIdentity identity = new HmqActorIdentity();
         ImAnHmqEventRegistry eventRegistry;
         ImAnHmqEventReActionRegistry eventReActingRegistry;
         ImAnHmqEventRiser eventRiser;
-
-        public Note[] IdentityAttributes { get; set; }
-
-        public string ID { get; set; } = Guid.NewGuid().ToString();
 
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {

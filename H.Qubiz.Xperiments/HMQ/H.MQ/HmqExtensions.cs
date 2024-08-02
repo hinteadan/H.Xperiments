@@ -2,6 +2,7 @@
 using H.MQ.Concrete;
 using H.Necessaire;
 using System;
+using System.Linq;
 
 namespace H.MQ
 {
@@ -77,6 +78,28 @@ namespace H.MQ
         {
             dependencyRegistry.Register<HmqDependencyGroup>(() => new HmqDependencyGroup());
             return dependencyRegistry;
+        }
+
+        public static ImAnHmqActor GetHmqActor(this ImADependencyRegistry dependencyRegistry, string id, params Note[] attributes)
+        {
+            if (id.IsEmpty())
+                throw new ArgumentException($"HMQ Actor ID must be specified", nameof(id));
+
+            HmqActor actor = dependencyRegistry.Get<HmqActor>();
+            actor.ID = id;
+            actor.IdentityAttributes = attributes?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
+            return actor;
+        }
+
+        public static ImAnHmqReActor GetHmqReActor(this ImADependencyRegistry dependencyRegistry, string id, params Note[] attributes)
+        {
+            if (id.IsEmpty())
+                throw new ArgumentException($"HMQ ReActor ID must be specified", nameof(id));
+
+            HmqReActor reActor = dependencyRegistry.Get<HmqReActor>();
+            reActor.ID = id;
+            reActor.IdentityAttributes = attributes?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
+            return reActor;
         }
     }
 }
