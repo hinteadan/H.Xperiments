@@ -3,6 +3,7 @@ using H.MQ.Concrete;
 using H.Necessaire;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace H.MQ
 {
@@ -74,31 +75,34 @@ namespace H.MQ
                 };
         }
 
+
+
         public static T WithHmq<T>(this T dependencyRegistry) where T : ImADependencyRegistry
         {
             dependencyRegistry.Register<HmqDependencyGroup>(() => new HmqDependencyGroup());
             return dependencyRegistry;
         }
 
-        public static ImAnHmqActor GetHmqActor(this ImADependencyRegistry dependencyRegistry, string id, params Note[] attributes)
+        public static ImAnHmqActor GetHmqActor(this ImADependencyRegistry dependencyRegistry, string id, params Note[] idAttrs)
         {
             if (id.IsEmpty())
                 throw new ArgumentException($"HMQ Actor ID must be specified", nameof(id));
 
             HmqActor actor = dependencyRegistry.Get<HmqActor>();
             actor.ID = id;
-            actor.IdentityAttributes = attributes?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
+            actor.IdentityAttributes = idAttrs?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
             return actor;
         }
 
-        public static ImAnHmqReActor GetHmqReActor(this ImADependencyRegistry dependencyRegistry, string id, params Note[] attributes)
+        public static ImAnHmqReActor GetHmqReActor(this ImADependencyRegistry dependencyRegistry, Func<HmqEvent, Task<OperationResult>> handler, string id, params Note[] idAttrs)
         {
             if (id.IsEmpty())
                 throw new ArgumentException($"HMQ ReActor ID must be specified", nameof(id));
 
             HmqReActor reActor = dependencyRegistry.Get<HmqReActor>();
             reActor.ID = id;
-            reActor.IdentityAttributes = attributes?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
+            reActor.IdentityAttributes = idAttrs?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
+            reActor.Handler = handler;
             return reActor;
         }
     }
