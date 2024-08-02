@@ -17,6 +17,8 @@ namespace H.MQ.Concrete
 
         public async Task<OperationResult> Raise(HmqEvent hmqEvent)
         {
+            hmqEvent = hmqEvent.Clone().And(x => x.RaisedBy = this.ToIdentityOnly());
+
             OperationResult appendResult = await eventRegistry.Append(hmqEvent);
 
             if (!appendResult.IsSuccessful)

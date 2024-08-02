@@ -48,6 +48,7 @@ namespace H.MQ
                     Data = hmqEvent.Data,
                     HappenedAt = hmqEvent.HappenedAt,
                     Name = hmqEvent.Name,
+                    RaisedBy = hmqEvent.RaisedBy,
                 };
         }
 

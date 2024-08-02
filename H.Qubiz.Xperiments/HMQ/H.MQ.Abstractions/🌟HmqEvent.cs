@@ -9,6 +9,9 @@ namespace H.MQ.Abstractions
 
         public DateTime HappenedAt { get; set; } = DateTime.UtcNow;
 
+        public ImAnHmqActorIdentity RaisedBy { get; set; }
+        public string RaisedByID => RaisedBy?.ID;
+
 
         public string Name { get; set; }
 
