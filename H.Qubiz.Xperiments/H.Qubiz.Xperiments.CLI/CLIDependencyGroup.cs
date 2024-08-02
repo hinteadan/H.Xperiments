@@ -10,6 +10,7 @@ namespace H.Qubiz.Xperiments.CLI
             dependencyRegistry
 
                 .WithHmq()
+                .StartHmqPeriodicPollingExternalListener()
 
                 .Register<RavenDb.DependencyGroup>(() => new RavenDb.DependencyGroup())
                 .Register<SQLite.DependencyGroup>(() => new SQLite.DependencyGroup())

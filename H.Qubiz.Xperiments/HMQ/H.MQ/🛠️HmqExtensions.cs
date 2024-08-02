@@ -3,6 +3,7 @@ using H.MQ.Concrete;
 using H.Necessaire;
 using System;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace H.MQ
@@ -81,6 +82,14 @@ namespace H.MQ
         {
             dependencyRegistry.Register<HmqDependencyGroup>(() => new HmqDependencyGroup());
             return dependencyRegistry;
+        }
+
+        public static T StartHmqPeriodicPollingExternalListener<T>(this T dependencyProvider) where T : ImADependencyProvider
+        {
+            ImAnHmqExternalEventListener periodicPollingExternalListener
+                = dependencyProvider.Build<ImAnHmqExternalEventListener>("PeriodicPolling");
+            periodicPollingExternalListener.Start();
+            return dependencyProvider;
         }
 
         public static ImAnHmqActor GetHmqActor(this ImADependencyProvider dependencyProvider, string id, params Note[] idAttrs)

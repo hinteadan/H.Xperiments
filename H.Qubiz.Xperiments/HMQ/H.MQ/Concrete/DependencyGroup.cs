@@ -18,7 +18,7 @@ namespace H.MQ.Concrete
 
                 .Register<ImAnHmqEventRiser>(() => new HmqEventRiser())
 
-                .Register<PeriodicPollingHmqExternalEventReceiver>(() => new PeriodicPollingHmqExternalEventReceiver())
+                .Register<PeriodicPollingHmqExternalEventListener>(() => new PeriodicPollingHmqExternalEventListener())
 
                 .RegisterAlwaysNew<HmqActor>(() => new HmqActor())
                 .RegisterAlwaysNew<HmqReActor>(() => new HmqReActor())

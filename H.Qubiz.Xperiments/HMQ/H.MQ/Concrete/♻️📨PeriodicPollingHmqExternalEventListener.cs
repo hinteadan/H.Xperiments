@@ -7,7 +7,7 @@ namespace H.MQ.Concrete
 {
     [ID("PeriodicPolling")]
     [Alias("Periodic-Polling", "polling", "poll", "pull")]
-    internal class PeriodicPollingHmqExternalEventReceiver : ImAnHmqExternalEventListener, ImADependency
+    internal class PeriodicPollingHmqExternalEventListener : ImAnHmqExternalEventListener, ImADependency
     {
         static readonly TimeSpan pollingInterval = TimeSpan.FromSeconds(5);
         static readonly TimeSpan intervalToLookBackInto = TimeSpan.FromDays(21);
@@ -22,7 +22,7 @@ namespace H.MQ.Concrete
             eventReActionRegistry = dependencyProvider.Get<ImAnHmqEventReActionRegistry>();
             eventRiser = dependencyProvider.Get<ImAnHmqEventRiser>();
             poller = poller ?? dependencyProvider.Get<ImAPeriodicAction>();
-            logger = dependencyProvider.GetLogger<PeriodicPollingHmqExternalEventReceiver>();
+            logger = dependencyProvider.GetLogger<PeriodicPollingHmqExternalEventListener>();
         }
 
         public Task<OperationResult> Start()
