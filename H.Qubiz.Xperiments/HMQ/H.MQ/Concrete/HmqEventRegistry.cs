@@ -20,7 +20,7 @@ namespace H.MQ.Concrete
             if (hmqEvent is null)
                 return OperationResult.Fail("Event is NULL");
 
-            HmqEvent eventToSave = hmqEvent.Map();
+            HmqEvent eventToSave = hmqEvent.Clone();
             eventToSave.Attributes = hmqEvent.Attributes.AddOrReplace(
                 $"{true}".NoteAs("IsPersisted"),
                 "PersistentStore".NoteAs("Source")

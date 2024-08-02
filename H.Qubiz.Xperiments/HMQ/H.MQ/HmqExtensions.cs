@@ -27,7 +27,7 @@ namespace H.MQ
                 };
         }
 
-        public static HmqEvent Map(this HmqEvent hmqEvent)
+        public static HmqEvent Clone(this HmqEvent hmqEvent)
         {
             if (hmqEvent is null)
                 return null;
@@ -38,7 +38,7 @@ namespace H.MQ
                     ID = hmqEvent.ID,
                     Assembly = hmqEvent.Assembly,
                     Type = hmqEvent.Type,
-                    Attributes = hmqEvent.Attributes,
+                    Attributes = hmqEvent.Attributes.ToArrayNullIfEmpty(),
                     Data = hmqEvent.Data,
                     HappenedAt = hmqEvent.HappenedAt,
                     Name = hmqEvent.Name,
