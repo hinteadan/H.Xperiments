@@ -17,7 +17,7 @@ namespace H.MQ.Concrete
 
                 .Register<ImAnHmqEventRiser>(() => new HmqEventRiser())
 
-                .Register<ImAnHmqActor>(() => new HmqActor())
+                .RegisterAlwaysNew<ImAnHmqActor>(() => new HmqActor())
 
                 ;
         }
