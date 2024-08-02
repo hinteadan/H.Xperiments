@@ -14,7 +14,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         {
             base.ReferDependencies(dependencyProvider);
             debugActor = dependencyProvider.GetHmqActor("debug");
-            debugReActor = dependencyProvider.GetHmqReActor(React, "debug");
+            debugReActor = dependencyProvider.GetHmqReActor(InProcessReact, "debug");
         }
 
         public override async Task<OperationResult> Run()
@@ -30,7 +30,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             return OperationResult.Win();
         }
 
-        async Task<OperationResult> React(HmqEvent hmqEvent)
+        async Task<OperationResult> InProcessReact(HmqEvent hmqEvent)
         {
             await Task.CompletedTask;
 
