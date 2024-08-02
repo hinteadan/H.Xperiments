@@ -24,7 +24,13 @@ namespace H.MQ
             return actor;
         }
 
-        public static ImAnHmqReActor GetHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, params Note[] idAttrs)
+        public static ImAnHmqReActor GetCatchAllHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, params Note[] idAttrs)
+        {
+            return
+                dependencyProvider.GetHmqReActor(handler, id, idAttrs);
+        }
+
+        private static ImAnHmqReActor GetHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, Note[] idAttrs, Action<HmqReActor> config = null)
         {
             if (id.IsEmpty())
                 throw new ArgumentException($"HMQ ReActor ID must be specified", nameof(id));
@@ -35,6 +41,8 @@ namespace H.MQ
                 r.ID = i;
                 r.IdentityAttributes = idAttrs?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
                 r.Handler = handler;
+                if (config != null)
+                    config(r);
             }));
 
             return reActor;
