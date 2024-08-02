@@ -47,7 +47,7 @@ namespace H.MQ.Concrete
 
         }
 
-        public async Task<OperationResult> LogEventReAction(HmqEvent hmqEvent, OperationResult<ImAnHmqActorIdentity>[] hmqReActorResults)
+        public async Task<OperationResult> LogEventReAction(HmqEvent hmqEvent, params OperationResult<ImAnHmqActorIdentity>[] hmqReActorResults)
         {
             if (hmqReActorResults?.Any() != true)
                 return OperationResult.Win();

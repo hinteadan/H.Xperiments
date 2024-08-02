@@ -6,6 +6,6 @@ namespace H.MQ
 {
     internal interface ImAnHmqEventReActionRegistry
     {
-        Task<OperationResult> LogEventReAction(HmqEvent hmqEvent, OperationResult<ImAnHmqActorIdentity>[] hmqReActorResults); 
+        Task<OperationResult> LogEventReAction(HmqEvent hmqEvent, params OperationResult<ImAnHmqActorIdentity>[] hmqReActorResults); 
     }
 }
