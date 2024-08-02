@@ -10,7 +10,7 @@ namespace H.MQ.Concrete
     {
         ImAnHmqEventRegistry eventRegistry;
         ImAnHmqEventReActionRegistry eventReActingRegistry;
-        HmqEventRiser eventRiser;
+        ImAnHmqEventRiser eventRiser;
 
         public Note[] IdentityAttributes { get; set; }
 
@@ -20,7 +20,7 @@ namespace H.MQ.Concrete
         {
             eventRegistry = dependencyProvider.Get<ImAnHmqEventRegistry>();
             eventReActingRegistry = dependencyProvider.Get<ImAnHmqEventReActionRegistry>();
-            eventRiser = dependencyProvider.Get<HmqEventRiser>();
+            eventRiser = dependencyProvider.Get<ImAnHmqEventRiser>();
         }
 
         public async Task<OperationResult> Raise(HmqEvent hmqEvent)
