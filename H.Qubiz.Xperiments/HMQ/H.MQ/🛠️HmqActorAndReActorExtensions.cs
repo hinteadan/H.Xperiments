@@ -25,10 +25,14 @@ namespace H.MQ
         }
 
         public static ImAnHmqReActor GetCatchAllHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, params Note[] idAttrs)
-        {
-            return
-                dependencyProvider.GetHmqReActor(handler, id, idAttrs);
-        }
+            => dependencyProvider.GetHmqReActor(handler, id, idAttrs);
+
+        public static ImAnHmqReActor GetCatchAllInternalHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, params Note[] idAttrs)
+            => dependencyProvider.GetHmqReActor(handler, id, idAttrs, x => x.IsHandlingExternalEvents = false);
+
+        public static ImAnHmqReActor GetCatchAllExternalHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, params Note[] idAttrs)
+            => dependencyProvider.GetHmqReActor(handler, id, idAttrs, x => x.IsHandlingInternalEvents = false);
+
 
         private static ImAnHmqReActor GetHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, Note[] idAttrs, Action<HmqReActor> config = null)
         {
