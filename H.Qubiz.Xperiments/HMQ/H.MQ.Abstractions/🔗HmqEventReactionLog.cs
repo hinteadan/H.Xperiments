@@ -11,6 +11,7 @@ namespace H.MQ.Concrete.Storage.Model
 
         public HmqEvent Event { get; set; }
         public Guid EventID => Event?.ID ?? Guid.Empty;
+        public DateTime EventHappenedAt => Event?.HappenedAt ?? AsOf;
 
         public ImAnHmqActorIdentity ActorIdentity { get; set; }
         public string ActorID => ActorIdentity?.ID;
