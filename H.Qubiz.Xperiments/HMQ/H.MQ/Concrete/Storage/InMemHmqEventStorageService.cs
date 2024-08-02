@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace H.MQ.Concrete.Storage
 {
-    internal class HmqEventStorageService : InMemoryStorageServiceBase<Guid, HmqEvent, HmqEventFilter>
+    internal class InMemHmqEventStorageService : InMemoryStorageServiceBase<Guid, HmqEvent, HmqEventFilter>
     {
         protected override IEnumerable<HmqEvent> ApplyFilter(IEnumerable<HmqEvent> stream, HmqEventFilter filter)
         {

@@ -10,13 +10,13 @@ namespace H.MQ.Concrete.Storage
         {
             dependencyRegistry
 
-                .Register<HmqEventStorageService>(() => new HmqEventStorageService())
-                .Register<ImAStorageService<Guid, HmqEvent>>(() => dependencyRegistry.Get<HmqEventStorageService>())
-                .Register<ImAStorageBrowserService<HmqEvent, HmqEventFilter>>(() => dependencyRegistry.Get<HmqEventStorageService>())
+                .Register<InMemHmqEventStorageService>(() => new InMemHmqEventStorageService())
+                .Register<ImAStorageService<Guid, HmqEvent>>(() => dependencyRegistry.Get<InMemHmqEventStorageService>())
+                .Register<ImAStorageBrowserService<HmqEvent, HmqEventFilter>>(() => dependencyRegistry.Get<InMemHmqEventStorageService>())
 
-                .Register<HmqEventReActionStorageService>(() => new HmqEventReActionStorageService())
-                .Register<ImAStorageService<Guid, HmqEventReactionLog>>(() => dependencyRegistry.Get<HmqEventReActionStorageService>())
-                .Register<ImAStorageBrowserService<HmqEventReactionLog, HmqEventReActionFilter>>(() => dependencyRegistry.Get<HmqEventReActionStorageService>())
+                .Register<InMemHmqEventReActionStorageService>(() => new InMemHmqEventReActionStorageService())
+                .Register<ImAStorageService<Guid, HmqEventReactionLog>>(() => dependencyRegistry.Get<InMemHmqEventReActionStorageService>())
+                .Register<ImAStorageBrowserService<HmqEventReactionLog, HmqEventReActionFilter>>(() => dependencyRegistry.Get<InMemHmqEventReActionStorageService>())
 
                 ;
         }
