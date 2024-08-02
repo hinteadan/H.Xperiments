@@ -7,15 +7,11 @@ namespace H.MQ.Concrete
 {
     internal class HmqActor : HmqActorIdentity, ImAnHmqActor, ImADependency
     {
-        private ImAnHmqActorIdentity identity = new HmqActorIdentity();
         ImAnHmqEventRegistry eventRegistry;
-        ImAnHmqEventReActionRegistry eventReActingRegistry;
         ImAnHmqEventRiser eventRiser;
-
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             eventRegistry = dependencyProvider.Get<ImAnHmqEventRegistry>();
-            eventReActingRegistry = dependencyProvider.Get<ImAnHmqEventReActionRegistry>();
             eventRiser = dependencyProvider.Get<ImAnHmqEventRiser>();
         }
 
@@ -27,11 +23,6 @@ namespace H.MQ.Concrete
                 return appendResult;
 
             OperationResult<ImAnHmqReActor>[] raiseResults = await eventRiser.Raise(hmqEvent);
-
-            //OperationResult logResult = await eventReActingRegistry.LogEventReAction(hmqEvent, raiseResults.Select(x => x.WithPayload(x.Payload as ImAnHmqActorIdentity)).ToArray());
-
-            //if (!logResult.IsSuccessful)
-            //    return logResult;
 
             OperationResult<OperationResult<ImAnHmqReActor>[]> globalRaiseResult = raiseResults.Merge(globalReasonIfNecesarry: "Some of the HMQ ReActors failed to handle the event. Check payload for details.").WithPayload(raiseResults.Where(x => !x.IsSuccessful).ToArrayNullIfEmpty());
 
