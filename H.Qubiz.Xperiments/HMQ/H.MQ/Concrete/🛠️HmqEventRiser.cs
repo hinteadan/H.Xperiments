@@ -8,10 +8,16 @@ namespace H.MQ.Concrete
 {
     internal class HmqEventRiser : ImAnHmqEventRiser, ImADependency
     {
+        static readonly TimeSpan eventRetryMinIterval = TimeSpan.FromSeconds(5);
+        static readonly TimeSpan eventRetryMaxIterval = TimeSpan.FromMinutes(5);
+        static readonly TimeSpan eventRetryIncrement = TimeSpan.FromSeconds(5);
+
         ImAnHmqActorAndReActorBookkeeper actorAndReActorBookkeeper;
+        ImAnHmqEventReActionRegistry eventReActionRegistry;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             actorAndReActorBookkeeper = dependencyProvider.Get<ImAnHmqActorAndReActorBookkeeper>();
+            eventReActionRegistry = dependencyProvider.Get<ImAnHmqEventReActionRegistry>();
         }
 
         public async Task<OperationResult<ImAnHmqReActor>[]> Raise(HmqEvent hmqEvent)
@@ -21,9 +27,79 @@ namespace H.MQ.Concrete
             if (allKnownReactors?.Any() != true)
                 return Array.Empty<OperationResult<ImAnHmqReActor>>();
 
-            OperationResult<ImAnHmqReActor>[] results = await Task.WhenAll(allKnownReactors.Select(r => Raise(hmqEvent, r)));
+            ImAnHmqActorIdentity[] reactorsToIgnore = await DetermineReactorsToIgnore(hmqEvent);
+            string[] reactorIDsToIgnore = reactorsToIgnore?.Select(x => x.ID.NullIfEmpty()).ToNoNullsArray();
+
+            ImAnHmqReActor[] reActorsToRaise = allKnownReactors;
+            if (reactorIDsToIgnore?.Any() == true)
+            {
+                reActorsToRaise
+                    = reActorsToRaise
+                    .Where(x => x.ID.NotIn(reactorIDsToIgnore))
+                    .ToArrayNullIfEmpty();
+            }
+
+            if (reActorsToRaise?.Any() != true)
+                return Array.Empty<OperationResult<ImAnHmqReActor>>();
+
+            OperationResult<ImAnHmqReActor>[] results = await Task.WhenAll(reActorsToRaise.Select(r => Raise(hmqEvent, r)));
 
             return results;
+        }
+
+        async Task<ImAnHmqActorIdentity[]> DetermineReactorsToIgnore(HmqEvent hmqEvent)
+        {
+            HmqEventReactionLog[] eventReactionLogs = await LoadReactionLogsFor(hmqEvent);
+
+            if (eventReactionLogs?.Any() != true)
+                return null;
+
+            return
+                eventReactionLogs
+                .GroupBy(x => x.ActorID)
+                .Where(IsReActorIgnored)
+                .Select(g => g.First().ActorIdentity)
+                .ToNoNullsArray()
+                ;
+        }
+
+        bool IsReActorIgnored(IGrouping<string, HmqEventReactionLog> reActorLogs)
+        {
+            HmqEventReactionLog latestLog = reActorLogs.OrderByDescending(x => x.AsOf).First();
+            if (latestLog.IsSuccessful)
+                return true;
+
+            int numberOfAttempts = reActorLogs.Count();
+            TimeSpan retryCoolDown = TimeSpan.FromSeconds(numberOfAttempts * eventRetryIncrement.TotalSeconds);
+            if (retryCoolDown < eventRetryMinIterval)
+                retryCoolDown = eventRetryMinIterval;
+            if (retryCoolDown > eventRetryMaxIterval)
+                retryCoolDown = eventRetryMaxIterval;
+            DateTime timestampToResumeRetry = latestLog.AsOf + retryCoolDown;
+
+            bool canRetry = DateTime.UtcNow >= timestampToResumeRetry;
+
+            if (!canRetry)
+                return true;
+
+            return false;
+        }
+
+        async Task<HmqEventReactionLog[]> LoadReactionLogsFor(HmqEvent hmqEvent)
+        {
+            OperationResult<IDisposableEnumerable<HmqEventReactionLog>> reActorsStreamResult
+                = await eventReActionRegistry.Stream(new HmqEventReActionFilter
+                {
+                    EventIDs = hmqEvent.ID.AsArray(),
+                });
+
+            if (!reActorsStreamResult.IsSuccessful)
+                return null;
+
+            using (reActorsStreamResult.Payload)
+            {
+                return reActorsStreamResult.Payload.ToArray().NullIfEmpty();
+            }
         }
 
         async Task<OperationResult<ImAnHmqReActor>> Raise(HmqEvent hmqEvent, ImAnHmqReActor reactor)

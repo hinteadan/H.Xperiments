@@ -37,13 +37,13 @@ namespace H.MQ.Concrete
         public async Task<OperationResult<IDisposableEnumerable<HmqEvent>>> Stream(HmqEventFilter filter)
         {
             OperationResult<IDisposableEnumerable<HmqEvent>> streamResult = await eventBrowser.Stream(filter);
-            return streamResult?.WithPayload(streamResult?.Payload?.ProjectTo(x => x as HmqEvent));
+            return streamResult;
         }
 
         public async Task<OperationResult<IDisposableEnumerable<HmqEvent>>> StreamAll()
         {
             OperationResult<IDisposableEnumerable<HmqEvent>> streamResult = await eventBrowser.StreamAll();
-            return streamResult?.WithPayload(streamResult?.Payload?.ProjectTo(x => x as HmqEvent));
+            return streamResult;
 
         }
 
@@ -64,6 +64,18 @@ namespace H.MQ.Concrete
             OperationResult result = logResults.Merge(globalReasonIfNecesarry: $"Some event reactions couldn't be logged. See reasons for details.");
 
             return result;
+        }
+
+        async Task<OperationResult<IDisposableEnumerable<HmqEventReactionLog>>> ImAnHmqEventReActionRegistry.StreamAll()
+        {
+            OperationResult<IDisposableEnumerable<HmqEventReactionLog>> streamResult = await eventReactionLogBrowser.StreamAll();
+            return streamResult;
+        }
+
+        public async Task<OperationResult<IDisposableEnumerable<HmqEventReactionLog>>> Stream(HmqEventReActionFilter filter)
+        {
+            OperationResult<IDisposableEnumerable<HmqEventReactionLog>> streamResult = await eventReactionLogBrowser.Stream(filter);
+            return streamResult;
         }
 
         private async Task<OperationResult> LogEventReAction(HmqEvent hmqEvent, OperationResult<ImAnHmqActorIdentity> hmqReActorResult)

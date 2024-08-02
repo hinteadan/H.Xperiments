@@ -9,18 +9,18 @@ namespace H.MQ.Concrete
     [Alias("Periodic-Polling", "polling", "poll", "pull")]
     internal class PeriodicPollingHmqExternalEventReceiver : ImAnHmqExternalEventListener, ImADependency
     {
-        static readonly TimeSpan eventRetryMinIterval = TimeSpan.FromSeconds(5);
-        static readonly TimeSpan eventRetryMaxIterval = TimeSpan.FromMinutes(5);
-        static readonly TimeSpan eventRetryIncrement = TimeSpan.FromSeconds(5);
-
         static readonly TimeSpan pollingInterval = TimeSpan.FromSeconds(5);
         static readonly TimeSpan intervalToLookBackInto = TimeSpan.FromDays(21);
         ImAnHmqEventRegistry eventRegistry;
+        ImAnHmqEventReActionRegistry eventReActionRegistry;
+        ImAnHmqEventRiser eventRiser;
         ImAPeriodicAction poller;
         ImALogger logger;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             eventRegistry = dependencyProvider.Get<ImAnHmqEventRegistry>();
+            eventReActionRegistry = dependencyProvider.Get<ImAnHmqEventReActionRegistry>();
+            eventRiser = dependencyProvider.Get<ImAnHmqEventRiser>();
             poller = poller ?? dependencyProvider.Get<ImAPeriodicAction>();
             logger = dependencyProvider.GetLogger<PeriodicPollingHmqExternalEventReceiver>();
         }
@@ -55,14 +55,9 @@ namespace H.MQ.Concrete
             {
                 foreach (HmqEvent hmqEvent in stream)
                 {
-                    await RaiseEvent(hmqEvent);
+                    await eventRiser.Raise(hmqEvent);
                 }
             }
-        }
-
-        async Task RaiseEvent(HmqEvent hmqEvent)
-        {
-            
         }
     }
 }
