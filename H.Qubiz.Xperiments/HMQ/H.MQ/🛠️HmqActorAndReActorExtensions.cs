@@ -34,6 +34,30 @@ namespace H.MQ
             => dependencyProvider.GetHmqReActor(handler, id, idAttrs, x => x.IsHandlingInternalEvents = false);
 
 
+        public static ImAnHmqReActor GetTargetedHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, Note[] idAttrs, string[] sourceIDs, string[] eventNames, string[] eventTypes)
+            => dependencyProvider.GetHmqReActor(handler, id, idAttrs, x => { 
+                x.SpecificHandledSourceIDs = sourceIDs;
+                x.SpecificHandledEventNames = eventNames;
+                x.SpecificHandledEventTypes = eventTypes;
+            });
+
+        public static ImAnHmqReActor GetTargetedInternalHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, Note[] idAttrs, string[] sourceIDs, string[] eventNames, string[] eventTypes)
+            => dependencyProvider.GetHmqReActor(handler, id, idAttrs, x => {
+                x.IsHandlingExternalEvents = false;
+                x.SpecificHandledSourceIDs = sourceIDs;
+                x.SpecificHandledEventNames = eventNames;
+                x.SpecificHandledEventTypes = eventTypes;
+            });
+
+        public static ImAnHmqReActor GetTargetedExternalHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, Note[] idAttrs, string[] sourceIDs, string[] eventNames, string[] eventTypes)
+            => dependencyProvider.GetHmqReActor(handler, id, idAttrs, x => {
+                x.IsHandlingInternalEvents = false;
+                x.SpecificHandledSourceIDs = sourceIDs;
+                x.SpecificHandledEventNames = eventNames;
+                x.SpecificHandledEventTypes = eventTypes;
+            });
+
+
         private static ImAnHmqReActor GetHmqReActor(this ImADependencyProvider dependencyProvider, Func<HmqEvent, Task<OperationResult>> handler, string id, Note[] idAttrs, Action<HmqReActor> config = null)
         {
             if (id.IsEmpty())
