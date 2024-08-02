@@ -14,7 +14,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         {
             base.ReferDependencies(dependencyProvider);
             debugActor = dependencyProvider.GetHmqActor("debug");
-            debugReActor = dependencyProvider.GetCatchAllHmqReActor(InProcessReact, "debug");
+            debugReActor = dependencyProvider.GetCatchAllInternalHmqReActor(InProcessReact, "debug");
         }
 
         public override async Task<OperationResult> Run()
