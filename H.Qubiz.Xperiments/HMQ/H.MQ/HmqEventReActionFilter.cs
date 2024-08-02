@@ -1,4 +1,4 @@
-﻿using H.MQ.Concrete.Storage.Model;
+﻿using H.MQ.Abstractions;
 using H.Necessaire;
 using System;
 

@@ -1,10 +1,9 @@
-﻿using H.MQ.Abstractions;
-using H.Necessaire;
+﻿using H.Necessaire;
 using System;
 
-namespace H.MQ.Concrete.Storage.Model
+namespace H.MQ.Abstractions
 {
-    public class HmqEventReactionLog : IGuidIdentity
+    public sealed class HmqEventReactionLog : IGuidIdentity
     {
         public Guid ID { get; set; } = Guid.NewGuid();
         public DateTime AsOf { get; set; } = DateTime.UtcNow;
