@@ -8,21 +8,16 @@ namespace H.MQ.Concrete
 {
     internal class HmqEventRiser : ImAnHmqEventRiser, ImADependency
     {
-        ImAnHmqReActor[] allKnownReactors;
+        ImAnHmqActorAndReActorBookkeeper actorAndReActorBookkeeper;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
-            allKnownReactors
-                = allKnownReactors 
-                ??
-                typeof(ImAnHmqReActor)
-                .GetAllImplementations()
-                .Select(t => (dependencyProvider.Get(t) ?? Activator.CreateInstance(t)) as ImAnHmqReActor)
-                .ToNoNullsArray()
-                ;
+            actorAndReActorBookkeeper = dependencyProvider.Get<ImAnHmqActorAndReActorBookkeeper>();
         }
 
         public async Task<OperationResult<ImAnHmqReActor>[]> Raise(HmqEvent hmqEvent)
         {
+            ImAnHmqReActor[] allKnownReactors = actorAndReActorBookkeeper.GetAllReActors();
+
             if (allKnownReactors?.Any() != true)
                 return Array.Empty<OperationResult<ImAnHmqReActor>>();
 

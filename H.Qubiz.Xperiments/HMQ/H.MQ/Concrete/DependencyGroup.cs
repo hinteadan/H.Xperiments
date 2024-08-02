@@ -1,5 +1,4 @@
-﻿using H.MQ.Abstractions;
-using H.Necessaire;
+﻿using H.Necessaire;
 
 namespace H.MQ.Concrete
 {
@@ -14,6 +13,8 @@ namespace H.MQ.Concrete
                 .Register<HmqEventRegistry>(() => new HmqEventRegistry())
                 .Register<ImAnHmqEventRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
                 .Register<ImAnHmqEventReActionRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
+
+                .Register<ImAnHmqActorAndReActorBookkeeper>(() => new HmqActorAndReActorBookkeeper())
 
                 .Register<ImAnHmqEventRiser>(() => new HmqEventRiser())
 

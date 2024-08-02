@@ -88,9 +88,13 @@ namespace H.MQ
             if (id.IsEmpty())
                 throw new ArgumentException($"HMQ Actor ID must be specified", nameof(id));
 
-            HmqActor actor = dependencyRegistry.Get<HmqActor>();
-            actor.ID = id;
-            actor.IdentityAttributes = idAttrs?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
+            ImAnHmqActorAndReActorBookkeeper actorAndReActorBookkeeper = dependencyRegistry.Get<ImAnHmqActorAndReActorBookkeeper>();
+
+            ImAnHmqActor actor = actorAndReActorBookkeeper.GetOrAddActor(id, i => dependencyRegistry.Get<HmqActor>().And(a => {
+                a.ID = i;
+                a.IdentityAttributes = idAttrs?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
+            }));
+
             return actor;
         }
 
@@ -99,10 +103,14 @@ namespace H.MQ
             if (id.IsEmpty())
                 throw new ArgumentException($"HMQ ReActor ID must be specified", nameof(id));
 
-            HmqReActor reActor = dependencyRegistry.Get<HmqReActor>();
-            reActor.ID = id;
-            reActor.IdentityAttributes = idAttrs?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
-            reActor.Handler = handler;
+            ImAnHmqActorAndReActorBookkeeper actorAndReActorBookkeeper = dependencyRegistry.Get<ImAnHmqActorAndReActorBookkeeper>();
+
+            ImAnHmqReActor reActor = actorAndReActorBookkeeper.GetOrAddReActor(id, i => dependencyRegistry.Get<HmqReActor>().And(r => {
+                r.ID = i;
+                r.IdentityAttributes = idAttrs?.Where(x => !x.IsEmpty())?.ToArrayNullIfEmpty();
+                r.Handler = handler;
+            }));
+            
             return reActor;
         }
     }
