@@ -21,7 +21,7 @@ namespace H.MQ.Concrete
                 ;
         }
 
-        public async Task<OperationResult<ImAnHmqReActor>[]> Raise(ImAnHmqEvent hmqEvent)
+        public async Task<OperationResult<ImAnHmqReActor>[]> Raise(HmqEvent hmqEvent)
         {
             if (allKnownReactors?.Any() != true)
                 return Array.Empty<OperationResult<ImAnHmqReActor>>();
@@ -31,7 +31,7 @@ namespace H.MQ.Concrete
             return results;
         }
 
-        async Task<OperationResult<ImAnHmqReActor>> Raise(ImAnHmqEvent hmqEvent, ImAnHmqReActor reactor)
+        async Task<OperationResult<ImAnHmqReActor>> Raise(HmqEvent hmqEvent, ImAnHmqReActor reactor)
         {
             OperationResult<ImAnHmqReActor> result = OperationResult.Fail("Not yet started").WithPayload(reactor);
 

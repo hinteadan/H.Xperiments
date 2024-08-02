@@ -6,7 +6,7 @@ namespace H.MQ
 {
     public static class HmqExtensions
     {
-        public static ImAnHmqEvent ToHmqEvent<T>(this T data, params Note[] attributes)
+        public static HmqEvent ToHmqEvent<T>(this T data, params Note[] attributes)
         {
             Type dataType = data?.GetType() ?? typeof(T);
 
@@ -27,7 +27,7 @@ namespace H.MQ
                 };
         }
 
-        public static HmqEvent Map(this ImAnHmqEvent hmqEvent)
+        public static HmqEvent Map(this HmqEvent hmqEvent)
         {
             if (hmqEvent is null)
                 return null;

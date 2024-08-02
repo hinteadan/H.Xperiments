@@ -1,10 +1,9 @@
-﻿using H.MQ.Abstractions;
-using H.Necessaire;
+﻿using H.Necessaire;
 using System;
 
-namespace H.MQ
+namespace H.MQ.Abstractions
 {
-    public class HmqEvent : ImAnHmqEvent
+    public sealed class HmqEvent : IGuidIdentity
     {
         public Guid ID { get; set; } = Guid.NewGuid();
 

@@ -6,10 +6,10 @@ namespace H.MQ
 {
     internal interface ImAnHmqEventRegistry
     {
-        Task<OperationResult> Append(ImAnHmqEvent hmqEvent);
+        Task<OperationResult> Append(HmqEvent hmqEvent);
 
-        Task<OperationResult<IDisposableEnumerable<ImAnHmqEvent>>> StreamAll();
+        Task<OperationResult<IDisposableEnumerable<HmqEvent>>> StreamAll();
 
-        Task<OperationResult<IDisposableEnumerable<ImAnHmqEvent>>> Stream(HmqEventFilter filter);
+        Task<OperationResult<IDisposableEnumerable<HmqEvent>>> Stream(HmqEventFilter filter);
     }
 }

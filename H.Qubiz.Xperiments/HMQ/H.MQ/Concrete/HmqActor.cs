@@ -9,8 +9,8 @@ namespace H.MQ.Concrete
     internal class HmqActor : ImAnHmqActor, ImADependency
     {
         ImAnHmqEventRegistry eventRegistry;
-        ImAnHmqEventReActingRegistry eventReActingRegistry;
-        ImAnHmqEventRiser eventRiser;
+        ImAnHmqEventReActionRegistry eventReActingRegistry;
+        HmqEventRiser eventRiser;
 
         public Note[] IdentityAttributes { get; set; }
 
@@ -19,11 +19,11 @@ namespace H.MQ.Concrete
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             eventRegistry = dependencyProvider.Get<ImAnHmqEventRegistry>();
-            eventReActingRegistry = dependencyProvider.Get<ImAnHmqEventReActingRegistry>();
-            eventRiser = dependencyProvider.Get<ImAnHmqEventRiser>();
+            eventReActingRegistry = dependencyProvider.Get<ImAnHmqEventReActionRegistry>();
+            eventRiser = dependencyProvider.Get<HmqEventRiser>();
         }
 
-        public async Task<OperationResult> Raise(ImAnHmqEvent hmqEvent)
+        public async Task<OperationResult> Raise(HmqEvent hmqEvent)
         {
             OperationResult appendResult = await eventRegistry.Append(hmqEvent);
 
@@ -45,7 +45,7 @@ namespace H.MQ.Concrete
             return globalRaiseResult;
         }
 
-        private Task HandleRaiseFailures(ImAnHmqEvent hmqEvent, ImAnHmqReActor[] imAnHmqReActors)
+        private Task HandleRaiseFailures(HmqEvent hmqEvent, ImAnHmqReActor[] imAnHmqReActors)
         {
             //TODO: Handle raise failures if necessary
             return Task.CompletedTask;

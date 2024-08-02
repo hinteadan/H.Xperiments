@@ -13,7 +13,7 @@ namespace H.MQ.Concrete
 
                 .Register<HmqEventRegistry>(() => new HmqEventRegistry())
                 .Register<ImAnHmqEventRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
-                .Register<ImAnHmqEventReActingRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
+                .Register<ImAnHmqEventReActionRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
 
                 .Register<ImAnHmqEventRiser>(() => new HmqEventRiser())
 

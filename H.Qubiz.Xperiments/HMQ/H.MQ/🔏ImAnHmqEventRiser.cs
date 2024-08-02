@@ -6,6 +6,6 @@ namespace H.MQ
 {
     internal interface ImAnHmqEventRiser
     {
-        Task<OperationResult<ImAnHmqReActor>[]> Raise(ImAnHmqEvent hmqEvent);
+        Task<OperationResult<ImAnHmqReActor>[]> Raise(HmqEvent hmqEvent);
     }
 }

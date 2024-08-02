@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace H.MQ.Concrete
 {
-    internal class HmqEventRegistry : ImAnHmqEventRegistry, ImAnHmqEventReActingRegistry, ImADependency
+    internal class HmqEventRegistry : ImAnHmqEventRegistry, ImAnHmqEventReActionRegistry, ImADependency
     {
         ImAStorageService<Guid, HmqEvent> eventStore;
         ImAStorageBrowserService<HmqEvent, HmqEventFilter> eventBrowser;
@@ -15,7 +15,7 @@ namespace H.MQ.Concrete
             eventBrowser = dependencyProvider.Get<ImAStorageBrowserService<HmqEvent, HmqEventFilter>>();
         }
 
-        public async Task<OperationResult> Append(ImAnHmqEvent hmqEvent)
+        public async Task<OperationResult> Append(HmqEvent hmqEvent)
         {
             if (hmqEvent is null)
                 return OperationResult.Fail("Event is NULL");
@@ -29,20 +29,20 @@ namespace H.MQ.Concrete
             return await eventStore.Save(eventToSave);
         }
 
-        public async Task<OperationResult<IDisposableEnumerable<ImAnHmqEvent>>> Stream(HmqEventFilter filter)
+        public async Task<OperationResult<IDisposableEnumerable<HmqEvent>>> Stream(HmqEventFilter filter)
         {
             OperationResult<IDisposableEnumerable<HmqEvent>> streamResult = await eventBrowser.Stream(filter);
-            return streamResult?.WithPayload(streamResult?.Payload?.ProjectTo(x => x as ImAnHmqEvent));
+            return streamResult?.WithPayload(streamResult?.Payload?.ProjectTo(x => x as HmqEvent));
         }
 
-        public async Task<OperationResult<IDisposableEnumerable<ImAnHmqEvent>>> StreamAll()
+        public async Task<OperationResult<IDisposableEnumerable<HmqEvent>>> StreamAll()
         {
             OperationResult<IDisposableEnumerable<HmqEvent>> streamResult = await eventBrowser.StreamAll();
-            return streamResult?.WithPayload(streamResult?.Payload?.ProjectTo(x => x as ImAnHmqEvent));
+            return streamResult?.WithPayload(streamResult?.Payload?.ProjectTo(x => x as HmqEvent));
 
         }
 
-        public async Task<OperationResult> LogEventReAction(ImAnHmqEvent hmqEvent, OperationResult<ImAnHmqActorIdentity>[] hmqReActorResults)
+        public async Task<OperationResult> LogEventReAction(HmqEvent hmqEvent, OperationResult<ImAnHmqActorIdentity>[] hmqReActorResults)
         {
             throw new NotImplementedException();
         }

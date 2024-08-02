@@ -5,6 +5,6 @@ namespace H.MQ.Abstractions
 {
     public interface ImAnHmqReActor : ImAnHmqActorIdentity
     {
-        Task<OperationResult> Handle(ImAnHmqEvent hmqEvent);
+        Task<OperationResult> Handle(HmqEvent hmqEvent);
     }
 }
