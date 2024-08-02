@@ -28,10 +28,10 @@ namespace H.MQ.Concrete
 
             OperationResult<ImAnHmqReActor>[] raiseResults = await eventRiser.Raise(hmqEvent);
 
-            OperationResult logResult = await eventReActingRegistry.LogEventReAction(hmqEvent, raiseResults.Select(x => x.WithPayload(x.Payload as ImAnHmqActorIdentity)).ToArray());
+            //OperationResult logResult = await eventReActingRegistry.LogEventReAction(hmqEvent, raiseResults.Select(x => x.WithPayload(x.Payload as ImAnHmqActorIdentity)).ToArray());
 
-            if (!logResult.IsSuccessful)
-                return logResult;
+            //if (!logResult.IsSuccessful)
+            //    return logResult;
 
             OperationResult<OperationResult<ImAnHmqReActor>[]> globalRaiseResult = raiseResults.Merge(globalReasonIfNecesarry: "Some of the HMQ ReActors failed to handle the event. Check payload for details.").WithPayload(raiseResults.Where(x => !x.IsSuccessful).ToArrayNullIfEmpty());
 
