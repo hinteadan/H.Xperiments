@@ -1,6 +1,7 @@
 ﻿using H.MQ.Abstractions;
 using H.Necessaire;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace H.MQ.Concrete
@@ -8,6 +9,12 @@ namespace H.MQ.Concrete
     internal class HmqReActor : HmqActorIdentity, ImAnHmqReActor, ImADependency
     {
         internal Func<HmqEvent, Task<OperationResult>> Handler { get; set; }
+        internal bool IsHandlingInternalEvents { get; set; } = true;
+        internal bool IsHandlingExternalEvents { get; set; } = true;
+        internal string[] SpecificHandledSourceIDs { get; set; }
+        internal string[] SpecificHandledEventNames { get; set; }
+        internal string[] SpecificHandledEventTypes { get; set; }
+
         ImAnHmqEventReActionRegistry eventReActingRegistry;
         ImALogger logger;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
@@ -22,6 +29,24 @@ namespace H.MQ.Concrete
                 return OperationResult.Win();
 
             if (hmqEvent is null)
+                return OperationResult.Win();
+
+            if (!IsHandlingInternalEvents && !IsHandlingExternalEvents)
+                return OperationResult.Win();
+
+            if (hmqEvent.IsInternal() && !IsHandlingInternalEvents)
+                return OperationResult.Win();
+
+            if (hmqEvent.IsExternal() && !IsHandlingExternalEvents)
+                return OperationResult.Win();
+
+            if (SpecificHandledSourceIDs?.Any() == true && hmqEvent.RaisedByID.NotIn(SpecificHandledSourceIDs))
+                return OperationResult.Win();
+
+            if (SpecificHandledEventNames?.Any() == true && hmqEvent.Name.NotIn(SpecificHandledEventNames))
+                return OperationResult.Win();
+
+            if (SpecificHandledEventTypes?.Any() == true && hmqEvent.Type.NotIn(SpecificHandledEventTypes))
                 return OperationResult.Win();
 
             OperationResult result = OperationResult.Fail("Not yet started");
