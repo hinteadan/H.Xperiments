@@ -1,4 +1,5 @@
-﻿using H.Necessaire;
+﻿using H.MQ.Abstractions;
+using H.Necessaire;
 
 namespace H.MQ.Concrete
 {

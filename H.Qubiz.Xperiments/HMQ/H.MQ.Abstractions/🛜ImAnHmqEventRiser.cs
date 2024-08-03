@@ -1,10 +1,9 @@
-﻿using H.MQ.Abstractions;
-using H.Necessaire;
+﻿using H.Necessaire;
 using System.Threading.Tasks;
 
-namespace H.MQ
+namespace H.MQ.Abstractions
 {
-    internal interface ImAnHmqEventRiser
+    public interface ImAnHmqEventRiser
     {
         Task<OperationResult<ImAnHmqReActor>[]> Raise(HmqEvent hmqEvent);
     }

@@ -1,9 +1,9 @@
 ﻿using H.Necessaire;
 using System.Threading.Tasks;
 
-namespace H.MQ
+namespace H.MQ.Abstractions
 {
-    internal interface ImAnHmqExternalEventListener
+    public interface ImAnHmqExternalEventListener
     {
         Task<OperationResult> Start();
 

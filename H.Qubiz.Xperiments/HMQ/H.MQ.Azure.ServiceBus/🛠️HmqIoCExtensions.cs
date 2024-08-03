@@ -1,18 +1,15 @@
 ﻿using H.MQ.Abstractions;
 using H.Necessaire;
 
-namespace H.MQ
+namespace H.MQ.Azure.ServiceBus
 {
     public static class HmqIoCExtensions
     {
-        public static T WithHmq<T>(this T dependencyRegistry) where T : ImADependencyRegistry
+        public static T WithAzureServiceBusHmq<T>(this T dependencyRegistry) where T : ImADependencyRegistry
         {
-            dependencyRegistry.Register<HmqDependencyGroup>(() => new HmqDependencyGroup());
+            dependencyRegistry.Register<AzureServiceBusHmqDependencyGroup>(() => new AzureServiceBusHmqDependencyGroup());
             return dependencyRegistry;
         }
-
-        public static T StartHmqPeriodicPollingExternalListener<T>(this T dependencyProvider) where T : ImADependencyProvider
-            => dependencyProvider.StartHmqExternalListener("PeriodicPolling");
 
         public static T StartHmqAzureServiceBusExternalListener<T>(this T dependencyProvider) where T : ImADependencyProvider
             => dependencyProvider.StartHmqExternalListener("AzureServiceBus");
