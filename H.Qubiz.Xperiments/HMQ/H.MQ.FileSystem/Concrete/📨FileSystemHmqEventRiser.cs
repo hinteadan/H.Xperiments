@@ -1,20 +1,26 @@
 ﻿using H.MQ.Abstractions;
+using H.MQ.Core;
+using H.MQ.FileSystem.Concrete.Storage;
 using H.Necessaire;
-using System;
 using System.Threading.Tasks;
 
 namespace H.MQ.FileSystem.Concrete
 {
     internal class FileSystemHmqEventRiser : ImAnHmqEventRiser, ImADependency
     {
+        HmqEventsJsonCachedFileSystemStorageService hmqEventsFileSystem;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
-            throw new NotImplementedException();
+            hmqEventsFileSystem = dependencyProvider.Get<HmqEventsJsonCachedFileSystemStorageService>();
         }
 
-        public Task<OperationResult<ImAnHmqReActor>[]> Raise(HmqEvent hmqEvent)
+        public async Task<OperationResult<ImAnHmqReActor>[]> Raise(HmqEvent hmqEvent)
         {
-            throw new NotImplementedException();
+            HmqEvent eventToSend = hmqEvent.Clone().MarkAsPersisted();
+
+            OperationResult result = await hmqEventsFileSystem.Save(eventToSend);
+
+            return result.WithPayload(FileSystemReActor.Instance).AsArray();
         }
     }
 }

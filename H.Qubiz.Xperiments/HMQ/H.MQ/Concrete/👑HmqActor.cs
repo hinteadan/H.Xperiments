@@ -30,7 +30,7 @@ namespace H.MQ.Concrete
             OperationResult<ImAnHmqReActor>[] raiseResults = await internalEventRiser.Raise(hmqEvent);
             if (eventRiser != internalEventRiser)
             {
-                OperationResult<ImAnHmqReActor>[] externalRaiseResults = await eventRiser.Raise(hmqEvent);
+                OperationResult<ImAnHmqReActor>[] externalRaiseResults = await eventRiser.Raise(hmqEvent.Clone().MarkAsPersisted());
                 raiseResults = raiseResults.Push(externalRaiseResults);
             }
 
