@@ -1,4 +1,5 @@
-﻿using H.Necessaire;
+﻿using H.MQ.Abstractions;
+using H.Necessaire;
 
 namespace H.MQ.Azure.ServiceBus.Concrete
 {
@@ -7,6 +8,12 @@ namespace H.MQ.Azure.ServiceBus.Concrete
         public void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {
             dependencyRegistry
+
+                //.Register<HmqEventRegistry>(() => new HmqEventRegistry())
+                //.Register<ImAnHmqEventRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
+                //.Register<ImAnHmqEventReActionRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
+
+                .Register<ImAnHmqEventRiser>(() => new AzureServiceBusHmqEventRiser())
 
                 .Register<AzureServiceBusHmqExternalEventListener>(() => new AzureServiceBusHmqExternalEventListener())
 
