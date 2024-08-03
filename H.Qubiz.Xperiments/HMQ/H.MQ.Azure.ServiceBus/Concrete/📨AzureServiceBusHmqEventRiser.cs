@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace H.MQ.Azure.ServiceBus.Concrete
 {
-    internal class AzureServiceBusHmqEventRiser : ImAnHmqEventRiser, ImADependency
+    internal class AzureServiceBusHmqEventRiser : ImAnHmqEventRiser, ImADependency, IDisposable
     {
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
@@ -19,6 +19,11 @@ namespace H.MQ.Azure.ServiceBus.Concrete
                 return Array.Empty<OperationResult<ImAnHmqReActor>>();
 
             HmqEvent eventToSave = hmqEvent.Clone().MarkAsPersisted();
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
             throw new NotImplementedException();
         }
     }
