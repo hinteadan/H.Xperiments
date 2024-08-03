@@ -9,6 +9,8 @@ namespace H.MQ.FileSystem.Concrete
         {
             dependencyRegistry
 
+                .Register<Storage.DependencyGroup>(() => new Storage.DependencyGroup())
+
                 .Register<FileSystemHmqEventRiser>(() => new FileSystemHmqEventRiser())
                 .Register<ImAnHmqEventRiser>(() => dependencyRegistry.Get<FileSystemHmqEventRiser>())
 
