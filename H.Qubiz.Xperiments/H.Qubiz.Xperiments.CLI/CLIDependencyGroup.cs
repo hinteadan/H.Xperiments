@@ -1,6 +1,7 @@
 using H.MQ;
 using H.MQ.Azure.ServiceBus;
 using H.MQ.Core;
+using H.MQ.FileSystem;
 using H.Necessaire;
 
 namespace H.Qubiz.Xperiments.CLI
@@ -12,8 +13,10 @@ namespace H.Qubiz.Xperiments.CLI
             dependencyRegistry
 
                 .WithHmq()
-                .WithAzureServiceBusHmq()
-                .StartHmqAzureServiceBusExternalListener()
+                //.WithAzureServiceBusHmq()
+                //.StartHmqAzureServiceBusExternalListener()
+                .WithFileSystemHmq()
+                .StartHmqFileSystemExternalListener()
 
                 .Register<RavenDb.DependencyGroup>(() => new RavenDb.DependencyGroup())
                 .Register<SQLite.DependencyGroup>(() => new SQLite.DependencyGroup())

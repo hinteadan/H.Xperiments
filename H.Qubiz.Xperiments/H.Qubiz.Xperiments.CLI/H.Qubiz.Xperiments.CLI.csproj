@@ -16,6 +16,7 @@
 	  <ProjectReference Include="..\H.Xperiments.CLI.UI\H.Xperiments.CLI.UI.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ.Abstractions\H.MQ.Abstractions.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ.Azure.ServiceBus\H.MQ.Azure.ServiceBus.csproj" />
+	  <ProjectReference Include="..\HMQ\H.MQ.FileSystem\H.MQ.FileSystem.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ\H.MQ.csproj" />
 	</ItemGroup>
 
