@@ -10,10 +10,12 @@ namespace H.MQ.Concrete
     {
         ImAnHmqEventRegistry eventRegistry;
         ImAnHmqEventRiser eventRiser;
+        ImAnHmqEventRiser internalEventRiser;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             eventRegistry = dependencyProvider.Get<ImAnHmqEventRegistry>();
             eventRiser = dependencyProvider.Get<ImAnHmqEventRiser>();
+            internalEventRiser = dependencyProvider.Build<ImAnHmqEventRiser>("internal");
         }
 
         public async Task<OperationResult> Raise(HmqEvent hmqEvent)
@@ -25,7 +27,12 @@ namespace H.MQ.Concrete
             if (!appendResult.IsSuccessful)
                 return appendResult;
 
-            OperationResult<ImAnHmqReActor>[] raiseResults = await eventRiser.Raise(hmqEvent);
+            OperationResult<ImAnHmqReActor>[] raiseResults = await internalEventRiser.Raise(hmqEvent);
+            if (eventRiser != internalEventRiser)
+            {
+                OperationResult<ImAnHmqReActor>[] externalRaiseResults = await eventRiser.Raise(hmqEvent);
+                raiseResults = raiseResults.Push(externalRaiseResults);
+            }
 
             OperationResult<OperationResult<ImAnHmqReActor>[]> globalRaiseResult = raiseResults.Merge(globalReasonIfNecesarry: "Some of the HMQ ReActors failed to handle the event. Check payload for details.").WithPayload(raiseResults.Where(x => !x.IsSuccessful).ToArrayNullIfEmpty());
 

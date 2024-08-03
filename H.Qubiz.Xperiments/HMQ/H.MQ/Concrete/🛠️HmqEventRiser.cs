@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace H.MQ.Concrete
 {
+    [Alias("internal", "internal-event-riser")]
     internal class HmqEventRiser : ImAnHmqEventRiser, ImADependency
     {
         static readonly TimeSpan eventRetryMinIterval = TimeSpan.FromSeconds(5);

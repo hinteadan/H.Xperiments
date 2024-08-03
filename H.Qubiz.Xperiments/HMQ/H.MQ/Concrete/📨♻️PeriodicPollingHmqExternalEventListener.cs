@@ -12,13 +12,13 @@ namespace H.MQ.Concrete
         static readonly TimeSpan pollingInterval = TimeSpan.FromSeconds(5);
         static readonly TimeSpan intervalToLookBackInto = TimeSpan.FromDays(21);
         ImAnHmqEventRegistry eventRegistry;
-        ImAnHmqEventRiser eventRiser;
+        ImAnHmqEventRiser internalEventRiser;
         ImAPeriodicAction poller;
         ImALogger logger;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             eventRegistry = dependencyProvider.Get<ImAnHmqEventRegistry>();
-            eventRiser = dependencyProvider.Get<ImAnHmqEventRiser>();
+            internalEventRiser = dependencyProvider.Build<ImAnHmqEventRiser>("internal");
             poller = poller ?? dependencyProvider.Get<ImAPeriodicAction>();
             logger = dependencyProvider.GetLogger<PeriodicPollingHmqExternalEventListener>();
         }
@@ -53,7 +53,7 @@ namespace H.MQ.Concrete
             {
                 foreach (HmqEvent hmqEvent in stream)
                 {
-                    await eventRiser.Raise(hmqEvent);
+                    await internalEventRiser.Raise(hmqEvent);
                 }
             }
         }

@@ -19,7 +19,8 @@ namespace H.MQ.Concrete
                 .Register<ImAnHmqEventRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
                 .Register<ImAnHmqEventReActionRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
 
-                .Register<ImAnHmqEventRiser>(() => new HmqEventRiser())
+                .Register<HmqEventRiser>(() => new HmqEventRiser())
+                .Register<ImAnHmqEventRiser>(() => dependencyRegistry.Get<HmqEventRiser>())
 
                 .Register<PeriodicPollingHmqExternalEventListener>(() => new PeriodicPollingHmqExternalEventListener())
 
