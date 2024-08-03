@@ -9,9 +9,9 @@ namespace H.MQ.Azure.ServiceBus.Concrete
         {
             dependencyRegistry
 
-                //.Register<HmqEventRegistry>(() => new HmqEventRegistry())
-                //.Register<ImAnHmqEventRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
-                //.Register<ImAnHmqEventReActionRegistry>(() => dependencyRegistry.Get<HmqEventRegistry>())
+                .Register<AzureServiceBusHmqEventRegistry>(() => new AzureServiceBusHmqEventRegistry())
+                .Register<ImAnHmqEventRegistry>(() => dependencyRegistry.Get<AzureServiceBusHmqEventRegistry>())
+                .Register<ImAnHmqEventReActionRegistry>(() => dependencyRegistry.Get<AzureServiceBusHmqEventRegistry>())
 
                 .Register<ImAnHmqEventRiser>(() => new AzureServiceBusHmqEventRiser())
 
