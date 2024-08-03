@@ -6,7 +6,7 @@ namespace H.MQ.Core
 {
     internal class HmqActorIdentity : ImAnHmqActorIdentity
     {
-        public string ID { get; internal set; } = Guid.NewGuid().ToString();
-        public Note[] IdentityAttributes { get; internal set; }
+        public string ID { get; set; } = Guid.NewGuid().ToString();
+        public Note[] IdentityAttributes { get; set; }
     }
 }
