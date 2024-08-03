@@ -1,5 +1,6 @@
 using H.MQ;
 using H.MQ.Azure.ServiceBus;
+using H.MQ.Core;
 using H.Necessaire;
 
 namespace H.Qubiz.Xperiments.CLI
