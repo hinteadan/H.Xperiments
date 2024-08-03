@@ -1,16 +1,39 @@
-﻿using H.MQ.Abstractions;
+﻿using Azure.Messaging.ServiceBus;
+using H.MQ.Abstractions;
 using H.MQ.Core;
 using H.Necessaire;
+using H.Necessaire.Serialization;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace H.MQ.Azure.ServiceBus.Concrete
 {
     internal class AzureServiceBusHmqEventRiser : ImAnHmqEventRiser, ImADependency, IDisposable
     {
+        string connectionString = null;
+        string topicName = null;
+        ServiceBusClient serviceBusClient = null;
+        ServiceBusSender serviceBusSender = null;
+        CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
-            throw new NotImplementedException();
+            ConfigNode config
+                = dependencyProvider
+                .GetRuntimeConfig()
+                ?.Get("HMQ")
+                ?.Get("Azure")
+                ?.Get("ServiceBus")
+                ;
+
+            connectionString = config?.Get("ConnectionString")?.ToString();
+            topicName = config?.Get("TopicName")?.ToString();
+
+            if (connectionString.IsEmpty())
+                return;
+
+            serviceBusClient = new ServiceBusClient(connectionString);
+            serviceBusSender = serviceBusClient.CreateSender(topicName);
         }
 
         public async Task<OperationResult<ImAnHmqReActor>[]> Raise(HmqEvent hmqEvent)
@@ -18,13 +41,35 @@ namespace H.MQ.Azure.ServiceBus.Concrete
             if (hmqEvent is null)
                 return Array.Empty<OperationResult<ImAnHmqReActor>>();
 
-            HmqEvent eventToSave = hmqEvent.Clone().MarkAsPersisted();
-            throw new NotImplementedException();
+            HmqEvent eventToSend = hmqEvent.Clone().MarkAsPersisted();
+
+            string serializedEventToSend = eventToSend.ToJsonObject();
+
+            if (serializedEventToSend.IsEmpty())
+            {
+                return OperationResult.Fail("Serialized event is empty").WithPayload(AzureServiceBusReActor.Instance).AsArray();
+            }
+
+            ServiceBusMessage serviceBusMessage = new ServiceBusMessage(serializedEventToSend);
+
+            await serviceBusSender.SendMessageAsync(serviceBusMessage, cancellationTokenSource.Token);
+
+            return OperationResult.Win().WithPayload(AzureServiceBusReActor.Instance).AsArray();
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            new Action(() =>
+            {
+                cancellationTokenSource.Cancel();
+
+                if (serviceBusSender != null)
+                    serviceBusSender.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+
+                if (serviceBusClient != null)
+                    serviceBusClient.DisposeAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+
+            }).TryOrFailWithGrace();
         }
     }
 }
