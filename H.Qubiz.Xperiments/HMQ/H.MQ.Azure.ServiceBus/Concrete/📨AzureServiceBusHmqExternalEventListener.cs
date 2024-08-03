@@ -19,6 +19,7 @@ namespace H.MQ.Azure.ServiceBus.Concrete
         ServiceBusProcessor serviceBusProcessor = null;
         CancellationTokenSource cancellationTokenSource = new CancellationTokenSource();
         ImAnHmqEventRiser internalEventRiser;
+        ImALogger logger;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             ConfigNode config
@@ -34,6 +35,8 @@ namespace H.MQ.Azure.ServiceBus.Concrete
             subscriptionName = config?.Get("SubscriptionName")?.ToString();
 
             internalEventRiser = dependencyProvider.Build<ImAnHmqEventRiser>("internal");
+
+            logger = dependencyProvider.GetLogger<AzureServiceBusHmqExternalEventListener>();
         }
 
         public async Task<OperationResult> Start()
@@ -95,9 +98,9 @@ namespace H.MQ.Azure.ServiceBus.Concrete
             await internalEventRiser.Raise(hmqEvent);
         }
 
-        private Task ServiceBusProcessor_ProcessErrorAsync(ProcessErrorEventArgs arg)
+        private async Task ServiceBusProcessor_ProcessErrorAsync(ProcessErrorEventArgs arg)
         {
-            return Task.CompletedTask;
+            await logger.LogError(arg.Exception);
         }
     }
 }
