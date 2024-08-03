@@ -3,6 +3,7 @@ using H.Necessaire;
 using H.Necessaire.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -13,6 +14,8 @@ namespace H.MQ.FileSystem.Concrete.Storage
     [ID("FileSystemMessageBus")]
     internal class HmqEventsJsonCachedFileSystemStorageService : CachedFileSystemStorageServiceBase<Guid, HmqEvent, HmqEventFilter>, IDisposable
     {
+        static readonly TimeSpan maxWaitForFileWriteCompletion = TimeSpan.FromSeconds(30);
+        static readonly TimeSpan fileWriteCompletionCheckFrequency = TimeSpan.FromSeconds(.25);
         public event EventHandler<FileSystemTriggerHmqEventArgs> OnFileSystemTriggerEvent;
         readonly FileSystemWatcher messageBusFolderWatcher;
         public HmqEventsJsonCachedFileSystemStorageService()
@@ -25,16 +28,52 @@ namespace H.MQ.FileSystem.Concrete.Storage
             messageBusFolderWatcher.Created += MessageBusFolderWatcher_Created;
         }
 
-        private void MessageBusFolderWatcher_Created(object sender, FileSystemEventArgs e)
+        private async void MessageBusFolderWatcher_Created(object sender, FileSystemEventArgs e)
         {
             if (e.ChangeType != WatcherChangeTypes.Created)
                 return;
 
+            FileInfo file = new FileInfo(e.FullPath);
+
+            await WaitForFileWriteCompletion(file);
+
             new Action(() => {
 
-                OnFileSystemTriggerEvent?.Invoke(this, new FileSystemTriggerHmqEventArgs(new FileInfo(e.FullPath)));
+                OnFileSystemTriggerEvent?.Invoke(this, new FileSystemTriggerHmqEventArgs(file));
 
             }).TryOrFailWithGrace();
+        }
+
+        async Task WaitForFileWriteCompletion(FileInfo fileInfo)
+        {
+            if (fileInfo?.Exists != true)
+                return;
+
+            Stopwatch stopwatch = Stopwatch.StartNew();
+
+            while(!CanReadFile(fileInfo))
+            {
+                await Task.Delay(fileWriteCompletionCheckFrequency);
+
+                if (stopwatch.Elapsed >= maxWaitForFileWriteCompletion)
+                    break;
+            }
+        }
+
+        bool CanReadFile(FileInfo file)
+        {
+            bool result = true;
+
+            new Action(() => {
+
+                using (file.OpenRead())
+                {
+                    result = true;
+                }
+
+            }).TryOrFailWithGrace(onFail: ex => result = false);
+
+            return result;
         }
 
         protected override IEnumerable<HmqEvent> ApplyFilter(IEnumerable<HmqEvent> stream, HmqEventFilter filter)
