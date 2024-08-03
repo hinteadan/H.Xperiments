@@ -5,12 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace H.MQ.FileSystem.Concrete.Storage
 {
+    [ID("FileSystemMessageBus")]
     internal class HmqEventsJsonCachedFileSystemStorageService : CachedFileSystemStorageServiceBase<Guid, HmqEvent, HmqEventFilter>
     {
+        public HmqEventsJsonCachedFileSystemStorageService()
+            : base(rootFolder: GetFileSystemMessageBusFolderFromStartAssembly())
+        {
+        }
+
         protected override IEnumerable<HmqEvent> ApplyFilter(IEnumerable<HmqEvent> stream, HmqEventFilter filter)
         {
             if (filter?.IDs?.Any() == true)
@@ -50,6 +57,11 @@ namespace H.MQ.FileSystem.Concrete.Storage
                 .ToJsonObject(isPrettyPrinted: true)
                 .WriteToStreamAsync(entitySerializationStream)
                 ;
+        }
+
+        private static DirectoryInfo GetFileSystemMessageBusFolderFromStartAssembly()
+        {
+            return new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Uri.UnescapeDataString(new UriBuilder(Assembly.GetEntryAssembly().CodeBase).Path)), "FileSystemMessageBus"));
         }
     }
 }

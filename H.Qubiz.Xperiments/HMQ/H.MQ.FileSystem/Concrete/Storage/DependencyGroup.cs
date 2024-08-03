@@ -1,6 +1,4 @@
-﻿using H.MQ.Abstractions;
-using H.Necessaire;
-using System;
+﻿using H.Necessaire;
 
 namespace H.MQ.FileSystem.Concrete.Storage
 {
@@ -11,8 +9,6 @@ namespace H.MQ.FileSystem.Concrete.Storage
             dependencyRegistry
 
                 .Register<HmqEventsJsonCachedFileSystemStorageService>(() => new HmqEventsJsonCachedFileSystemStorageService())
-                .Register<ImAStorageService<Guid, HmqEvent>>(() => dependencyRegistry.Get<HmqEventsJsonCachedFileSystemStorageService>())
-                .Register<ImAStorageBrowserService<HmqEvent, HmqEventFilter>>(() => dependencyRegistry.Get<HmqEventsJsonCachedFileSystemStorageService>())
 
                 ;
         }
