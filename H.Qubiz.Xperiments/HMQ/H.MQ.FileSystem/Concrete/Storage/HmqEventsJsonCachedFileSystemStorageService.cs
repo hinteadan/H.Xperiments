@@ -11,11 +11,22 @@ using System.Threading.Tasks;
 namespace H.MQ.FileSystem.Concrete.Storage
 {
     [ID("FileSystemMessageBus")]
-    internal class HmqEventsJsonCachedFileSystemStorageService : CachedFileSystemStorageServiceBase<Guid, HmqEvent, HmqEventFilter>
+    internal class HmqEventsJsonCachedFileSystemStorageService : CachedFileSystemStorageServiceBase<Guid, HmqEvent, HmqEventFilter>, IDisposable
     {
+        readonly FileSystemWatcher messageBusFolderWatcher;
         public HmqEventsJsonCachedFileSystemStorageService()
-            : base(rootFolder: GetFileSystemMessageBusFolderFromStartAssembly())
+            : base(rootFolder: GetFileSystemMessageBusFolderFromStartAssembly(), fileExtension: "bus.event.json")
         {
+            entityStorageFolder = GetFileSystemMessageBusFolderFromStartAssembly();
+            EnsureEntityStorageFolder().ConfigureAwait(false).GetAwaiter().GetResult();
+            messageBusFolderWatcher = new FileSystemWatcher(entityStorageFolder.FullName, "*.bus.event.json");
+            messageBusFolderWatcher.EnableRaisingEvents = true;
+            messageBusFolderWatcher.Created += MessageBusFolderWatcher_Created;
+        }
+
+        private void MessageBusFolderWatcher_Created(object sender, FileSystemEventArgs e)
+        {
+            throw new NotImplementedException();
         }
 
         protected override IEnumerable<HmqEvent> ApplyFilter(IEnumerable<HmqEvent> stream, HmqEventFilter filter)
@@ -62,6 +73,16 @@ namespace H.MQ.FileSystem.Concrete.Storage
         private static DirectoryInfo GetFileSystemMessageBusFolderFromStartAssembly()
         {
             return new DirectoryInfo(Path.Combine(Path.GetDirectoryName(Uri.UnescapeDataString(new UriBuilder(Assembly.GetEntryAssembly().CodeBase).Path)), "FileSystemMessageBus"));
+        }
+
+        public void Dispose()
+        {
+            new Action(() =>
+            {
+                messageBusFolderWatcher.Created -= MessageBusFolderWatcher_Created;
+                messageBusFolderWatcher.Dispose();
+
+            }).TryOrFailWithGrace();
         }
     }
 }
