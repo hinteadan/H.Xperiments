@@ -41,14 +41,15 @@ namespace H.MQ.Azure.ServiceBus.Concrete
             if (hmqEvent is null)
                 return Array.Empty<OperationResult<ImAnHmqReActor>>();
 
+            if (serviceBusSender is null)
+                return OperationResult.Fail("Azure Service Bus config is missing. It should be configured @ <ConfigRoot>.HMQ.Azure.ServiceBus.ConnectionString and <ConfigRoot>.HMQ.Azure.ServiceBus.TopicName").WithPayload(AzureServiceBusReActor.Instance).AsArray();
+
             HmqEvent eventToSend = hmqEvent.Clone().MarkAsPersisted();
 
             string serializedEventToSend = eventToSend.ToJsonObject();
 
             if (serializedEventToSend.IsEmpty())
-            {
                 return OperationResult.Fail("Serialized event is empty").WithPayload(AzureServiceBusReActor.Instance).AsArray();
-            }
 
             ServiceBusMessage serviceBusMessage = new ServiceBusMessage(serializedEventToSend);
 

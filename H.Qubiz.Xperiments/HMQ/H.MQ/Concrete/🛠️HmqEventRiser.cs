@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace H.MQ.Concrete
 {
+    [ID("InternalEventRiser")]
     [Alias("internal", "internal-event-riser")]
     internal class HmqEventRiser : ImAnHmqEventRiser, ImADependency
     {
