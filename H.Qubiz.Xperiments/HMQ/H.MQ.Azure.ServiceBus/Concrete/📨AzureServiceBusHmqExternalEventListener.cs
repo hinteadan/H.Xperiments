@@ -30,7 +30,7 @@ namespace H.MQ.Azure.ServiceBus.Concrete
 
             connectionString = config?.Get("ConnectionString")?.ToString();
             topicName = config?.Get("TopicName")?.ToString();
-            topicName = config?.Get("SubscriptionName")?.ToString();
+            subscriptionName = config?.Get("SubscriptionName")?.ToString();
 
             internalEventRiser = dependencyProvider.Build<ImAnHmqEventRiser>("internal");
         }
