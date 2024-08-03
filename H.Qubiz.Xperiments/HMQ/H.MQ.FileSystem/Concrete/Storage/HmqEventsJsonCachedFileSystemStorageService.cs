@@ -13,6 +13,7 @@ namespace H.MQ.FileSystem.Concrete.Storage
     [ID("FileSystemMessageBus")]
     internal class HmqEventsJsonCachedFileSystemStorageService : CachedFileSystemStorageServiceBase<Guid, HmqEvent, HmqEventFilter>, IDisposable
     {
+        public event EventHandler<FileSystemTriggerHmqEventArgs> OnFileSystemTriggerEvent;
         readonly FileSystemWatcher messageBusFolderWatcher;
         public HmqEventsJsonCachedFileSystemStorageService()
             : base(rootFolder: GetFileSystemMessageBusFolderFromStartAssembly(), fileExtension: "bus.event.json")
@@ -26,7 +27,14 @@ namespace H.MQ.FileSystem.Concrete.Storage
 
         private void MessageBusFolderWatcher_Created(object sender, FileSystemEventArgs e)
         {
-            throw new NotImplementedException();
+            if (e.ChangeType != WatcherChangeTypes.Created)
+                return;
+
+            new Action(() => {
+
+                OnFileSystemTriggerEvent?.Invoke(this, new FileSystemTriggerHmqEventArgs(new FileInfo(e.FullPath)));
+
+            }).TryOrFailWithGrace();
         }
 
         protected override IEnumerable<HmqEvent> ApplyFilter(IEnumerable<HmqEvent> stream, HmqEventFilter filter)
