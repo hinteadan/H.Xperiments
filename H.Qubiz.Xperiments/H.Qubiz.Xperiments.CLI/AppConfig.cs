@@ -18,6 +18,15 @@ namespace H.Qubiz.Xperiments.CLI
                 {
                     Values = new[] {
                         "NuSpecRootFolderPath".ConfigWith(GetCodebaseFolderPath()),
+                        "HMQ".ConfigWith(
+                            "Azure".ConfigWith(
+                                "ServiceBus".ConfigWith(
+                                    "ConnectionString".ConfigWith(ReadConfigFromFile("AzureServiceBusConnectionString.cfg.txt")),
+                                    "TopicName".ConfigWith(ReadConfigFromFile("AzureServiceBusTopicName.cfg.txt")),
+                                    "SubscriptionName".ConfigWith(ReadConfigFromFile("AzureServiceBusSubscriptionName.cfg.txt"))
+                                )
+                            )
+                        )
                     },
                 }));
             ;
