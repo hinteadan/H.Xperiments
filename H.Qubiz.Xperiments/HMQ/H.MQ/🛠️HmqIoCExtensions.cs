@@ -14,9 +14,6 @@ namespace H.MQ
         public static T StartHmqPeriodicPollingExternalListener<T>(this T dependencyProvider) where T : ImADependencyProvider
             => dependencyProvider.StartHmqExternalListener("PeriodicPolling");
 
-        public static T StartHmqAzureServiceBusExternalListener<T>(this T dependencyProvider) where T : ImADependencyProvider
-            => dependencyProvider.StartHmqExternalListener("AzureServiceBus");
-
         private static T StartHmqExternalListener<T>(this T dependencyProvider, string buildTypeID) where T : ImADependencyProvider
         {
             ImAnHmqExternalEventListener periodicPollingExternalListener

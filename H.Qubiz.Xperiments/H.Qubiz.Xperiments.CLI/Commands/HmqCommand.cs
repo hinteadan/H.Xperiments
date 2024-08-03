@@ -11,11 +11,13 @@ namespace H.Qubiz.Xperiments.CLI.Commands
     {
         ImAnHmqActor debugActor;
         ImAnHmqReActor debugReActor;
+        ImAnHmqReActor sbDebugReActor;
         public override void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             base.ReferDependencies(dependencyProvider);
             debugActor = dependencyProvider.GetHmqActor("debug");
             debugReActor = dependencyProvider.GetCatchAllInternalHmqReActor(InProcessReact, "debug");
+            sbDebugReActor = dependencyProvider.GetCatchAllExternalHmqReActor(ExternalReact, "sbDebug");
         }
 
         public override async Task<OperationResult> Run()
@@ -32,6 +34,13 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         }
 
         async Task<OperationResult> InProcessReact(HmqEvent hmqEvent)
+        {
+            await Task.CompletedTask;
+
+            return OperationResult.Win();
+        }
+
+        async Task<OperationResult> ExternalReact(HmqEvent hmqEvent)
         {
             await Task.CompletedTask;
 

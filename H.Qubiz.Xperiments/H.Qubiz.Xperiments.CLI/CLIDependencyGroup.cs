@@ -1,4 +1,5 @@
 using H.MQ;
+using H.MQ.Azure.ServiceBus;
 using H.Necessaire;
 
 namespace H.Qubiz.Xperiments.CLI
@@ -10,7 +11,8 @@ namespace H.Qubiz.Xperiments.CLI
             dependencyRegistry
 
                 .WithHmq()
-                .StartHmqPeriodicPollingExternalListener()
+                .WithAzureServiceBusHmq()
+                .StartHmqAzureServiceBusExternalListener()
 
                 .Register<RavenDb.DependencyGroup>(() => new RavenDb.DependencyGroup())
                 .Register<SQLite.DependencyGroup>(() => new SQLite.DependencyGroup())
