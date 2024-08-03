@@ -10,6 +10,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\H.MQ.Abstractions\H.MQ.Abstractions.csproj" />
+    <ProjectReference Include="..\H.MQ.Core\H.MQ.Core.csproj" />
   </ItemGroup>
 
 </Project>

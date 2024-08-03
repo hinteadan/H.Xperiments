@@ -1,19 +1,18 @@
 ﻿using H.MQ.Abstractions;
-using H.MQ.Core;
 using H.Necessaire;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace H.MQ.Concrete
+namespace H.MQ.Core
 {
-    internal class HmqEventRegistry : ImAnHmqEventRegistry, ImAnHmqEventReActionRegistry, ImADependency
+    public abstract class HmqEventRegistryBackedByStorageServicesBase : ImAnHmqEventRegistry, ImAnHmqEventReActionRegistry, ImADependency
     {
         ImAStorageService<Guid, HmqEvent> eventStore;
         ImAStorageBrowserService<HmqEvent, HmqEventFilter> eventBrowser;
         ImAStorageService<Guid, HmqEventReactionLog> eventReactionLogStore;
         ImAStorageBrowserService<HmqEventReactionLog, HmqEventReActionFilter> eventReactionLogBrowser;
-        public void ReferDependencies(ImADependencyProvider dependencyProvider)
+        public virtual void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
             eventStore = dependencyProvider.Get<ImAStorageService<Guid, HmqEvent>>();
             eventBrowser = dependencyProvider.Get<ImAStorageBrowserService<HmqEvent, HmqEventFilter>>();
@@ -119,7 +118,8 @@ namespace H.MQ.Concrete
                     ActorIdentity = hmqReActorResult.Payload.ToIdentityOnly(),
                     AsOf = DateTime.UtcNow,
                     Event = hmqEvent,
-                    OperationResult = new OperationResult { 
+                    OperationResult = new OperationResult
+                    {
                         Comments = hmqReActorResult.Comments,
                         IsSuccessful = hmqReActorResult.IsSuccessful,
                         Reason = hmqReActorResult.Reason,

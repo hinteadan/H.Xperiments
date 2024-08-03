@@ -1,4 +1,5 @@
 ﻿using H.MQ.Abstractions;
+using H.MQ.Core;
 using H.Necessaire;
 using System;
 using System.Linq;

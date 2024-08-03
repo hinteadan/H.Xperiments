@@ -3,6 +3,7 @@ using H.MQ;
 using H.Necessaire;
 using H.Necessaire.Runtime.CLI.Commands;
 using System.Threading.Tasks;
+using H.MQ.Core;
 
 namespace H.Qubiz.Xperiments.CLI.Commands
 {

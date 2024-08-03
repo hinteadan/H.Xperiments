@@ -1,12 +1,8 @@
 ﻿using H.MQ.Abstractions;
-using H.MQ.Concrete;
 using H.Necessaire;
 using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace H.MQ
+namespace H.MQ.Core
 {
     public static class HmqEventExtensions
     {

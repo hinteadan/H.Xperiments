@@ -2,7 +2,7 @@
 using H.Necessaire;
 using System;
 
-namespace H.MQ.Concrete
+namespace H.MQ.Core
 {
     internal class HmqActorIdentity : ImAnHmqActorIdentity
     {
