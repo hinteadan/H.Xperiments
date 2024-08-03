@@ -23,7 +23,7 @@ namespace H.Qubiz.Xperiments.CLI
             ;
         }
 
-        private static string ReadConnectionStringFromFile(string filePath)
+        private static string ReadConfigFromFile(string filePath)
         {
             FileInfo fileInfo = new FileInfo(filePath);
 
