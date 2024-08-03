@@ -1,6 +1,7 @@
 ﻿using Azure.Messaging.ServiceBus;
 using H.MQ.Abstractions;
 using H.Necessaire;
+using H.Necessaire.Serialization;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -87,14 +88,16 @@ namespace H.MQ.Azure.ServiceBus.Concrete
             await serviceBusProcessor.StartProcessingAsync();
         }
 
-        private Task ServiceBusProcessor_ProcessMessageAsync(ProcessMessageEventArgs arg)
+        private async Task ServiceBusProcessor_ProcessMessageAsync(ProcessMessageEventArgs arg)
         {
-            throw new NotImplementedException();
+            string serializedEventReceived = arg.Message.Body.ToString();
+            HmqEvent hmqEvent = serializedEventReceived.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn();
+            await internalEventRiser.Raise(hmqEvent);
         }
 
         private Task ServiceBusProcessor_ProcessErrorAsync(ProcessErrorEventArgs arg)
         {
-            throw new NotImplementedException();
+            return Task.CompletedTask;
         }
     }
 }

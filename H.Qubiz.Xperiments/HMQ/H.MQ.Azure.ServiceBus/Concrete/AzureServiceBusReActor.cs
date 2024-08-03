@@ -9,6 +9,7 @@ namespace H.MQ.Azure.ServiceBus.Concrete
         public static readonly ImAnHmqReActor Instance = new AzureServiceBusReActor();
 
         const string id = "AzureServiceBusReActor-{12777008-43C4-4A11-95EB-596BDE87B013}";
+
         public Note[] IdentityAttributes { get; set; }
 
         public string ID => id;
