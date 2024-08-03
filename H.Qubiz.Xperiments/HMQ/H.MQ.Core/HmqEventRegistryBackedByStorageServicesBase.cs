@@ -25,11 +25,7 @@ namespace H.MQ.Core
             if (hmqEvent is null)
                 return OperationResult.Fail("Event is NULL");
 
-            HmqEvent eventToSave = hmqEvent.Clone();
-            eventToSave.Attributes = hmqEvent.Attributes.AddOrReplace(
-                $"{true}".NoteAs("IsPersisted"),
-                "PersistentStore".NoteAs("Source")
-            );
+            HmqEvent eventToSave = hmqEvent.Clone().MarkAsPersisted();
 
             return await eventStore.Save(eventToSave);
         }

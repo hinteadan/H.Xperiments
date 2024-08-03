@@ -14,6 +14,7 @@ namespace H.MQ.Azure.ServiceBus.Concrete
                 .Register<ImAnHmqEventReActionRegistry>(() => dependencyRegistry.Get<AzureServiceBusHmqEventRegistry>())
 
                 .Register<AzureServiceBusHmqEventRiser>(() => new AzureServiceBusHmqEventRiser())
+                .Register<ImAnHmqEventRiser>(() => dependencyRegistry.Get<AzureServiceBusHmqEventRiser>())
 
                 .Register<AzureServiceBusHmqExternalEventListener>(() => new AzureServiceBusHmqExternalEventListener())
 

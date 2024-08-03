@@ -23,6 +23,9 @@ namespace H.MQ.Concrete
 
         public async Task<OperationResult<ImAnHmqReActor>[]> Raise(HmqEvent hmqEvent)
         {
+            if (hmqEvent is null)
+                return Array.Empty<OperationResult<ImAnHmqReActor>>();
+
             ImAnHmqReActor[] allKnownReactors = actorAndReActorBookkeeper.GetAllReActors();
 
             ImAnHmqReActor[] candidateReactors

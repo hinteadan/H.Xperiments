@@ -48,6 +48,19 @@ namespace H.MQ.Core
                 };
         }
 
+        public static HmqEvent MarkAsPersisted(this HmqEvent hmqEvent)
+        {
+            if (hmqEvent is null)
+                return null;
+
+            hmqEvent.Attributes = hmqEvent.Attributes.AddOrReplace(
+                $"{true}".NoteAs("IsPersisted"),
+                "PersistentStore".NoteAs("Source")
+            );
+
+            return hmqEvent;
+        }
+
         public static bool IsExternal(this HmqEvent hmqEvent)
         {
             return hmqEvent?.Attributes?.Get("Source", ignoreCase: true)?.In(externalSourceNames, (val, key) => val.Is(key)) == true;
