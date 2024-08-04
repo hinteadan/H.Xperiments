@@ -1,4 +1,6 @@
-﻿using H.Necessaire;
+﻿using H.MQ.Abstractions;
+using H.MQ.FileSystem.Concrete;
+using H.Necessaire;
 
 namespace H.MQ.RavenDB.Concrete
 {
@@ -8,6 +10,9 @@ namespace H.MQ.RavenDB.Concrete
         {
             dependencyRegistry
                 .Register<Storage.DependencyGroup>(() => new Storage.DependencyGroup())
+
+                .Register<RavenDbHmqEventRiser>(() => new RavenDbHmqEventRiser())
+                .Register<ImAnHmqEventRiser>(() => dependencyRegistry.Get<RavenDbHmqEventRiser>())
 
                 .Register<RavenDbHmqExternalEventListener>(() => new RavenDbHmqExternalEventListener())
 
