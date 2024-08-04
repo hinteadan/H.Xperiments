@@ -8,7 +8,7 @@ namespace H.MQ.RavenDB.Concrete.Storage
         {
             dependencyRegistry
 
-                .Register<HmqEventsRavenDbStorageService>(() => new HmqEventsRavenDbStorageService())
+                .Register<RavenDbServiceBusStorageService>(() => new RavenDbServiceBusStorageService())
 
                 ;
         }
