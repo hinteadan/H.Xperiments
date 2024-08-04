@@ -8,6 +8,9 @@ namespace H.MQ.RavenDB.Concrete
         {
             dependencyRegistry
                 .Register<Storage.DependencyGroup>(() => new Storage.DependencyGroup())
+
+                .Register<RavenDbHmqExternalEventListener>(() => new RavenDbHmqExternalEventListener())
+
                 ;
         }
     }

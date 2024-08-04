@@ -83,7 +83,7 @@ namespace H.MQ.RavenDB.Concrete.Storage
             new Action(() =>
             {
 
-                OnServiceBusMessage?.Invoke(this, new RavenDbServiceBusMessageEventArgs(value.Id.Substring("ServiceBusMessage/".Length).ParseToGuidOrFallbackTo(Guid.Empty).Value));
+                OnServiceBusMessage?.Invoke(this, new RavenDbServiceBusMessageEventArgs(value.Id));
 
             }).TryOrFailWithGrace();
         }

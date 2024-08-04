@@ -4,11 +4,11 @@ namespace H.MQ.RavenDB.Concrete.Storage
 {
     internal class RavenDbServiceBusMessageEventArgs : EventArgs
     {
-        public RavenDbServiceBusMessageEventArgs(Guid eventID)
+        public RavenDbServiceBusMessageEventArgs(string serviceBusMessageID)
         {
-            EventID = eventID;
+            ServiceBusMessageID = serviceBusMessageID;
         }
 
-        public Guid EventID { get; }
+        public string ServiceBusMessageID { get; }
     }
 }
