@@ -8,7 +8,7 @@ namespace H.MQ.Concrete
 {
     [ID("InternalEventRiser")]
     [Alias("internal", "internal-event-riser")]
-    internal class HmqEventRiser : ImAnHmqEventRiser, ImADependency
+    internal class HmqEventInternalRiser : ImAnHmqEventRiser, ImADependency
     {
         static readonly TimeSpan eventRetryMinIterval = TimeSpan.FromSeconds(5);
         static readonly TimeSpan eventRetryMaxIterval = TimeSpan.FromMinutes(5);
