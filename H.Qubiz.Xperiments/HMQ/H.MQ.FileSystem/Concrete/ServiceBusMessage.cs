@@ -2,11 +2,11 @@
 using H.Necessaire;
 using System;
 
-namespace H.MQ.RavenDB.Concrete
+namespace H.MQ.FileSystem.Concrete
 {
-    internal class ServiceBusMessage : IStringIdentity
+    internal class ServiceBusMessage : IGuidIdentity
     {
-        public string ID { get; set; } = $"ServiceBusMessage/{Guid.NewGuid()}";
+        public Guid ID { get; set; } = Guid.NewGuid();
 
         public HmqEvent Event { get; set; }
 

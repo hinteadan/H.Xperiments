@@ -8,7 +8,7 @@ namespace H.MQ.FileSystem.Concrete.Storage
         {
             dependencyRegistry
 
-                .Register<HmqEventsJsonCachedFileSystemStorageService>(() => new HmqEventsJsonCachedFileSystemStorageService())
+                .Register<ServiceBusJsonCachedFileSystemStorageService>(() => new ServiceBusJsonCachedFileSystemStorageService())
 
                 ;
         }

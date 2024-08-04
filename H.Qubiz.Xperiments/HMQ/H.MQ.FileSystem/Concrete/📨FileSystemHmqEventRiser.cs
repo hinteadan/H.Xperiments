@@ -8,10 +8,10 @@ namespace H.MQ.FileSystem.Concrete
 {
     internal class FileSystemHmqEventRiser : ImAnHmqEventRiser, ImADependency
     {
-        HmqEventsJsonCachedFileSystemStorageService hmqEventsFileSystem;
+        ServiceBusJsonCachedFileSystemStorageService hmqEventsFileSystem;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
-            hmqEventsFileSystem = dependencyProvider.Get<HmqEventsJsonCachedFileSystemStorageService>();
+            hmqEventsFileSystem = dependencyProvider.Get<ServiceBusJsonCachedFileSystemStorageService>();
         }
 
         public async Task<OperationResult<ImAnHmqReActor>[]> Raise(HmqEvent hmqEvent)

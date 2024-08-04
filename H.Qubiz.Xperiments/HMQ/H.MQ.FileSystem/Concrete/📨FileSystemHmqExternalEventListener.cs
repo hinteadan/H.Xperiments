@@ -14,12 +14,12 @@ namespace H.MQ.FileSystem.Concrete
     [Alias("fs")]
     internal class FileSystemHmqExternalEventListener : ImAnHmqExternalEventListener, ImADependency, IDisposable
     {
-        HmqEventsJsonCachedFileSystemStorageService hmqEventsFileSystem;
+        ServiceBusJsonCachedFileSystemStorageService hmqEventsFileSystem;
         ImAnHmqEventRiser internalEventRiser;
         ImALogger logger;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
-            hmqEventsFileSystem = dependencyProvider.Get<HmqEventsJsonCachedFileSystemStorageService>();
+            hmqEventsFileSystem = dependencyProvider.Get<ServiceBusJsonCachedFileSystemStorageService>();
             internalEventRiser = dependencyProvider.Build<ImAnHmqEventRiser>("internal");
             logger = dependencyProvider.GetLogger<FileSystemHmqExternalEventListener>();
         }
@@ -59,7 +59,8 @@ namespace H.MQ.FileSystem.Concrete
                 {
 
                     string serializedEventReceived = await e.EventFile.OpenRead().ReadAsStringAsync(isStreamLeftOpen: false);
-                    HmqEvent hmqEvent = serializedEventReceived.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn();
+                    ServiceBusMessage serviceBusMessage = serializedEventReceived.TryJsonToObject<ServiceBusMessage>().ThrowOnFailOrReturn();
+                    HmqEvent hmqEvent = serviceBusMessage.Event;
                     TryToConvertEventDataToAppropriateType(hmqEvent);
                     await internalEventRiser.Raise(hmqEvent);
 

@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 namespace H.MQ.FileSystem.Concrete.Storage
 {
     [ID("FileSystemMessageBus")]
-    internal class HmqEventsJsonCachedFileSystemStorageService : CachedFileSystemStorageServiceBase<Guid, HmqEvent, HmqEventFilter>, IDisposable
+    internal class ServiceBusJsonCachedFileSystemStorageService : CachedFileSystemStorageServiceBase<Guid, ServiceBusMessage, HmqEventFilter>, IDisposable
     {
         static readonly TimeSpan maxWaitForFileWriteCompletion = TimeSpan.FromSeconds(30);
         static readonly TimeSpan fileWriteCompletionCheckFrequency = TimeSpan.FromSeconds(.25);
         public event EventHandler<FileSystemTriggerHmqEventArgs> OnFileSystemTriggerEvent;
         readonly FileSystemWatcher messageBusFolderWatcher;
-        public HmqEventsJsonCachedFileSystemStorageService()
+        public ServiceBusJsonCachedFileSystemStorageService()
             : base(rootFolder: GetFileSystemMessageBusFolderFromStartAssembly(), fileExtension: "bus.event.json")
         {
             entityStorageFolder = GetFileSystemMessageBusFolderFromStartAssembly();
@@ -74,39 +74,39 @@ namespace H.MQ.FileSystem.Concrete.Storage
             return true;
         }
 
-        protected override IEnumerable<HmqEvent> ApplyFilter(IEnumerable<HmqEvent> stream, HmqEventFilter filter)
+        protected override IEnumerable<ServiceBusMessage> ApplyFilter(IEnumerable<ServiceBusMessage> stream, HmqEventFilter filter)
         {
             if (filter?.IDs?.Any() == true)
-                stream = stream.Where(x => x.ID.In(filter.IDs));
+                stream = stream.Where(x => x.Event.ID.In(filter.IDs));
 
             if (filter?.From != null)
-                stream = stream.Where(x => x.HappenedAt >= filter.From);
+                stream = stream.Where(x => x.Event.HappenedAt >= filter.From);
 
             if (filter?.To != null)
-                stream = stream.Where(x => x.HappenedAt <= filter.To);
+                stream = stream.Where(x => x.Event.HappenedAt <= filter.To);
 
             if (filter?.Names?.Any() == true)
-                stream = stream.Where(x => x.Name.In(filter.Names, (item, key) => item.Is(key)));
+                stream = stream.Where(x => x.Event.Name.In(filter.Names, (item, key) => item.Is(key)));
 
             if (filter?.Types?.Any() == true)
-                stream = stream.Where(x => x.Type.In(filter.Types, (item, key) => item.Is(key)));
+                stream = stream.Where(x => x.Event.Type.In(filter.Types, (item, key) => item.Is(key)));
 
             if (filter?.Assemblies?.Any() == true)
-                stream = stream.Where(x => x.Assembly.In(filter.Assemblies, (item, key) => item.Is(key)));
+                stream = stream.Where(x => x.Event.Assembly.In(filter.Assemblies, (item, key) => item.Is(key)));
 
             return stream;
         }
 
-        protected override async Task<HmqEvent> ReadAndParseEntityFromStream(Stream serializedEntityStream)
+        protected override async Task<ServiceBusMessage> ReadAndParseEntityFromStream(Stream serializedEntityStream)
         {
             return
                 (await serializedEntityStream.ReadAsStringAsync())
-                .TryJsonToObject<HmqEvent>()
+                .TryJsonToObject<ServiceBusMessage>()
                 .ThrowOnFailOrReturn()
                 ;
         }
 
-        protected override async Task SerializeEntityToStream(HmqEvent entityToSerialize, Stream entitySerializationStream)
+        protected override async Task SerializeEntityToStream(ServiceBusMessage entityToSerialize, Stream entitySerializationStream)
         {
             await
                 entityToSerialize
