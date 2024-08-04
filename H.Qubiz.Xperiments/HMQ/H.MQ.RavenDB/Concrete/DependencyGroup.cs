@@ -1,15 +1,13 @@
 ﻿using H.Necessaire;
 
-namespace H.MQ.RavenDB
+namespace H.MQ.RavenDB.Concrete
 {
-    internal class RavenDbHmqDependencyGroup : ImADependencyGroup
+    internal class DependencyGroup : ImADependencyGroup
     {
         public void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {
             dependencyRegistry
-
-                .Register<Concrete.DependencyGroup>(() => new Concrete.DependencyGroup())
-
+                .Register<Storage.DependencyGroup>(() => new Storage.DependencyGroup())
                 ;
         }
     }
