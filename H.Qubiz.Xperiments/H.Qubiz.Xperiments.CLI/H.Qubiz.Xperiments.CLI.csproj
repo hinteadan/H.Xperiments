@@ -28,6 +28,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<None Update="**/*.pfx">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Folder Include="Commands\HMQ\" />
 	</ItemGroup>
 
