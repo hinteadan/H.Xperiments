@@ -62,18 +62,16 @@ namespace H.MQ.FileSystem.Concrete.Storage
 
         bool CanReadFile(FileInfo file)
         {
-            bool result = true;
+            try
+            {
+                using (file.Open(FileMode.Open, FileAccess.Read, FileShare.None)) { }
+            }
+            catch (IOException)
+            {
+                return false;
+            }
 
-            new Action(() => {
-
-                using (file.OpenRead())
-                {
-                    result = true;
-                }
-
-            }).TryOrFailWithGrace(onFail: ex => result = false);
-
-            return result;
+            return true;
         }
 
         protected override IEnumerable<HmqEvent> ApplyFilter(IEnumerable<HmqEvent> stream, HmqEventFilter filter)
