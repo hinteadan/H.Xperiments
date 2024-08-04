@@ -1,5 +1,4 @@
-﻿using H.MQ.FileSystem.Concrete.Storage;
-using H.Necessaire;
+﻿using H.Necessaire;
 
 namespace H.MQ.FileSystem
 {
@@ -9,7 +8,7 @@ namespace H.MQ.FileSystem
         {
             dependencyRegistry
 
-                .Register<DependencyGroup>(() => new Concrete.DependencyGroup())
+                .Register<Concrete.DependencyGroup>(() => new Concrete.DependencyGroup())
 
                 ;
         }
