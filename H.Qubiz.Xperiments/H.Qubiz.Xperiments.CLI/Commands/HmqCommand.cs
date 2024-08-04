@@ -4,6 +4,7 @@ using H.Necessaire;
 using H.Necessaire.Runtime.CLI.Commands;
 using System.Threading.Tasks;
 using H.MQ.Core;
+using System;
 
 namespace H.Qubiz.Xperiments.CLI.Commands
 {
@@ -27,7 +28,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             {
                 await Task.CompletedTask;
 
-                OperationResult raiseResult = await debugActor.Raise("test".ToHmqEvent());
+                OperationResult raiseResult = await debugActor.Raise(new SomeFancyPayload().ToHmqEvent());
             }
 
             return OperationResult.Win();
@@ -45,6 +46,13 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             await Task.CompletedTask;
 
             return OperationResult.Win();
+        }
+
+        class SomeFancyPayload
+        {
+            public Guid ID { get; set; } = Guid.NewGuid();
+            public string Name { get; set; } = Guid.NewGuid().ToString();
+            public DateTime DateTime { get; set; } = DateTime.UtcNow;
         }
     }
 }

@@ -1,7 +1,9 @@
 ﻿using H.MQ.Abstractions;
+using H.MQ.Core;
 using H.MQ.FileSystem.Concrete.Storage;
 using H.Necessaire;
 using H.Necessaire.Serialization;
+using Newtonsoft.Json.Linq;
 using System;
 using System.IO;
 using System.Threading.Tasks;
@@ -58,6 +60,7 @@ namespace H.MQ.FileSystem.Concrete
 
                     string serializedEventReceived = await e.EventFile.OpenRead().ReadAsStringAsync(isStreamLeftOpen: false);
                     HmqEvent hmqEvent = serializedEventReceived.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn();
+                    TryToConvertEventDataToAppropriateType(hmqEvent);
                     await internalEventRiser.Raise(hmqEvent);
 
                 })
@@ -65,8 +68,22 @@ namespace H.MQ.FileSystem.Concrete
                 {
                     await logger.LogError($"Error occured while handling FileSystem event for {e.EventFile.FullName}. Message: {ex.Message}", ex);
                 });
+        }
 
-            
+        private void TryToConvertEventDataToAppropriateType(HmqEvent hmqEvent)
+        {
+            if (hmqEvent?.Data is null)
+                return;
+
+            if (!(hmqEvent.Data is JToken))
+                return;
+
+            Type dataType = hmqEvent.FindDataType();
+
+            if (dataType is null)
+                return;
+
+            hmqEvent.Data = (hmqEvent.Data as JToken).ToObject(dataType);
         }
     }
 }

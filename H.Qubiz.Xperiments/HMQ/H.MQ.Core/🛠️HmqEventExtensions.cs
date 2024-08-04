@@ -1,6 +1,8 @@
 ﻿using H.MQ.Abstractions;
 using H.Necessaire;
 using System;
+using System.Linq;
+using System.Reflection;
 
 namespace H.MQ.Core
 {
@@ -82,6 +84,59 @@ namespace H.MQ.Core
                     ID = identityHolder.ID,
                     IdentityAttributes = identityHolder.IdentityAttributes,
                 };
+        }
+
+        public static Type FindDataType(this HmqEvent hmqEvent)
+        {
+            if (hmqEvent?.Data is null)
+                return null;
+
+            Type type = null;
+
+            new Action(() => {
+
+                type = Type.GetType($"{hmqEvent.Type}, {hmqEvent.Assembly}");
+
+            }).TryOrFailWithGrace(onFail: ex => type = null);
+
+            if (type != null)
+                return type;
+
+            Assembly[] allAssemblies = AppDomain.CurrentDomain.GetAssemblies();
+            Assembly targetAssembly = allAssemblies.FirstOrDefault(a => a.FullName.Is(hmqEvent.Assembly));
+
+            if (targetAssembly != null)
+            {
+                new Action(() => {
+
+                    type
+                        = targetAssembly.GetType(hmqEvent.Type)
+                        ??
+                        targetAssembly.GetTypes()?.FirstOrDefault(t => t.FullName.Is(hmqEvent.Type))
+                        ??
+                        targetAssembly.GetTypes()?.FirstOrDefault(t => t.Name.Is(hmqEvent.Type))
+
+                        ;
+
+                }).TryOrFailWithGrace(onFail: ex => type = null);
+
+                if (type != null)
+                    return type;
+            }
+
+            Type[] allTypes = allAssemblies.SelectMany(a => a.GetTypes() ?? Array.Empty<Type>()).ToArray();
+
+            new Action(() => {
+
+                type
+                    = allTypes.FirstOrDefault(t => t.FullName.Is(hmqEvent.Type))
+                    ??
+                    allTypes.FirstOrDefault(t => t.Name.Is(hmqEvent.Type))
+                    ;
+
+            }).TryOrFailWithGrace(onFail: ex => type = null);
+
+            return type;
         }
     }
 }
