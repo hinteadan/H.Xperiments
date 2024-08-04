@@ -4,7 +4,7 @@ using System;
 
 namespace H.MQ.Core
 {
-    internal class HmqActorIdentity : ImAnHmqActorIdentity
+    public class HmqActorIdentity : ImAnHmqActorIdentity
     {
         public string ID { get; set; } = Guid.NewGuid().ToString();
         public Note[] IdentityAttributes { get; set; }

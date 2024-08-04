@@ -36,7 +36,7 @@ namespace H.MQ.Concrete
 
                     result = (await Handler(hmqEvent)) ?? OperationResult.Fail($"Handler for {ID} returned NULL as OperationResult");
 
-                    OperationResult logResult = await eventReActingRegistry.LogEventReAction(hmqEvent, result.WithPayload(this.ToIdentityOnly()));
+                    OperationResult logResult = await eventReActingRegistry.LogEventReAction(hmqEvent, result.WithPayload(this.ToIdentityOnly() as ImAnHmqActorIdentity));
                     if (!logResult.IsSuccessful)
                     {
                         await logger.LogError($"Error occurred while trying to LogEventReAction for {hmqEvent} event in {ID} ReActor");

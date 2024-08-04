@@ -71,7 +71,7 @@ namespace H.MQ.Core
             return (hmqEvent?.Attributes?.Get("Source")).IsEmpty() || !hmqEvent.IsExternal();
         }
 
-        public static ImAnHmqActorIdentity ToIdentityOnly<T>(this T identityHolder) where T : class, ImAnHmqActorIdentity
+        public static HmqActorIdentity ToIdentityOnly<T>(this T identityHolder) where T : class, ImAnHmqActorIdentity
         {
             if (identityHolder is null)
                 return null;

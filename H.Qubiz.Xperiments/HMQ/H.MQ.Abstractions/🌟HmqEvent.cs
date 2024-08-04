@@ -1,4 +1,5 @@
-﻿using H.Necessaire;
+﻿using H.MQ.Core;
+using H.Necessaire;
 using System;
 
 namespace H.MQ.Abstractions
@@ -9,7 +10,7 @@ namespace H.MQ.Abstractions
 
         public DateTime HappenedAt { get; set; } = DateTime.UtcNow;
 
-        public ImAnHmqActorIdentity RaisedBy { get; set; }
+        public HmqActorIdentity RaisedBy { get; set; }
         public string RaisedByID => RaisedBy?.ID;
 
 
