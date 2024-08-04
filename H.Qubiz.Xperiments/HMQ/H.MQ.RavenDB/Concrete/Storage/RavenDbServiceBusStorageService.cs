@@ -7,6 +7,7 @@ using Raven.Client.Documents.Indexes;
 using Raven.Client.Documents.Linq;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace H.MQ.RavenDB.Concrete.Storage
 {
@@ -26,6 +27,12 @@ namespace H.MQ.RavenDB.Concrete.Storage
         }
 
         protected override string GetIdFor(ServiceBusMessage item) => item.ID;
+
+        protected override async Task EnsureIndexes()
+        {
+            await base.EnsureIndexes();
+            await EnsureIndex(() => ServiceBusMessageFilterIndex.Instance);
+        }
 
         protected override IRavenQueryable<ServiceBusMessage> ApplyFilter(IRavenQueryable<ServiceBusMessage> query, HmqEventFilter filter)
         {
@@ -51,12 +58,14 @@ namespace H.MQ.RavenDB.Concrete.Storage
         }
 
 
-        public void StartListeningForServiceBusCollectionChanges()
+        public async Task StartListeningForServiceBusCollectionChanges()
         {
+            await EnsureIndexes().ConfigureAwait(false);
+
             ravenDbServiceBusSubscription
                 = ravenDbDocumentStore
                 .Store
-                .Changes()
+                .Changes(DatabaseName)
                 .ForDocumentsInCollection<ServiceBusMessage>()
                 .Subscribe(this)
                 ;
@@ -91,6 +100,8 @@ namespace H.MQ.RavenDB.Concrete.Storage
 
     internal class ServiceBusMessageFilterIndex : AbstractIndexCreationTask<ServiceBusMessage>
     {
+        public static readonly ServiceBusMessageFilterIndex Instance = new ServiceBusMessageFilterIndex();
+
         public ServiceBusMessageFilterIndex()
         {
             Map = docs => docs.Select(doc =>

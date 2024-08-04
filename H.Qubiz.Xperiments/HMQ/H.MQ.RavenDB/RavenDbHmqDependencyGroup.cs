@@ -1,11 +1,14 @@
 ﻿using H.Necessaire;
+using H.Necessaire.RavenDB;
 
 namespace H.MQ.RavenDB
 {
-    internal class RavenDbHmqDependencyGroup : ImADependencyGroup
+    internal class RavenDbHmqDependencyGroup : RavenDbDependencyGroup
     {
-        public void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
+        public override void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {
+            base.RegisterDependencies(dependencyRegistry);
+
             dependencyRegistry
 
                 .Register<Concrete.DependencyGroup>(() => new Concrete.DependencyGroup())

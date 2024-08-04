@@ -20,10 +20,13 @@ namespace H.MQ.RavenDB.Concrete
             logger = dependencyProvider.GetLogger<RavenDbHmqExternalEventListener>();
         }
 
-        public Task<OperationResult> Start()
+        public async Task<OperationResult> Start()
         {
             ravenDbServiceBusStore.OnServiceBusMessage += RavenDbServiceBusStore_OnServiceBusMessage;
-            return OperationResult.Win().AsTask();
+
+            await ravenDbServiceBusStore.StartListeningForServiceBusCollectionChanges();
+
+            return OperationResult.Win();
         }
 
         public Task<OperationResult> Stop()

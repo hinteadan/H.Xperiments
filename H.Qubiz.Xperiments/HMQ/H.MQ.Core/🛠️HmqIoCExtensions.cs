@@ -9,7 +9,7 @@ namespace H.MQ.Core
         {
             ImAnHmqExternalEventListener periodicPollingExternalListener
                 = dependencyProvider.Build<ImAnHmqExternalEventListener>(buildTypeID);
-            periodicPollingExternalListener.Start();
+            periodicPollingExternalListener.Start().ConfigureAwait(false).GetAwaiter().GetResult();
             return dependencyProvider;
         }
     }

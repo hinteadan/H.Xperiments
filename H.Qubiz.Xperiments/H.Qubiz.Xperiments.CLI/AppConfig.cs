@@ -16,7 +16,7 @@ namespace H.Qubiz.Xperiments.CLI
                 wireup
                 .With(x => x.Register<RuntimeConfig>(() => new RuntimeConfig
                 {
-                    Values = new[] {
+                    Values = [
                         "NuSpecRootFolderPath".ConfigWith(GetCodebaseFolderPath()),
                         "HMQ".ConfigWith(
                             "Azure".ConfigWith(
@@ -26,8 +26,19 @@ namespace H.Qubiz.Xperiments.CLI
                                     "SubscriptionName".ConfigWith(ReadConfigFromFile("AzureServiceBusSubscriptionName.cfg.txt"))
                                 )
                             )
+                        ),
+                        "RavenDbConnections".ConfigWith(
+                            "ClientCertificateName".ConfigWith(ReadConfigFromFile("RavenDbCertName.cfg.txt")),
+                            "ClientCertificatePassword".ConfigWith(ReadConfigFromFile("RavenDbCertPass.cfg.txt")),
+                            "DatabaseUrls".ConfigWith(
+                                "0".ConfigWith(ReadConfigFromFile("RavenDbUrl.cfg.txt"))
+                            ),
+                            "DatabaseNames".ConfigWith(
+                                "Core".ConfigWith("H.Xperiments.Core.DevTesting"),
+                                "Default".ConfigWith("H.Xperiments.Default.DevTesting")
+                            )
                         )
-                    },
+                    ],
                 }));
             ;
         }
