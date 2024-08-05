@@ -5,6 +5,7 @@ using H.Necessaire.Runtime.CLI.Commands;
 using System.Threading.Tasks;
 using H.MQ.Core;
 using System;
+using H.Necessaire.Serialization;
 
 namespace H.Qubiz.Xperiments.CLI.Commands
 {
@@ -38,6 +39,8 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         {
             await Task.CompletedTask;
 
+            LogEvent(hmqEvent);
+
             return OperationResult.Win();
         }
 
@@ -45,7 +48,17 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         {
             await Task.CompletedTask;
 
+            LogEvent(hmqEvent);
+
             return OperationResult.Win();
+        }
+
+        private void LogEvent(HmqEvent hmqEvent, string eventType = null)
+        {
+            Log($"Received {(!eventType.IsEmpty() ? eventType : (hmqEvent.IsInternal() ? "INTERNAL" : "EXTERNAL"))} event {hmqEvent.Name}[{hmqEvent.ID}]");
+            Log($"{Environment.NewLine}{Environment.NewLine}BEGIN======={Environment.NewLine}" +
+                $"{hmqEvent.ToJsonObject(isPrettyPrinted: true)}" +
+                $"{Environment.NewLine}END========={Environment.NewLine}");
         }
 
         class SomeFancyPayload
