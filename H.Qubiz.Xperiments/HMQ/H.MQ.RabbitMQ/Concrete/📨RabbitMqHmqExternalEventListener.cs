@@ -49,7 +49,7 @@ namespace H.MQ.RabbitMQ.Concrete
             rabbitMqConenction = rabbitMqConnectionFactory.CreateConnection();
             rabbitMqChannel = rabbitMqConenction.CreateModel();
 
-            rabbitMqChannel.ExchangeDeclare(exchange, ExchangeType.Fanout);
+            rabbitMqChannel.ExchangeDeclare(exchange, ExchangeType.Direct);
             QueueDeclareOk queue = rabbitMqChannel.QueueDeclare();
 
             rabbitMqChannel
