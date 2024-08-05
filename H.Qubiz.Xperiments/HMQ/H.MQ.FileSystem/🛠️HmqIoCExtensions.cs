@@ -7,7 +7,7 @@ namespace H.MQ.FileSystem
     {
         public static T WithHmqFileSystemMessageBus<T>(this T dependencyRegistry) where T : ImADependencyRegistry
         {
-            dependencyRegistry.Register<FileSystemHmqDependencyGroup>(() => new FileSystemHmqDependencyGroup());
+            dependencyRegistry.Register<DependencyGroup>(() => new DependencyGroup());
             return dependencyRegistry;
         }
 

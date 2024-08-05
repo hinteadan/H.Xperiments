@@ -3,7 +3,7 @@ using H.Necessaire.RavenDB;
 
 namespace H.MQ.RavenDB
 {
-    internal class RavenDbHmqDependencyGroup : RavenDbDependencyGroup
+    internal class DependencyGroup : RavenDbDependencyGroup
     {
         public override void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {

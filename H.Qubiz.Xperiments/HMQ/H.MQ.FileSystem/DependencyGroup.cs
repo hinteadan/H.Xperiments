@@ -1,8 +1,8 @@
 ﻿using H.Necessaire;
 
-namespace H.MQ
+namespace H.MQ.FileSystem
 {
-    internal class HmqDependencyGroup : ImADependencyGroup
+    internal class DependencyGroup : ImADependencyGroup
     {
         public void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {

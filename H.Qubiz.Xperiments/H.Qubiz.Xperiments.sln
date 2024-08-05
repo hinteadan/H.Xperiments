@@ -33,6 +33,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Runtime", "Runtime", "{0686
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.MQ.Runtime.FileSystem", "HMQ\H.MQ.Runtime.FileSystem\H.MQ.Runtime.FileSystem.csproj", "{1A8EE2BD-EB99-4595-8F60-E0E74741F678}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.MQ.RabbitMQ", "HMQ\H.MQ.RabbitMQ\H.MQ.RabbitMQ.csproj", "{805E6F49-43C7-4383-9130-2A2BEB87E0F1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{1A8EE2BD-EB99-4595-8F60-E0E74741F678}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A8EE2BD-EB99-4595-8F60-E0E74741F678}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A8EE2BD-EB99-4595-8F60-E0E74741F678}.Release|Any CPU.Build.0 = Release|Any CPU
+		{805E6F49-43C7-4383-9130-2A2BEB87E0F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{805E6F49-43C7-4383-9130-2A2BEB87E0F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{805E6F49-43C7-4383-9130-2A2BEB87E0F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{805E6F49-43C7-4383-9130-2A2BEB87E0F1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{555BAF97-6B03-4C5A-8F32-2C673BD03ADE} = {1C96C0C4-BB5F-4D6B-AE09-F67158938D13}
 		{068601E2-E9AC-4375-BE5D-8C6DF90C10B4} = {1C96C0C4-BB5F-4D6B-AE09-F67158938D13}
 		{1A8EE2BD-EB99-4595-8F60-E0E74741F678} = {068601E2-E9AC-4375-BE5D-8C6DF90C10B4}
+		{805E6F49-43C7-4383-9130-2A2BEB87E0F1} = {1C96C0C4-BB5F-4D6B-AE09-F67158938D13}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D1C2BA0F-DC65-4EA6-BEDD-DA2182F47671}
