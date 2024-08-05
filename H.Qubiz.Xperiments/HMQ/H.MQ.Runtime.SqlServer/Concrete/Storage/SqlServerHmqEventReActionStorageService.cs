@@ -16,6 +16,17 @@ namespace H.MQ.Runtime.SqlServer.Concrete.Storage
         #region Construct
         public SqlServerHmqEventReActionStorageService() : base(connectionString: null, tableName: table, databaseName: "H.Necessaire.HMQ.Core") { }
         protected override Task<SqlMigration[]> GetAllMigrations() => sqlMigrations.AsTask();
+
+        public override void ReferDependencies(ImADependencyProvider dependencyProvider)
+        {
+            connectionString = dependencyProvider.GetRuntimeConfig()?.Get("SqlConnections")?.Get("DefaultConnectionString")?.ToString();
+            connectionStringWithoutDatabase = connectionString?.WithoutDatabase();
+            databaseName = dependencyProvider.GetRuntimeConfig()?.Get("SqlConnections")?.Get("DatabaseNames")?.Get("HMQRegistry")?.ToString();
+            if (!databaseName.IsEmpty())
+                connectionString = connectionStringWithoutDatabase.WithDatabase(databaseName);
+
+            base.ReferDependencies(dependencyProvider);
+        }
         #endregion
 
         protected override ISqlFilterCriteria[] ApplyFilter(HmqEventReActionFilter filter, DynamicParameters sqlParams)

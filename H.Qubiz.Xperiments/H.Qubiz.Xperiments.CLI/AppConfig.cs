@@ -43,6 +43,14 @@ namespace H.Qubiz.Xperiments.CLI
                                 "Core".ConfigWith("H.Xperiments.Core.DevTesting"),
                                 "Default".ConfigWith("H.Xperiments.Default.DevTesting")
                             )
+                        ),
+                        "SqlConnections".ConfigWith(
+                            "DefaultConnectionString".ConfigWith(ReadConfigFromFile("SqlServerDefaultConnectionString.cfg.txt")),
+                            "DatabaseNames".ConfigWith(
+                                "Core".ConfigWith("H.Xperiments.DevTest.Core"),
+                                "Default".ConfigWith("H.Xperiments.DevTest"),
+                                "HMQRegistry".ConfigWith("H.MQ.Registry")
+                            )
                         )
                     ],
                 }));

@@ -6,6 +6,7 @@ using H.MQ.RabbitMQ;
 using H.MQ.RavenDB;
 using H.MQ.Runtime.FileSystem;
 using H.MQ.Runtime.RavenDb;
+using H.MQ.Runtime.SqlServer;
 using H.Necessaire;
 
 namespace H.Qubiz.Xperiments.CLI
@@ -23,9 +24,11 @@ namespace H.Qubiz.Xperiments.CLI
                 //.WithHmqFileSystemMessageBus()
                 //.WithHmqFileSystemRuntime()
                 //.StartHmqFileSystemExternalListener()
-                .WithHmqRavenDbRuntime()
-                .WithHmqRavenDbMessageBus()
-                .StartHmqRavenDbExternalListener()
+                //.WithHmqRavenDbRuntime()
+                .WithHmqSqlServerRuntime()
+                .StartHmqPeriodicPollingExternalListener()
+                //.WithHmqRavenDbMessageBus()
+                //.StartHmqRavenDbExternalListener()
                 //.WithHmqRabbitMqMessageBus()
                 //.StartHmqRabbitMqExternalListener()
 
