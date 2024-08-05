@@ -1,24 +1,14 @@
 ﻿using H.MQ.Abstractions;
-using H.MQ.Core;
 using H.Necessaire;
 using H.Necessaire.Runtime;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace H.MQ.Runtime.FileSystem.Concrete.Storage
 {
     internal class FileSystemHmqEventReActionStorageService : JsonCachedFileSystemStorageServiceBase<Guid, HmqEventReactionLog, HmqEventReActionFilter>
     {
-        protected override async Task<HmqEventReactionLog> ReadAndParseEntityFromStream(Stream serializedEntityStream)
-        {
-            HmqEventReactionLog result = await base.ReadAndParseEntityFromStream(serializedEntityStream);
-            result.Event = result.Event.ToWellTypedEventDataFromJson();
-            return result;
-        }
-
         protected override IEnumerable<HmqEventReactionLog> ApplyFilter(IEnumerable<HmqEventReactionLog> stream, HmqEventReActionFilter filter)
         {
             if (filter?.IDs?.Any() == true)

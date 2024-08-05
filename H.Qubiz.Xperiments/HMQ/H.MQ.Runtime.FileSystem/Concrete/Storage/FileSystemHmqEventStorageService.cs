@@ -12,13 +12,6 @@ namespace H.MQ.Runtime.FileSystem.Concrete.Storage
 {
     internal class FileSystemHmqEventStorageService : JsonCachedFileSystemStorageServiceBase<Guid, HmqEvent, HmqEventFilter>
     {
-        protected override async Task<HmqEvent> ReadAndParseEntityFromStream(Stream serializedEntityStream)
-        {
-            HmqEvent hmqEvent = await base.ReadAndParseEntityFromStream(serializedEntityStream);
-            hmqEvent = hmqEvent.ToWellTypedEventDataFromJson();
-            return hmqEvent;
-        }
-
         protected override IEnumerable<HmqEvent> ApplyFilter(IEnumerable<HmqEvent> stream, HmqEventFilter filter)
         {
             if (filter?.IDs?.Any() == true)

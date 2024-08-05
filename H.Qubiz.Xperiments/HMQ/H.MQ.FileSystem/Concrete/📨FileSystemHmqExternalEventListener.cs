@@ -60,7 +60,7 @@ namespace H.MQ.FileSystem.Concrete
 
                     string serializedEventReceived = await e.EventFile.OpenRead().ReadAsStringAsync(isStreamLeftOpen: false);
                     ServiceBusMessage serviceBusMessage = serializedEventReceived.TryJsonToObject<ServiceBusMessage>().ThrowOnFailOrReturn();
-                    HmqEvent hmqEvent = serviceBusMessage.Event.ToWellTypedEventDataFromJson();
+                    HmqEvent hmqEvent = serviceBusMessage.Event;
                     await internalEventRiser.Raise(hmqEvent);
 
                 })

@@ -96,7 +96,7 @@ namespace H.MQ.Azure.ServiceBus.Concrete
         private async Task ServiceBusProcessor_ProcessMessageAsync(ProcessMessageEventArgs arg)
         {
             string serializedEventReceived = arg.Message.Body.ToString();
-            HmqEvent hmqEvent = serializedEventReceived.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn().ToWellTypedEventDataFromJson();
+            HmqEvent hmqEvent = serializedEventReceived.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn();
             await internalEventRiser.Raise(hmqEvent);
         }
 

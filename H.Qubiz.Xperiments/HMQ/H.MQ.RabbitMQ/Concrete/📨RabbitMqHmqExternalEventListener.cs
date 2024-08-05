@@ -95,7 +95,7 @@ namespace H.MQ.RabbitMQ.Concrete
         {
             byte[] body = args.Body.ToArray();
             string hmqEventAsJsonString = Encoding.UTF8.GetString(body);
-            HmqEvent hmqEvent = hmqEventAsJsonString.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn().ToWellTypedEventDataFromJson();
+            HmqEvent hmqEvent = hmqEventAsJsonString.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn();
             await internalEventRiser.Raise(hmqEvent);
         }
     }

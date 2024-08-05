@@ -1,4 +1,5 @@
 ﻿using H.MQ.Abstractions;
+using H.MQ.Core;
 using H.Necessaire;
 using System;
 using System.Linq;
@@ -120,7 +121,7 @@ namespace H.MQ.Concrete
             await
                 new Func<Task>(async () =>
                 {
-                    result = (await reactor.Handle(hmqEvent)).WithPayload(reactor);
+                    result = (await reactor.Handle(hmqEvent.ToWellTypedEventData())).WithPayload(reactor);
                 })
                 .TryOrFailWithGrace(
                     onFail: ex => result = OperationResult.Fail(ex, $"Error occurred while trying to handle {hmqEvent.Name}({hmqEvent.ID}) that happened on {hmqEvent.HappenedAt.PrintDateAndTime()}. Message: {ex.Message}").WithPayload(reactor)

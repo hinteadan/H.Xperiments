@@ -1,9 +1,6 @@
 ﻿using H.MQ.Abstractions;
-using H.MQ.Core;
 using H.Necessaire;
 using H.Necessaire.RavenDB;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using Raven.Client.Documents;
 using Raven.Client.Documents.Changes;
 using Raven.Client.Documents.Indexes;
@@ -35,15 +32,6 @@ namespace H.MQ.RavenDB.Concrete.Storage
         {
             await base.EnsureIndexes();
             await EnsureIndex(() => ServiceBusMessageFilterIndex.Instance);
-        }
-
-        public override async Task<ServiceBusMessage> Load(string id)
-        {
-            ServiceBusMessage serviceBusMessage = await base.Load(id);
-
-            serviceBusMessage.Event = serviceBusMessage.Event.ToWellTypedEventDataFromJson();
-
-            return serviceBusMessage;
         }
 
         protected override IRavenQueryable<ServiceBusMessage> ApplyFilter(IRavenQueryable<ServiceBusMessage> query, HmqEventFilter filter)

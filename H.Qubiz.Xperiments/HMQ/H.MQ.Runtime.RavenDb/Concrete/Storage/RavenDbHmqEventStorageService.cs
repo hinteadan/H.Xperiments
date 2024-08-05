@@ -1,9 +1,11 @@
 ﻿using H.MQ.Abstractions;
+using H.MQ.Core;
 using H.Necessaire;
 using H.Necessaire.Runtime.RavenDB;
 using Raven.Client.Documents.Indexes;
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace H.MQ.Runtime.RavenDb.Concrete.Storage
 {

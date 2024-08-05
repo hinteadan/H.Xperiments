@@ -140,7 +140,7 @@ namespace H.MQ.Core
             return type;
         }
 
-        public static HmqEvent ToWellTypedEventDataFromJson(this HmqEvent hmqEvent)
+        public static HmqEvent ToWellTypedEventData(this HmqEvent hmqEvent)
         {
             if (hmqEvent?.Data is null)
                 return hmqEvent;
