@@ -12,7 +12,7 @@
 	<ItemGroup>
 		<PackageReference Include="H.Necessaire" Version="2.35.2" />
 		<PackageReference Include="H.Necessaire.Runtime" Version="2.35.2" />
-		<PackageReference Include="H.Necessaire.Serialization" Version="2.35.2" />
+		<PackageReference Include="H.Necessaire.Runtime.RavenDB" Version="2.35.2" />
 	</ItemGroup>
 
 </Project>
