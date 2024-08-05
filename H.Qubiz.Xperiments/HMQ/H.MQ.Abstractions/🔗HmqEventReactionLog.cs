@@ -12,7 +12,7 @@ namespace H.MQ.Abstractions
         public Guid EventID => Event?.ID ?? Guid.Empty;
         public DateTime EventHappenedAt => Event?.HappenedAt ?? AsOf;
 
-        public ImAnHmqActorIdentity ActorIdentity { get; set; }
+        public HmqActorIdentity ActorIdentity { get; set; }
         public string ActorID => ActorIdentity?.ID;
 
         public OperationResult OperationResult { get; set; }

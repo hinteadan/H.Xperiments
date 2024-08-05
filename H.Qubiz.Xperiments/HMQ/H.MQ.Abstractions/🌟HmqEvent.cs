@@ -1,5 +1,4 @@
-﻿using H.MQ.Core;
-using H.Necessaire;
+﻿using H.Necessaire;
 using System;
 
 namespace H.MQ.Abstractions

@@ -1,8 +1,7 @@
-﻿using H.MQ.Abstractions;
-using H.Necessaire;
+﻿using H.Necessaire;
 using System;
 
-namespace H.MQ.Core
+namespace H.MQ.Abstractions
 {
     public class HmqActorIdentity : ImAnHmqActorIdentity
     {
