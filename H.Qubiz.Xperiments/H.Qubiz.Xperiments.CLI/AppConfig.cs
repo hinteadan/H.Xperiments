@@ -25,6 +25,10 @@ namespace H.Qubiz.Xperiments.CLI
                                     "TopicName".ConfigWith(ReadConfigFromFile("AzureServiceBusTopicName.cfg.txt")),
                                     "SubscriptionName".ConfigWith(ReadConfigFromFile("AzureServiceBusSubscriptionName.cfg.txt"))
                                 )
+                            ),
+                            "RabbitMQ".ConfigWith(
+                                "HostName".ConfigWith(ReadConfigFromFile("RabbitMqHostName.cfg.txt")),
+                                "VirtualHost".ConfigWith(ReadConfigFromFile("RabbitMqVirtualHost.cfg.txt"))
                             )
                         ),
                         "RavenDbConnections".ConfigWith(

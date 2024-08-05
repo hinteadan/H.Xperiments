@@ -17,6 +17,7 @@
 	  <ProjectReference Include="..\HMQ\H.MQ.Abstractions\H.MQ.Abstractions.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ.Azure.ServiceBus\H.MQ.Azure.ServiceBus.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ.FileSystem\H.MQ.FileSystem.csproj" />
+	  <ProjectReference Include="..\HMQ\H.MQ.RabbitMQ\H.MQ.RabbitMQ.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ.RavenDB\H.MQ.RavenDB.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ.Runtime.FileSystem\H.MQ.Runtime.FileSystem.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ\H.MQ.csproj" />

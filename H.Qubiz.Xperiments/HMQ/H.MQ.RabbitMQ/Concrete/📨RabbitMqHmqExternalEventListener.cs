@@ -18,9 +18,9 @@ namespace H.MQ.RabbitMQ.Concrete
             logger = dependencyProvider.GetLogger<RabbitMqHmqExternalEventListener>();
         }
 
-        public async Task<OperationResult> Start()
+        public Task<OperationResult> Start()
         {
-            return OperationResult.Win();
+            return OperationResult.Win().AsTask();
         }
 
         public Task<OperationResult> Stop()
