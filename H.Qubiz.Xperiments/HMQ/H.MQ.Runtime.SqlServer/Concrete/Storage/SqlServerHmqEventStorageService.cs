@@ -91,6 +91,7 @@ namespace H.MQ.Runtime.SqlServer.Concrete.Storage
                 .MapEntityToSql(entity)
                 .And(x =>
                 {
+                    x.HappenedAtTicks = entity.HappenedAt.Ticks;
                     x.RaisedByJson = entity.RaisedBy?.ToJsonObject();
                     x.AttributesJson = entity.Attributes?.ToJsonArray();
                     x.DataJson = entity.Data?.ToJsonObject();
@@ -105,6 +106,7 @@ namespace H.MQ.Runtime.SqlServer.Concrete.Storage
                 .MapSqlToEntity(sqlEntity)
                 .And(x =>
                 {
+                    x.HappenedAt = new DateTime(sqlEntity.HappenedAtTicks);
                     x.RaisedBy = sqlEntity.RaisedByJson?.JsonToObject<HmqActorIdentity>();
                     x.Attributes = sqlEntity.AttributesJson?.DeserializeToNotes();
                     x.Data = sqlEntity.DataJson?.JsonToObject<object>();

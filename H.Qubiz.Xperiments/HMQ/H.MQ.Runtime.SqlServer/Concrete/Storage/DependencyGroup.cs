@@ -14,6 +14,10 @@ namespace H.MQ.Runtime.SqlServer.Concrete.Storage
                 .Register<ImAStorageService<Guid, HmqEvent>>(() => dependencyRegistry.Get<SqlServerHmqEventStorageService>())
                 .Register<ImAStorageBrowserService<HmqEvent, HmqEventFilter>>(() => dependencyRegistry.Get<SqlServerHmqEventStorageService>())
 
+                .Register<SqlServerHmqEventReActionStorageService>(() => new SqlServerHmqEventReActionStorageService())
+                .Register<ImAStorageService<Guid, HmqEventReactionLog>>(() => dependencyRegistry.Get<SqlServerHmqEventReActionStorageService>())
+                .Register<ImAStorageBrowserService<HmqEventReactionLog, HmqEventReActionFilter>>(() => dependencyRegistry.Get<SqlServerHmqEventReActionStorageService>())
+
                 ;
         }
     }
