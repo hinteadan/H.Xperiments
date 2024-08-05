@@ -6,7 +6,11 @@ namespace H.MQ.RabbitMQ.Concrete
     {
         public void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {
+            dependencyRegistry
 
+                .Register<RabbitMqHmqExternalEventListener>(() => new RabbitMqHmqExternalEventListener())
+
+                ;
         }
     }
 }
