@@ -5,7 +5,7 @@ namespace H.MQ.FileSystem
 {
     public static class HmqIoCExtensions
     {
-        public static T WithFileSystemHmq<T>(this T dependencyRegistry) where T : ImADependencyRegistry
+        public static T WithHmqFileSystemMessageBus<T>(this T dependencyRegistry) where T : ImADependencyRegistry
         {
             dependencyRegistry.Register<FileSystemHmqDependencyGroup>(() => new FileSystemHmqDependencyGroup());
             return dependencyRegistry;

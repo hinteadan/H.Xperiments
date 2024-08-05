@@ -5,7 +5,7 @@ namespace H.MQ.Azure.ServiceBus
 {
     public static class HmqIoCExtensions
     {
-        public static T WithAzureServiceBusHmq<T>(this T dependencyRegistry) where T : ImADependencyRegistry
+        public static T WithHmqAzureServiceBusMessageBus<T>(this T dependencyRegistry) where T : ImADependencyRegistry
         {
             dependencyRegistry.Register<AzureServiceBusHmqDependencyGroup>(() => new AzureServiceBusHmqDependencyGroup());
             return dependencyRegistry;

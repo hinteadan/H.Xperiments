@@ -5,7 +5,7 @@ namespace H.MQ.RavenDB
 {
     public static class HmqIoCExtensions
     {
-        public static T WithRavenDbHmq<T>(this T dependencyRegistry) where T : ImADependencyRegistry
+        public static T WithHmqRavenDbMessageBus<T>(this T dependencyRegistry) where T : ImADependencyRegistry
         {
             dependencyRegistry.Register<RavenDbHmqDependencyGroup>(() => new RavenDbHmqDependencyGroup());
             return dependencyRegistry;
