@@ -11,7 +11,9 @@
 
 	<ItemGroup>
 		<PackageReference Include="H.Necessaire" Version="2.35.2" />
+		<PackageReference Include="H.Necessaire.Dapper" Version="2.35.2" />
 		<PackageReference Include="H.Necessaire.Runtime" Version="2.35.2" />
+		<PackageReference Include="H.Necessaire.Runtime.SqlServer" Version="2.35.2" />
 		<PackageReference Include="H.Necessaire.Serialization" Version="2.35.2" />
 	</ItemGroup>
 
