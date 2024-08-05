@@ -7,7 +7,7 @@ namespace H.MQ.Runtime.RavenDb
         public void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {
             dependencyRegistry
-                .Register<Concrete.Storage.DependencyGroup>(() => new Concrete.DependencyGroup())
+                .Register<Concrete.DependencyGroup>(() => new Concrete.DependencyGroup())
                 ;
         }
     }

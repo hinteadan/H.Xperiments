@@ -47,8 +47,6 @@ namespace H.MQ.Runtime.RavenDb.Concrete.Storage
 
     internal class HmqEventFilterIndex : AbstractIndexCreationTask<HmqEvent>
     {
-        public static readonly HmqEventFilterIndex Instance = new HmqEventFilterIndex();
-
         public HmqEventFilterIndex()
         {
             Map = docs => docs.Select(doc =>
