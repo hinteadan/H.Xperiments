@@ -6,6 +6,7 @@ using H.Necessaire.Runtime.SqlServer;
 using H.Necessaire.Serialization;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace H.MQ.Runtime.SqlServer.Concrete.Storage
@@ -20,7 +21,37 @@ namespace H.MQ.Runtime.SqlServer.Concrete.Storage
         {
             List<ISqlFilterCriteria> result = new List<ISqlFilterCriteria>();
 
+            if (filter?.IDs?.Any() ?? false)
+            {
+                result.Add(new SqlFilterCriteria(columnName: nameof(HmqEventSqlEntry.ID), parameterName: nameof(filter.IDs), @operator: "IN"));
+            }
 
+            if (filter?.From != null)
+            {
+                sqlParams.Add($"{nameof(filter.From)}Ticks", filter.From.Value.Ticks);
+                result.Add(new SqlFilterCriteria(columnName: nameof(HmqEventSqlEntry.HappenedAtTicks), parameterName: $"{nameof(filter.From)}Ticks", @operator: ">="));
+            }
+
+            if (filter?.To != null)
+            {
+                sqlParams.Add($"{nameof(filter.To)}Ticks", filter.To.Value.Ticks);
+                result.Add(new SqlFilterCriteria(columnName: nameof(HmqEventSqlEntry.HappenedAtTicks), parameterName: $"{nameof(filter.To)}Ticks", @operator: "<="));
+            }
+
+            if (filter?.Names?.Any() ?? false)
+            {
+                result.Add(new SqlFilterCriteria(columnName: nameof(HmqEventSqlEntry.Name), parameterName: nameof(filter.Names), @operator: "IN"));
+            }
+
+            if (filter?.Types?.Any() ?? false)
+            {
+                result.Add(new SqlFilterCriteria(columnName: nameof(HmqEventSqlEntry.Type), parameterName: nameof(filter.Types), @operator: "IN"));
+            }
+
+            if (filter?.Assemblies?.Any() ?? false)
+            {
+                result.Add(new SqlFilterCriteria(columnName: nameof(HmqEventSqlEntry.Assembly), parameterName: nameof(filter.Assemblies), @operator: "IN"));
+            }
 
             return result.ToArray();
         }
@@ -31,6 +62,7 @@ namespace H.MQ.Runtime.SqlServer.Concrete.Storage
     {
         public Guid ID { get; set; }
         public DateTime HappenedAt { get; set; }
+        public long HappenedAtTicks { get; set; }
         public string RaisedByJson { get; set; }
         public string RaisedByID { get; set; }
 

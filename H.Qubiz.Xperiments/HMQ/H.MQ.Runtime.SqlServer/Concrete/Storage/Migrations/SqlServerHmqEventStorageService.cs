@@ -18,6 +18,7 @@ CREATE TABLE [dbo].[{table}]
 (
     [{nameof(HmqEventSqlEntry.ID)}] [uniqueidentifier] NOT NULL,
     [{nameof(HmqEventSqlEntry.HappenedAt)}] [datetime2](7) NOT NULL,
+    [{nameof(HmqEventSqlEntry.HappenedAtTicks)}] [bigint] NOT NULL,
     [{nameof(HmqEventSqlEntry.RaisedByJson)}] [nvarchar](MAX) NULL,
     [{nameof(HmqEventSqlEntry.RaisedByID)}] [nvarchar](450) NULL,
     [{nameof(HmqEventSqlEntry.Name)}] [nvarchar](450) NULL,

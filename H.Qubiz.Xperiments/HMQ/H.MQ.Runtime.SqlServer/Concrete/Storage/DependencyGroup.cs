@@ -1,4 +1,6 @@
-﻿using H.Necessaire;
+﻿using H.MQ.Abstractions;
+using H.Necessaire;
+using System;
 
 namespace H.MQ.Runtime.SqlServer.Concrete.Storage
 {
@@ -6,7 +8,13 @@ namespace H.MQ.Runtime.SqlServer.Concrete.Storage
     {
         public void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {
-            
+            dependencyRegistry
+
+                .Register<SqlServerHmqEventStorageService>(() => new SqlServerHmqEventStorageService())
+                .Register<ImAStorageService<Guid, HmqEvent>>(() => dependencyRegistry.Get<SqlServerHmqEventStorageService>())
+                .Register<ImAStorageBrowserService<HmqEvent, HmqEventFilter>>(() => dependencyRegistry.Get<SqlServerHmqEventStorageService>())
+
+                ;
         }
     }
 }
