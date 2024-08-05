@@ -6,6 +6,14 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Remove="free.hinteadan.client.certificate.with.password.pfx" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Include="free.hinteadan.client.certificate.with.password.pfx" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="H.Necessaire.CLI" Version="2.35.2" />
 	</ItemGroup>
 
@@ -20,6 +28,7 @@
 	  <ProjectReference Include="..\HMQ\H.MQ.RabbitMQ\H.MQ.RabbitMQ.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ.RavenDB\H.MQ.RavenDB.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ.Runtime.FileSystem\H.MQ.Runtime.FileSystem.csproj" />
+	  <ProjectReference Include="..\HMQ\H.MQ.Runtime.RavenDb\H.MQ.Runtime.RavenDb.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ\H.MQ.csproj" />
 	</ItemGroup>
 
