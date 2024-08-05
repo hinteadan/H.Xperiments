@@ -20,6 +20,7 @@
 	  <ProjectReference Include="..\HMQ\H.MQ.RabbitMQ\H.MQ.RabbitMQ.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ.RavenDB\H.MQ.RavenDB.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ.Runtime.FileSystem\H.MQ.Runtime.FileSystem.csproj" />
+	  <ProjectReference Include="..\HMQ\H.MQ.SqlServer\H.MQ.SqlServer.csproj" />
 	  <ProjectReference Include="..\HMQ\H.MQ\H.MQ.csproj" />
 	</ItemGroup>
 

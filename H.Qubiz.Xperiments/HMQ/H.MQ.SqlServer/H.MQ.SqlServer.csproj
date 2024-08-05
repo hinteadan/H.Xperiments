@@ -1,8 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\H.MQ.Abstractions\H.MQ.Abstractions.csproj" />
@@ -11,8 +11,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="H.Necessaire" Version="2.35.2" />
-		<PackageReference Include="H.Necessaire.RavenDB" Version="2.35.2" />
-		<PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="8.0.0" />
+		<PackageReference Include="H.Necessaire.Dapper" Version="2.35.2" />
+		<PackageReference Include="H.Necessaire.Serialization" Version="2.35.2" />
 	</ItemGroup>
 
 </Project>
