@@ -63,6 +63,13 @@ namespace H.MQ.RabbitMQ.Concrete
 
             eventConsumer.Received += EventConsumer_Received;
 
+            rabbitMqChannel
+                .BasicConsume(
+                    queue: queue.QueueName,
+                    autoAck: true,
+                    consumer: eventConsumer
+                );
+
             return OperationResult.Win().AsTask();
         }
 
