@@ -1,4 +1,5 @@
-﻿using H.Necessaire;
+﻿using H.MQ.Abstractions;
+using H.Necessaire;
 
 namespace H.MQ.RabbitMQ.Concrete
 {
@@ -7,6 +8,9 @@ namespace H.MQ.RabbitMQ.Concrete
         public void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {
             dependencyRegistry
+
+                .Register<RabbitMqHmqEventRiser>(() => new RabbitMqHmqEventRiser())
+                .Register<ImAnHmqEventRiser>(() => dependencyRegistry.Get<RabbitMqHmqEventRiser>())
 
                 .Register<RabbitMqHmqExternalEventListener>(() => new RabbitMqHmqExternalEventListener())
 
