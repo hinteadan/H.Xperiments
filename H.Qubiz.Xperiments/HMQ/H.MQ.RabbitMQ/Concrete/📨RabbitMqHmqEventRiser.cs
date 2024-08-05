@@ -3,12 +3,15 @@ using H.Necessaire;
 using H.Necessaire.Serialization;
 using RabbitMQ.Client;
 using System.Text;
+using System.Threading.Channels;
 using System.Threading.Tasks;
 
 namespace H.MQ.RabbitMQ.Concrete
 {
     internal class RabbitMqHmqEventRiser : ImAnHmqEventRiser, ImADependency
     {
+        string routingKey = "hmq";
+        string exchange = "hmq";
         ConnectionFactory rabbitMqConnectionFactory;
         public void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
@@ -34,10 +37,12 @@ namespace H.MQ.RabbitMQ.Concrete
             {
                 using (IModel rabbitMqChannel = rabbitMqConenction.CreateModel())
                 {
+                    rabbitMqChannel.ExchangeDeclare(exchange, ExchangeType.Fanout);
+
                     rabbitMqChannel
                         .BasicPublish(
-                            exchange: "",
-                            routingKey: hmqEvent.Name.IsEmpty() ? "defaut" : hmqEvent.Name,
+                            exchange: exchange,
+                            routingKey: routingKey,
                             basicProperties: null,
                             body: Encoding.UTF8.GetBytes(hmqEvent.ToJsonObject())
                         );

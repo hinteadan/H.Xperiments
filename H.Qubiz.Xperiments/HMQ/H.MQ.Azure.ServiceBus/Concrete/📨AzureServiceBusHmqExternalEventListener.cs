@@ -1,7 +1,9 @@
 ﻿using Azure.Messaging.ServiceBus;
 using H.MQ.Abstractions;
+using H.MQ.Core;
 using H.Necessaire;
 using H.Necessaire.Serialization;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -95,12 +97,29 @@ namespace H.MQ.Azure.ServiceBus.Concrete
         {
             string serializedEventReceived = arg.Message.Body.ToString();
             HmqEvent hmqEvent = serializedEventReceived.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn();
+            TryToConvertEventDataToAppropriateType(hmqEvent);
             await internalEventRiser.Raise(hmqEvent);
         }
 
         private async Task ServiceBusProcessor_ProcessErrorAsync(ProcessErrorEventArgs arg)
         {
             await logger.LogError(arg.Exception);
+        }
+
+        private void TryToConvertEventDataToAppropriateType(HmqEvent hmqEvent)
+        {
+            if (hmqEvent?.Data is null)
+                return;
+
+            if (!(hmqEvent.Data is JToken))
+                return;
+
+            Type dataType = hmqEvent.FindDataType();
+
+            if (dataType is null)
+                return;
+
+            hmqEvent.Data = (hmqEvent.Data as JToken).ToObject(dataType);
         }
     }
 }
