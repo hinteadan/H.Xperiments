@@ -1,4 +1,4 @@
-﻿namespace H.MQ.Runtime.SqlServer.Concrete.Storage.Migrations
+﻿namespace H.MQ.Runtime.SqlServer.Concrete.Storage
 {
     internal static class SqlScriptExtensions
     {
