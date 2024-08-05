@@ -1,12 +1,12 @@
-﻿using H.Necessaire.Dapper;
+﻿using Dapper;
+using H.MQ.Abstractions;
 using H.Necessaire;
+using H.Necessaire.Dapper;
+using H.Necessaire.Runtime.SqlServer;
+using H.Necessaire.Serialization;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using H.MQ.Abstractions;
-using H.Necessaire.Runtime.SqlServer;
 using System.Threading.Tasks;
-using Dapper;
 
 namespace H.MQ.Runtime.SqlServer.Concrete.Storage
 {
@@ -52,6 +52,32 @@ namespace H.MQ.Runtime.SqlServer.Concrete.Storage
     {
         static HmqEventSqlEntityMapper() => new HmqEventSqlEntityMapper().RegisterMapper();
 
+        public override HmqEventSqlEntry MapEntityToSql(HmqEvent entity)
+        {
+            return
+                base
+                .MapEntityToSql(entity)
+                .And(x =>
+                {
+                    x.RaisedByJson = entity.RaisedBy?.ToJsonObject();
+                    x.AttributesJson = entity.Attributes?.ToJsonArray();
+                    x.DataJson = entity.Data?.ToJsonObject();
+                })
+                ;
+        }
 
+        public override HmqEvent MapSqlToEntity(HmqEventSqlEntry sqlEntity)
+        {
+            return
+                base
+                .MapSqlToEntity(sqlEntity)
+                .And(x =>
+                {
+                    x.RaisedBy = sqlEntity.RaisedByJson?.JsonToObject<HmqActorIdentity>();
+                    x.Attributes = sqlEntity.AttributesJson?.DeserializeToNotes();
+                    x.Data = sqlEntity.DataJson?.JsonToObject<object>();
+                })
+                ;
+        }
     }
 }
