@@ -1,6 +1,6 @@
 ﻿using H.Necessaire;
 
-namespace H.MQ.Runtime.FileSystem
+namespace H.MQ.Runtime.SqlServer
 {
     internal class DependencyGroup : ImADependencyGroup
     {
