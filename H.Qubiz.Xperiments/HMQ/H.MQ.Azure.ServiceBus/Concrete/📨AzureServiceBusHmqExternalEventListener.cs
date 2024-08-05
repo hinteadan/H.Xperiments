@@ -96,30 +96,13 @@ namespace H.MQ.Azure.ServiceBus.Concrete
         private async Task ServiceBusProcessor_ProcessMessageAsync(ProcessMessageEventArgs arg)
         {
             string serializedEventReceived = arg.Message.Body.ToString();
-            HmqEvent hmqEvent = serializedEventReceived.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn();
-            TryToConvertEventDataToAppropriateType(hmqEvent);
+            HmqEvent hmqEvent = serializedEventReceived.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn().ToWellTypedEventDataFromJson();
             await internalEventRiser.Raise(hmqEvent);
         }
 
         private async Task ServiceBusProcessor_ProcessErrorAsync(ProcessErrorEventArgs arg)
         {
             await logger.LogError(arg.Exception);
-        }
-
-        private void TryToConvertEventDataToAppropriateType(HmqEvent hmqEvent)
-        {
-            if (hmqEvent?.Data is null)
-                return;
-
-            if (!(hmqEvent.Data is JToken))
-                return;
-
-            Type dataType = hmqEvent.FindDataType();
-
-            if (dataType is null)
-                return;
-
-            hmqEvent.Data = (hmqEvent.Data as JToken).ToObject(dataType);
         }
     }
 }

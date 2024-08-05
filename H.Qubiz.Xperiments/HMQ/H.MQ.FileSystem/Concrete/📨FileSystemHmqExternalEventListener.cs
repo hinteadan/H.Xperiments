@@ -60,8 +60,7 @@ namespace H.MQ.FileSystem.Concrete
 
                     string serializedEventReceived = await e.EventFile.OpenRead().ReadAsStringAsync(isStreamLeftOpen: false);
                     ServiceBusMessage serviceBusMessage = serializedEventReceived.TryJsonToObject<ServiceBusMessage>().ThrowOnFailOrReturn();
-                    HmqEvent hmqEvent = serviceBusMessage.Event;
-                    TryToConvertEventDataToAppropriateType(hmqEvent);
+                    HmqEvent hmqEvent = serviceBusMessage.Event.ToWellTypedEventDataFromJson();
                     await internalEventRiser.Raise(hmqEvent);
 
                 })
@@ -69,22 +68,6 @@ namespace H.MQ.FileSystem.Concrete
                 {
                     await logger.LogError($"Error occured while handling FileSystem event for {e.EventFile.FullName}. Message: {ex.Message}", ex);
                 });
-        }
-
-        private void TryToConvertEventDataToAppropriateType(HmqEvent hmqEvent)
-        {
-            if (hmqEvent?.Data is null)
-                return;
-
-            if (!(hmqEvent.Data is JToken))
-                return;
-
-            Type dataType = hmqEvent.FindDataType();
-
-            if (dataType is null)
-                return;
-
-            hmqEvent.Data = (hmqEvent.Data as JToken).ToObject(dataType);
         }
     }
 }

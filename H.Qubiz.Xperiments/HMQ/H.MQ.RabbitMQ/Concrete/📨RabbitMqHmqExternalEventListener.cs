@@ -95,25 +95,8 @@ namespace H.MQ.RabbitMQ.Concrete
         {
             byte[] body = args.Body.ToArray();
             string hmqEventAsJsonString = Encoding.UTF8.GetString(body);
-            HmqEvent hmqEvent = hmqEventAsJsonString.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn();
-            TryToConvertEventDataToAppropriateType(hmqEvent);
+            HmqEvent hmqEvent = hmqEventAsJsonString.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn().ToWellTypedEventDataFromJson();
             await internalEventRiser.Raise(hmqEvent);
-        }
-
-        private void TryToConvertEventDataToAppropriateType(HmqEvent hmqEvent)
-        {
-            if (hmqEvent?.Data is null)
-                return;
-
-            if (!(hmqEvent.Data is JToken))
-                return;
-
-            Type dataType = hmqEvent.FindDataType();
-
-            if (dataType is null)
-                return;
-
-            hmqEvent.Data = (hmqEvent.Data as JToken).ToObject(dataType);
         }
     }
 }

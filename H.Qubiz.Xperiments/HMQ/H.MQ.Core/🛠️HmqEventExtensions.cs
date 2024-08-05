@@ -1,5 +1,6 @@
 ﻿using H.MQ.Abstractions;
 using H.Necessaire;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Linq;
 using System.Reflection;
@@ -137,6 +138,24 @@ namespace H.MQ.Core
             }).TryOrFailWithGrace(onFail: ex => type = null);
 
             return type;
+        }
+
+        public static HmqEvent ToWellTypedEventDataFromJson(this HmqEvent hmqEvent)
+        {
+            if (hmqEvent?.Data is null)
+                return hmqEvent;
+
+            if (!(hmqEvent.Data is JToken))
+                return hmqEvent;
+
+            Type dataType = hmqEvent.FindDataType();
+
+            if (dataType is null)
+                return hmqEvent;
+
+            hmqEvent.Data = (hmqEvent.Data as JToken).ToObject(dataType);
+
+            return hmqEvent;
         }
     }
 }
