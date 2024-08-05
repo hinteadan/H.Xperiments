@@ -27,8 +27,10 @@ namespace H.Qubiz.Xperiments.CLI
                                 )
                             ),
                             "RabbitMQ".ConfigWith(
-                                "HostName".ConfigWith(ReadConfigFromFile("RabbitMqHostName.cfg.txt")),
-                                "VirtualHost".ConfigWith(ReadConfigFromFile("RabbitMqVirtualHost.cfg.txt"))
+                                "HostName".ConfigWith(ReadConfigFromFile("RabbitMqHost.cfg.txt")),
+                                "VirtualHost".ConfigWith(ReadConfigFromFile("RabbitMqVirtualHost.cfg.txt")),
+                                "UserName".ConfigWith(ReadConfigFromFile("RabbitMqUser.cfg.txt")),
+                                "Password".ConfigWith(ReadConfigFromFile("RabbitMqPass.cfg.txt"))
                             )
                         ),
                         "RavenDbConnections".ConfigWith(

@@ -23,6 +23,8 @@ namespace H.MQ.RabbitMQ.Concrete
             {
                 HostName = config?.Get("HostName")?.ToString(),
                 VirtualHost = config?.Get("VirtualHost")?.ToString(),
+                UserName = config?.Get("UserName")?.ToString(),
+                Password = config?.Get("Password")?.ToString(),
             };
         }
 
