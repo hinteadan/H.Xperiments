@@ -45,7 +45,7 @@ namespace H.MQ.Concrete
 
             if (!eventsStreamResult.IsSuccessful)
             {
-                await logger.LogError($"Error ocurred while trying to stream events from the past {intervalToLookBackInto.TotalDays} days", new OperationResultException(eventsStreamResult), payload: null, eventsStreamResult.FlattenReasons().ToNotes().NullIfEmpty());
+                await logger.LogError($"Error ocurred while trying to stream events from the past {intervalToLookBackInto.TotalMinutes} minutes", new OperationResultException(eventsStreamResult), payload: null, eventsStreamResult.FlattenReasons().ToNotes().NullIfEmpty());
                 return;
             }
 
