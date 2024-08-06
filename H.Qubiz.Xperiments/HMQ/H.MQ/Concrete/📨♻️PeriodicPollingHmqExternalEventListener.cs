@@ -10,7 +10,7 @@ namespace H.MQ.Concrete
     internal class PeriodicPollingHmqExternalEventListener : ImAnHmqExternalEventListener, ImADependency
     {
         static readonly TimeSpan pollingInterval = TimeSpan.FromSeconds(5);
-        static readonly TimeSpan intervalToLookBackInto = TimeSpan.FromDays(21);
+        static readonly TimeSpan intervalToLookBackInto = TimeSpan.FromMinutes(2);
         ImAnHmqEventRegistry eventRegistry;
         ImAnHmqEventRiser internalEventRiser;
         ImAPeriodicAction poller;
