@@ -1,4 +1,7 @@
-﻿(function (console) {
+﻿(function (console, document) {
+
+    const $logsSection = document.getElementById('logsSection');
+    const $logs = document.getElementById('logs');
 
     console.debug('App Started');
 
@@ -15,6 +18,8 @@
     socket.addEventListener("message", (event) => {
         console.info(`WS message received from ${socket.url}`);
         console.debug(event);
+        const logEntry = `<pre>${new Date()} | ${event.data}</pre>`;
+        $logs.innerHTML = `${logEntry}${$logs.innerHTML}`;
     });
 
-})(console);
+})(console, document);
