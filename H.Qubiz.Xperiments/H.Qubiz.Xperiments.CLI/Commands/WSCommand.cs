@@ -10,8 +10,7 @@ using System.Threading.Tasks;
 
 namespace H.Qubiz.Xperiments.CLI.Commands
 {
-    [Alias("ws")]
-    internal class WebSocketCommand : CommandBase
+    internal class WSCommand : CommandBase
     {
         public override void ReferDependencies(ImADependencyProvider dependencyProvider)
         {
