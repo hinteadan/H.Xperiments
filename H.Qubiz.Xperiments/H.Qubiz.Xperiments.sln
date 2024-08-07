@@ -37,7 +37,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.MQ.RabbitMQ", "HMQ\H.MQ.R
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.MQ.Runtime.RavenDb", "HMQ\H.MQ.Runtime.RavenDb\H.MQ.Runtime.RavenDb.csproj", "{B58685CE-50E8-4D04-8D79-FD939015D53C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.MQ.Runtime.SqlServer", "HMQ\H.MQ.Runtime.SqlServer\H.MQ.Runtime.SqlServer.csproj", "{B36BECC0-A0C5-4612-AAB5-D5CBB0578261}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.MQ.Runtime.SqlServer", "HMQ\H.MQ.Runtime.SqlServer\H.MQ.Runtime.SqlServer.csproj", "{B36BECC0-A0C5-4612-AAB5-D5CBB0578261}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.Xperiments.AspNetCore.StaticWebSite", "H.Xperiments.AspNetCore.StaticWebSite\H.Xperiments.AspNetCore.StaticWebSite.csproj", "{4B834B22-DE08-46DC-936C-04B5ACDB6DBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -109,6 +111,10 @@ Global
 		{B36BECC0-A0C5-4612-AAB5-D5CBB0578261}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B36BECC0-A0C5-4612-AAB5-D5CBB0578261}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B36BECC0-A0C5-4612-AAB5-D5CBB0578261}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B834B22-DE08-46DC-936C-04B5ACDB6DBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B834B22-DE08-46DC-936C-04B5ACDB6DBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B834B22-DE08-46DC-936C-04B5ACDB6DBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B834B22-DE08-46DC-936C-04B5ACDB6DBA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
