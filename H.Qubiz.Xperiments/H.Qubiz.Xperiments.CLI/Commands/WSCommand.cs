@@ -24,11 +24,11 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         [ID("send")]
         class SendSubCommand : SubCommandBase
         {
-            IWebSocketServerToClientOperations clientNotifier;
+            IWebSocketClientNotifier clientNotifier;
             public override void ReferDependencies(ImADependencyProvider dependencyProvider)
             {
                 base.ReferDependencies(dependencyProvider);
-                clientNotifier = dependencyProvider.Get<IWebSocketServerToClientOperations>();
+                clientNotifier = dependencyProvider.Get<IWebSocketClientNotifier>();
             }
 
             public override async Task<OperationResult> Run(params Note[] args)
@@ -39,7 +39,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                     if (!State.IsRunning)
                         return OperationResult.Win();
 
-                    await clientNotifier.Broadcast(
+                    await clientNotifier.Send(
                         new NotificationMessage { 
                             Content = args?.FirstOrDefault().ID,
                             Encoding = Encoding.UTF8,
@@ -49,6 +49,13 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                         new NotificationAddress { 
                             Address = "ws://localhost:11080",
                             Name = "WsDevTesting",
+                        },
+                        new NotificationEndpoint {
+                            Address = new NotificationAddress
+                            {
+                                Name = "DevTest",
+                                Address = "DevTest",
+                            }
                         }
                     );
 
