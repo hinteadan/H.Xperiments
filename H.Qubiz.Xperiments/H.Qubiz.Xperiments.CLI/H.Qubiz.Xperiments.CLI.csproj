@@ -14,8 +14,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="H.Necessaire.CLI" Version="2.35.2" />
-		<PackageReference Include="H.Necessaire.WebSockets" Version="2.35.2" />
+		<PackageReference Include="H.Necessaire.CLI" Version="2.35.3" />
+		<PackageReference Include="H.Necessaire.WebSockets" Version="2.35.3" />
 	</ItemGroup>
 
 	<ItemGroup>
