@@ -65,6 +65,8 @@ namespace H.Qubiz.Xperiments.CLI.Commands
 
                         await namedPipeServerStream.WaitForConnectionAsync(State.CancellationTokenSource.Token);
 
+                        State.Servers.Add(StartNewServerAndWaitForClientConnection());
+
                         Log($"New Named Pipe client connected. {State.Servers.Count} in total.");
 
                         StringBuilder messageBuilder = new StringBuilder();
@@ -137,6 +139,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
 
             public static void Clear()
             {
+                CancellationTokenSource.Cancel();
                 new Action(() => {
 
                     foreach (var server in Servers)
