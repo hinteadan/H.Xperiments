@@ -93,10 +93,21 @@ namespace H.MQ.RabbitMQ.Concrete
 
         private async void EventConsumer_Received(object sender, BasicDeliverEventArgs args)
         {
-            byte[] body = args.Body.ToArray();
-            string hmqEventAsJsonString = Encoding.UTF8.GetString(body);
-            HmqEvent hmqEvent = hmqEventAsJsonString.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn();
-            await internalEventRiser.Raise(hmqEvent);
+            await
+                new Func<Task>(async () =>
+                {
+
+                    byte[] body = args.Body.ToArray();
+                    string hmqEventAsJsonString = Encoding.UTF8.GetString(body);
+                    HmqEvent hmqEvent = hmqEventAsJsonString.TryJsonToObject<HmqEvent>().ThrowOnFailOrReturn();
+                    await internalEventRiser.Raise(hmqEvent);
+
+                })
+                .TryOrFailWithGrace(onFail: async ex => {
+                    string body = null;
+                    new Action(() => body = Encoding.UTF8.GetString(args.Body.ToArray())).TryOrFailWithGrace();
+                    await logger.LogError($"Error occurred while trying to process received event from RabbitMQ; probably the payload is not an HmqEvent and therefor cannot be parsed.{Environment.NewLine}Body: {body ?? "~~N/A~~"}{Environment.NewLine}Message: {ex.Message}", ex, args.ToJsonObject(isPrettyPrinted: true));
+                });
         }
     }
 }

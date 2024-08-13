@@ -24,16 +24,16 @@ namespace H.Qubiz.Xperiments.CLI
 
                 //.WithAzureServiceBusHmq()
                 //.StartHmqAzureServiceBusExternalListener()
-                .WithHmqFileSystemMessageBus()
+                //.WithHmqFileSystemMessageBus()
                 .WithHmqFileSystemRuntime()
-                .StartHmqFileSystemExternalListener()
+                //.StartHmqFileSystemExternalListener()
                 //.WithHmqRavenDbRuntime()
                 //.WithHmqSqlServerRuntime()
                 //.StartHmqPeriodicPollingExternalListener()
                 //.WithHmqRavenDbMessageBus()
                 //.StartHmqRavenDbExternalListener()
-                //.WithHmqRabbitMqMessageBus()
-                //.StartHmqRabbitMqExternalListener()
+                .WithHmqRabbitMqMessageBus()
+                .StartHmqRabbitMqExternalListener()
 
                 .WithHNecessaireWebSockets(() => "ws://localhost:11080")
 
