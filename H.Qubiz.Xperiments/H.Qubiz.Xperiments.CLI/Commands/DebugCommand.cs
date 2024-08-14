@@ -17,26 +17,13 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 await Task.Delay(0);
                 Log("Debug Command");
 
-                await foreach(string mess in new InfiniteEnumerable<string>(async x => { await Task.Delay(Random.Shared.Next(500, 1500)); return x.ToString(); }, (m, x) => (x == 5).AsTask()))
+                await foreach(string mess in new InfiniteEnumerable<string>(async x => { await Task.Delay(Random.Shared.Next(200, 1000)); return x.ToString(); }, (m, x) => (x == 5).AsTask()))
                 {
                     Log(mess);
                 }
             }
 
             return OperationResult.Win();
-        }
-
-        async IAsyncEnumerable<string> DummyStream()
-        {
-            int index = 10;
-
-            while (index >= 0)
-            {
-                index--;
-
-                await Task.CompletedTask;
-                yield return $"{index}";
-            }
         }
 
         class InfiniteEnumerator<T> : IAsyncEnumerator<T>

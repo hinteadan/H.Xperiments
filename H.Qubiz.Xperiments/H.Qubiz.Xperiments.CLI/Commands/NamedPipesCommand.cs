@@ -1,7 +1,6 @@
 ﻿using H.Necessaire;
 using H.Necessaire.Runtime.CLI.Commands;
 using System;
-using System.Collections.Concurrent;
 using System.IO.Pipes;
 using System.Linq;
 using System.Text;
@@ -36,9 +35,10 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 await State.Stop();
             }
 
-            private void State_OnMessageReceived(object sender, PipeMessageReceivedEventArgs e)
+            private async Task OnMessageReceived(string message)
             {
-                Log($"Named pipe message received: {e.Message}");
+                await Task.CompletedTask;
+                Log($"Named pipe message received: {message}");
             }
 
             public override async Task<OperationResult> Run(params Note[] args)
@@ -63,46 +63,40 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             {
                 Task.Run(async () =>
                 {
-                    using (new ScopedRunner(
-                        () => State.OnMessageReceived += State_OnMessageReceived,
-                        () => State.OnMessageReceived -= State_OnMessageReceived
-                    ))
+                    using (NamedPipeServerStream namedPipeServerStream = new NamedPipeServerStream(State.PipeName, PipeDirection.InOut, -1))
                     {
-                        using (NamedPipeServerStream namedPipeServerStream = new NamedPipeServerStream(State.PipeName, PipeDirection.InOut))
+
+                        await namedPipeServerStream.WaitForConnectionAsync(State.CancellationTokenSource.Token);
+
+                        StartNewServerAndWaitForClientConnection();
+
+                        Log($"Named Pipe client connected on {State.PipeName}");
+
+                        StringBuilder messageBuilder = new StringBuilder();
+
+                        byte[] readBuffer = new byte[State.BufferSize];
+                        while (namedPipeServerStream.IsConnected && !State.CancellationTokenSource.IsCancellationRequested)
                         {
-
-                            await namedPipeServerStream.WaitForConnectionAsync(State.CancellationTokenSource.Token);
-
-                            Log($"Named Pipe client connected on {State.PipeName}");
-
-                            StringBuilder messageBuilder = new StringBuilder();
-
-                            byte[] readBuffer = new byte[State.BufferSize];
-                            while (namedPipeServerStream.IsConnected && !State.CancellationTokenSource.IsCancellationRequested)
+                            int readBytes = await namedPipeServerStream.ReadAsync(readBuffer, 0, readBuffer.Length, State.CancellationTokenSource.Token);
+                            if (readBytes == 0)
                             {
-                                int readBytes = await namedPipeServerStream.ReadAsync(readBuffer, 0, readBuffer.Length, State.CancellationTokenSource.Token);
-                                if (readBytes == 0)
-                                {
-                                    await Task.Delay(State.PipeReadPause, State.CancellationTokenSource.Token);
-                                    if (State.CancellationTokenSource.IsCancellationRequested)
-                                        break;
-                                    else
-                                        continue;
-                                }
-
-                                string messageChunk = Encoding.UTF8.GetString(readBuffer, 0, readBytes);
-                                messageBuilder.Append(messageChunk);
+                                await Task.Delay(State.PipeReadPause, State.CancellationTokenSource.Token);
+                                if (State.CancellationTokenSource.IsCancellationRequested)
+                                    break;
+                                else
+                                    continue;
                             }
 
-                            namedPipeServerStream.Close();
-
-                            string message = messageBuilder.ToString();
-
-                            State.RaiseOnMessageReceived(message);
+                            string messageChunk = Encoding.UTF8.GetString(readBuffer, 0, readBytes);
+                            messageBuilder.Append(messageChunk);
                         }
-                    }
 
-                    StartNewServerAndWaitForClientConnection();
+                        namedPipeServerStream.Close();
+
+                        string message = messageBuilder.ToString();
+
+                        await OnMessageReceived(message);
+                    }
                 },
                 State.CancellationTokenSource.Token);
             }
@@ -127,7 +121,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 if (messageToSend.IsEmpty())
                     return OperationResult.Fail("No message specified");
 
-                using NamedPipeClientStream namedPipeClientStream 
+                using NamedPipeClientStream namedPipeClientStream
                     = new NamedPipeClientStream(".", State.PipeName, PipeDirection.InOut, PipeOptions.None, System.Security.Principal.TokenImpersonationLevel.None);
 
                 Log($"Connecting to named pipe {State.PipeName}");
@@ -147,20 +141,11 @@ namespace H.Qubiz.Xperiments.CLI.Commands
         static class State
         {
             public static bool IsRunning { get; set; } = false;
-            public static event EventHandler<PipeMessageReceivedEventArgs> OnMessageReceived;
 
             public static readonly TimeSpan PipeReadPause = TimeSpan.FromSeconds(.15);
             public const uint BufferSize = 256;
             public const string PipeName = "H.Necessaire.IPC.Pipe";
             public static CancellationTokenSource CancellationTokenSource { get; private set; } = new CancellationTokenSource();
-
-            public static void RaiseOnMessageReceived(string message)
-            {
-                if (OnMessageReceived == null)
-                    return;
-
-                OnMessageReceived(null, new PipeMessageReceivedEventArgs(message));
-            }
 
             public static async Task Stop()
             {
@@ -168,16 +153,6 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 CancellationTokenSource = new CancellationTokenSource();
                 IsRunning = false;
             }
-        }
-
-        class PipeMessageReceivedEventArgs : EventArgs
-        {
-            public PipeMessageReceivedEventArgs(string message)
-            {
-                Message = message;
-            }
-
-            public string Message { get; }
         }
     }
 }
