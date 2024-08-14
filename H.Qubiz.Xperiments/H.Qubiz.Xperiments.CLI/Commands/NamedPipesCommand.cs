@@ -122,7 +122,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                     return OperationResult.Fail("No message specified");
 
                 using NamedPipeClientStream namedPipeClientStream
-                    = new NamedPipeClientStream(".", State.PipeName, PipeDirection.InOut, PipeOptions.None, System.Security.Principal.TokenImpersonationLevel.None);
+                    = new NamedPipeClientStream("172.16.40.20", State.PipeName, PipeDirection.InOut, PipeOptions.None, System.Security.Principal.TokenImpersonationLevel.None);
 
                 Log($"Connecting to named pipe {State.PipeName}");
 
