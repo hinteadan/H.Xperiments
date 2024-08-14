@@ -14,26 +14,25 @@ namespace H.Qubiz.Xperiments.CLI.Commands
     internal class NamedPipesCommand : CommandBase
     {
         static readonly string[] usageSyntax = [
-            "np|NamedPipes serve",
-            "np|NamedPipes stop",
+            "np|NamedPipes serve|start",
+            "np|NamedPipes stop|end",
             "np|NamedPipes send <message:string>",
         ];
         protected override string[] GetUsageSyntaxes() => usageSyntax;
 
         public override Task<OperationResult> Run() => RunSubCommand();
 
+        [Alias("start")]
         class ServeSubCommand : SubCommandBase
         {
             public override void ReferDependencies(ImADependencyProvider dependencyProvider)
             {
                 base.ReferDependencies(dependencyProvider);
-                State.OnMessageReceived += State_OnMessageReceived;
                 AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
             }
 
             private async void CurrentDomain_ProcessExit(object sender, EventArgs e)
             {
-                State.OnMessageReceived -= State_OnMessageReceived;
                 await State.Stop();
             }
 
@@ -64,37 +63,43 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             {
                 Task.Run(async () =>
                 {
-                    using (NamedPipeServerStream namedPipeServerStream = new NamedPipeServerStream(State.PipeName, PipeDirection.InOut))
+                    using (new ScopedRunner(
+                        () => State.OnMessageReceived += State_OnMessageReceived,
+                        () => State.OnMessageReceived -= State_OnMessageReceived
+                    ))
                     {
-
-                        await namedPipeServerStream.WaitForConnectionAsync(State.CancellationTokenSource.Token);
-
-                        Log($"Named Pipe client connected on {State.PipeName}");
-
-                        StringBuilder messageBuilder = new StringBuilder();
-
-                        byte[] readBuffer = new byte[State.BufferSize];
-                        while (namedPipeServerStream.IsConnected && !State.CancellationTokenSource.IsCancellationRequested)
+                        using (NamedPipeServerStream namedPipeServerStream = new NamedPipeServerStream(State.PipeName, PipeDirection.InOut))
                         {
-                            int readBytes = await namedPipeServerStream.ReadAsync(readBuffer, 0, readBuffer.Length, State.CancellationTokenSource.Token);
-                            if (readBytes == 0)
+
+                            await namedPipeServerStream.WaitForConnectionAsync(State.CancellationTokenSource.Token);
+
+                            Log($"Named Pipe client connected on {State.PipeName}");
+
+                            StringBuilder messageBuilder = new StringBuilder();
+
+                            byte[] readBuffer = new byte[State.BufferSize];
+                            while (namedPipeServerStream.IsConnected && !State.CancellationTokenSource.IsCancellationRequested)
                             {
-                                await Task.Delay(State.PipeReadPause, State.CancellationTokenSource.Token);
-                                if (State.CancellationTokenSource.IsCancellationRequested)
-                                    break;
-                                else
-                                    continue;
+                                int readBytes = await namedPipeServerStream.ReadAsync(readBuffer, 0, readBuffer.Length, State.CancellationTokenSource.Token);
+                                if (readBytes == 0)
+                                {
+                                    await Task.Delay(State.PipeReadPause, State.CancellationTokenSource.Token);
+                                    if (State.CancellationTokenSource.IsCancellationRequested)
+                                        break;
+                                    else
+                                        continue;
+                                }
+
+                                string messageChunk = Encoding.UTF8.GetString(readBuffer, 0, readBytes);
+                                messageBuilder.Append(messageChunk);
                             }
 
-                            string messageChunk = Encoding.UTF8.GetString(readBuffer, 0, readBytes);
-                            messageBuilder.Append(messageChunk);
+                            namedPipeServerStream.Close();
+
+                            string message = messageBuilder.ToString();
+
+                            State.RaiseOnMessageReceived(message);
                         }
-
-                        namedPipeServerStream.Close();
-
-                        string message = messageBuilder.ToString();
-
-                        State.RaiseOnMessageReceived(message);
                     }
 
                     StartNewServerAndWaitForClientConnection();
@@ -103,6 +108,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             }
         }
 
+        [Alias("end")]
         class StopSubCommand : SubCommandBase
         {
             public override async Task<OperationResult> Run(params Note[] args)
@@ -146,7 +152,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             public static readonly TimeSpan PipeReadPause = TimeSpan.FromSeconds(.15);
             public const uint BufferSize = 256;
             public const string PipeName = "H.Necessaire.IPC.Pipe";
-            public static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
+            public static CancellationTokenSource CancellationTokenSource { get; private set; } = new CancellationTokenSource();
 
             public static void RaiseOnMessageReceived(string message)
             {
@@ -159,6 +165,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             public static async Task Stop()
             {
                 await CancellationTokenSource.CancelAsync();
+                CancellationTokenSource = new CancellationTokenSource();
                 IsRunning = false;
             }
         }
