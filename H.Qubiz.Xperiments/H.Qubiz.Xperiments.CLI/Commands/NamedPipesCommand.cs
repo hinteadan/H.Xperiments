@@ -64,38 +64,40 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             {
                 Task.Run(async () =>
                 {
-                    using NamedPipeServerStream namedPipeServerStream = new NamedPipeServerStream(State.PipeName, PipeDirection.InOut);
-
-                    await namedPipeServerStream.WaitForConnectionAsync(State.CancellationTokenSource.Token);
-
-                    StartNewServerAndWaitForClientConnection();
-
-                    Log($"Named Pipe client connected on {State.PipeName}");
-
-                    StringBuilder messageBuilder = new StringBuilder();
-
-                    byte[] readBuffer = new byte[State.BufferSize];
-                    while (namedPipeServerStream.IsConnected && !State.CancellationTokenSource.IsCancellationRequested)
+                    using (NamedPipeServerStream namedPipeServerStream = new NamedPipeServerStream(State.PipeName, PipeDirection.InOut))
                     {
-                        int readBytes = await namedPipeServerStream.ReadAsync(readBuffer, 0, readBuffer.Length, State.CancellationTokenSource.Token);
-                        if (readBytes == 0)
+
+                        await namedPipeServerStream.WaitForConnectionAsync(State.CancellationTokenSource.Token);
+
+                        Log($"Named Pipe client connected on {State.PipeName}");
+
+                        StringBuilder messageBuilder = new StringBuilder();
+
+                        byte[] readBuffer = new byte[State.BufferSize];
+                        while (namedPipeServerStream.IsConnected && !State.CancellationTokenSource.IsCancellationRequested)
                         {
-                            await Task.Delay(State.PipeReadPause, State.CancellationTokenSource.Token);
-                            if (State.CancellationTokenSource.IsCancellationRequested)
-                                break;
-                            else
-                                continue;
+                            int readBytes = await namedPipeServerStream.ReadAsync(readBuffer, 0, readBuffer.Length, State.CancellationTokenSource.Token);
+                            if (readBytes == 0)
+                            {
+                                await Task.Delay(State.PipeReadPause, State.CancellationTokenSource.Token);
+                                if (State.CancellationTokenSource.IsCancellationRequested)
+                                    break;
+                                else
+                                    continue;
+                            }
+
+                            string messageChunk = Encoding.UTF8.GetString(readBuffer, 0, readBytes);
+                            messageBuilder.Append(messageChunk);
                         }
 
-                        string messageChunk = Encoding.UTF8.GetString(readBuffer, 0, readBytes);
-                        messageBuilder.Append(messageChunk);
+                        namedPipeServerStream.Close();
+
+                        string message = messageBuilder.ToString();
+
+                        State.RaiseOnMessageReceived(message);
                     }
 
-                    namedPipeServerStream.Close();
-
-                    string message = messageBuilder.ToString();
-
-                    State.RaiseOnMessageReceived(message);
+                    StartNewServerAndWaitForClientConnection();
                 },
                 State.CancellationTokenSource.Token);
             }
