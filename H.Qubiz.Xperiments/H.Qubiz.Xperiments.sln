@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.MQ.Runtime.RavenDb", "HMQ
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.MQ.Runtime.SqlServer", "HMQ\H.MQ.Runtime.SqlServer\H.MQ.Runtime.SqlServer.csproj", "{B36BECC0-A0C5-4612-AAB5-D5CBB0578261}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.Xperiments.AspNetCore.StaticWebSite", "H.Xperiments.AspNetCore.StaticWebSite\H.Xperiments.AspNetCore.StaticWebSite.csproj", "{4B834B22-DE08-46DC-936C-04B5ACDB6DBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Xperiments.AspNetCore.StaticWebSite", "H.Xperiments.AspNetCore.StaticWebSite\H.Xperiments.AspNetCore.StaticWebSite.csproj", "{4B834B22-DE08-46DC-936C-04B5ACDB6DBA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
