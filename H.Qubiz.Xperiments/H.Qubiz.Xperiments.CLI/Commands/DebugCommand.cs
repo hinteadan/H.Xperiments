@@ -2,6 +2,8 @@ using H.Necessaire;
 using H.Necessaire.Runtime.CLI.Commands;
 using System;
 using System.Collections.Generic;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,10 +19,19 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 await Task.Delay(0);
                 Log("Debug Command");
 
-                await foreach(string mess in new InfiniteEnumerable<string>(async x => { await Task.Delay(Random.Shared.Next(200, 1000)); return x.ToString(); }, (m, x) => (x == 5).AsTask()))
-                {
-                    Log(mess);
-                }
+                var ips = await Dns.GetHostAddressesAsync(Dns.GetHostName());
+
+                //Ping ping = new Ping();
+
+                //await foreach(var mess in new InfiniteEnumerable<string>(async x => {
+                //    if (x < 2)
+                //        return null;
+                //    var pingReply = await ping.SendPingAsync();
+                //    return x.ToString();
+                //}, (m, x) => (x >= 255).AsTask()))
+                //{
+                //    Log(mess);
+                //}
             }
 
             return OperationResult.Win();
