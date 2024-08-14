@@ -61,7 +61,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             {
                 Task.Run(async () =>
                 {
-                    using NamedPipeServerStream namedPipeServerStream = new NamedPipeServerStream(State.PipeName, PipeDirection.InOut,);
+                    using NamedPipeServerStream namedPipeServerStream = new NamedPipeServerStream(State.PipeName, PipeDirection.InOut);
 
                     await namedPipeServerStream.WaitForConnectionAsync(State.CancellationTokenSource.Token);
 
