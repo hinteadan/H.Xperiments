@@ -11,7 +11,7 @@ namespace H.MQ.NamedPipe
             return dependencyRegistry;
         }
 
-        public static T StartHmqFileSystemExternalListener<T>(this T dependencyProvider) where T : ImADependencyProvider
+        public static T StartHmqNamedPipeExternalListener<T>(this T dependencyProvider) where T : ImADependencyProvider
             => dependencyProvider.StartHmqExternalListener("NamedPipe");
     }
 }

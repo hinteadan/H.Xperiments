@@ -2,6 +2,7 @@ using H.MQ;
 using H.MQ.Azure.ServiceBus;
 using H.MQ.Core;
 using H.MQ.FileSystem;
+using H.MQ.NamedPipe;
 using H.MQ.RabbitMQ;
 using H.MQ.RavenDB;
 using H.MQ.Runtime.FileSystem;
@@ -32,8 +33,10 @@ namespace H.Qubiz.Xperiments.CLI
                 //.StartHmqPeriodicPollingExternalListener()
                 //.WithHmqRavenDbMessageBus()
                 //.StartHmqRavenDbExternalListener()
-                .WithHmqRabbitMqMessageBus()
-                .StartHmqRabbitMqExternalListener()
+                //.WithHmqRabbitMqMessageBus()
+                //.StartHmqRabbitMqExternalListener()
+                .WithHmqNamedPipeMessageBus()
+                .StartHmqNamedPipeExternalListener()
 
                 .WithHNecessaireWebSockets(() => "ws://localhost:11080")
 
