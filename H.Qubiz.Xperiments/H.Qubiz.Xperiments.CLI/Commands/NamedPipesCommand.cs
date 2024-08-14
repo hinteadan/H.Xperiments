@@ -28,10 +28,10 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
             }
 
-            private void CurrentDomain_ProcessExit(object sender, EventArgs e)
+            private async void CurrentDomain_ProcessExit(object sender, EventArgs e)
             {
                 State.OnMessageReceived -= State_OnMessageReceived;
-                State.Clear();
+                await State.Stop();
             }
 
             private void State_OnMessageReceived(object sender, PipeMessageReceivedEventArgs e)
@@ -98,6 +98,16 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             }
         }
 
+        class StopSubCommand : SubCommandBase
+        {
+            public override async Task<OperationResult> Run(params Note[] args)
+            {
+                await Task.CompletedTask;
+                await State.Stop();
+                return OperationResult.Win();
+            }
+        }
+
         static class State
         {
             public static bool IsRunning { get; set; } = false;
@@ -116,9 +126,9 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 OnMessageReceived(null, new PipeMessageReceivedEventArgs(message));
             }
 
-            public static void Clear()
+            public static async Task Stop()
             {
-                CancellationTokenSource.Cancel();
+                await CancellationTokenSource.CancelAsync();
                 IsRunning = false;
             }
         }
