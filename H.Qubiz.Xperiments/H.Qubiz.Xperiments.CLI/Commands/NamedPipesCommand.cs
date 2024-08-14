@@ -3,6 +3,7 @@ using H.Necessaire.Runtime.CLI.Commands;
 using System;
 using System.Collections.Concurrent;
 using System.IO.Pipes;
+using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ namespace H.Qubiz.Xperiments.CLI.Commands
     {
         static readonly string[] usageSyntax = [
             "np|NamedPipes serve",
+            "np|NamedPipes stop",
+            "np|NamedPipes send <message:string>",
         ];
         protected override string[] GetUsageSyntaxes() => usageSyntax;
 
@@ -67,7 +70,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
 
                     StartNewServerAndWaitForClientConnection();
 
-                    Log($"Named Pipe client connected");
+                    Log($"Named Pipe client connected on {State.PipeName}");
 
                     StringBuilder messageBuilder = new StringBuilder();
 
@@ -104,6 +107,31 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             {
                 await Task.CompletedTask;
                 await State.Stop();
+                return OperationResult.Win();
+            }
+        }
+
+        class SendSubCommand : SubCommandBase
+        {
+            public override async Task<OperationResult> Run(params Note[] args)
+            {
+                string messageToSend = string.Join(" ", args?.Select(x => x.ID) ?? []);
+                if (messageToSend.IsEmpty())
+                    return OperationResult.Fail("No message specified");
+
+                using NamedPipeClientStream namedPipeClientStream 
+                    = new NamedPipeClientStream(".", State.PipeName, PipeDirection.InOut, PipeOptions.None, System.Security.Principal.TokenImpersonationLevel.None);
+
+                Log($"Connecting to named pipe {State.PipeName}");
+
+                await namedPipeClientStream.ConnectAsync(State.CancellationTokenSource.Token);
+
+                byte[] messageToSendAsBytes = Encoding.UTF8.GetBytes(messageToSend);
+
+                await namedPipeClientStream.WriteAsync(messageToSendAsBytes, 0, messageToSendAsBytes.Length, State.CancellationTokenSource.Token);
+
+                namedPipeClientStream.Close();
+
                 return OperationResult.Win();
             }
         }
