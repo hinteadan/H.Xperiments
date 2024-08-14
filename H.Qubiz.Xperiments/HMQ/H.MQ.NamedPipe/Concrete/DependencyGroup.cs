@@ -1,7 +1,5 @@
-﻿using H.Necessaire;
-using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using H.MQ.Abstractions;
+using H.Necessaire;
 
 namespace H.MQ.NamedPipe.Concrete
 {
@@ -9,7 +7,14 @@ namespace H.MQ.NamedPipe.Concrete
     {
         public void RegisterDependencies(ImADependencyRegistry dependencyRegistry)
         {
-            throw new NotImplementedException();
+            dependencyRegistry
+
+                .Register<NamedPipeHmqEventRiser>(() => new NamedPipeHmqEventRiser())
+                .Register<ImAnHmqEventRiser>(() => dependencyRegistry.Get<NamedPipeHmqEventRiser>())
+
+                .Register<NamedPipeHmqExternalEventListener>(() => new NamedPipeHmqExternalEventListener())
+
+                ;
         }
     }
 }
