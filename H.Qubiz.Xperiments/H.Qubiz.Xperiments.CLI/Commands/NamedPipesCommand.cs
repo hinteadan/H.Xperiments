@@ -143,7 +143,7 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             public static bool IsRunning { get; set; } = false;
             public static event EventHandler<PipeMessageReceivedEventArgs> OnMessageReceived;
 
-            public static readonly TimeSpan PipeReadPause = TimeSpan.FromSeconds(.2);
+            public static readonly TimeSpan PipeReadPause = TimeSpan.FromSeconds(.15);
             public const uint BufferSize = 256;
             public const string PipeName = "H.Necessaire.IPC.Pipe";
             public static readonly CancellationTokenSource CancellationTokenSource = new CancellationTokenSource();
