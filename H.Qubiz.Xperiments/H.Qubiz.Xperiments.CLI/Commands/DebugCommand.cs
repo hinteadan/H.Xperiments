@@ -1,5 +1,8 @@
 using H.Necessaire;
 using H.Necessaire.Runtime.CLI.Commands;
+using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace H.Qubiz.Xperiments.CLI.Commands
@@ -12,10 +15,63 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             using (new TimeMeasurement(x => Log($"DONE Debugging in {x}")))
             {
                 await Task.Delay(0);
+
+                await foreach(int value in NewRandomInts())
+                {
+                    Log($"{value}");
+                }
+
                 Log("Debug Command");
             }
 
             return OperationResult.Win();
+        }
+
+        IAsyncEnumerable<int> NewRandomInts()
+        {
+            return new InfiniteAsyncEnumerable<int>(async index =>
+            {
+                await Task.Delay(Random.Shared.Next(500, 3500));
+                return Random.Shared.Next(int.MinValue, int.MaxValue);
+            });
+        }
+
+
+        class InfiniteAsyncEnumerable<T> : IAsyncEnumerable<T>
+        {
+            readonly Func<int, Task<T>> valueFactory;
+            public InfiniteAsyncEnumerable(Func<int, Task<T>> valueFactory)
+            {
+                this.valueFactory = valueFactory;
+            }
+
+            public IAsyncEnumerator<T> GetAsyncEnumerator(CancellationToken cancellationToken = default)
+            {
+                return new InfiniteAsyncEnumerator(valueFactory);
+            }
+
+
+
+            class InfiniteAsyncEnumerator : IAsyncEnumerator<T>
+            {
+                int index = -1;
+                readonly Func<int, Task<T>> valueFactory;
+                public InfiniteAsyncEnumerator(Func<int, Task<T>> valueFactory)
+                {
+                    this.valueFactory = valueFactory;
+                }
+
+                public T Current { get; private set; }
+
+                public ValueTask DisposeAsync() => ValueTask.CompletedTask;
+
+                public async ValueTask<bool> MoveNextAsync()
+                {
+                    Current = await valueFactory(++index);
+
+                    return true;
+                }
+            }
         }
     }
 }
