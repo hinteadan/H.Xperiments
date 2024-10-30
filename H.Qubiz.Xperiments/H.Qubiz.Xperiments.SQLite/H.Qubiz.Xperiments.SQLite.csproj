@@ -11,8 +11,8 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="H.Necessaire.Runtime.CLI" Version="2.35.2" />
-		<PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.7" />
+		<PackageReference Include="H.Necessaire.Runtime.CLI" Version="2.37.3" />
+		<PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
 	</ItemGroup>
 
 </Project>
