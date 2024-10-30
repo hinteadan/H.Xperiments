@@ -6,9 +6,14 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
 {
     internal class BatchEnumerator<T> : IEnumerator<T>
     {
-        public BatchEnumerator(int batchIndex, int batchSize)
+        private readonly int batchIndex;
+        private readonly int batchSize;
+        private readonly IEnumerator<T> sourceEnumerator;
+        public BatchEnumerator(IEnumerator<T> sourceEnumerator, int batchIndex, int batchSize)
         {
-
+            this.sourceEnumerator = sourceEnumerator;
+            this.batchIndex = batchIndex;
+            this.batchSize = batchSize;
         }
 
         public T Current => throw new NotImplementedException();

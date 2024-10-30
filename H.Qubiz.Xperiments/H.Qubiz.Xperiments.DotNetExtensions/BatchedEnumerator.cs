@@ -10,6 +10,7 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
         int currentBatchIndex = -1;
         private readonly int batchSize;
         private readonly IEnumerable<T> sourceEnumerable;
+        private readonly IEnumerator<T> sourceEnumerator;
         public BatchedEnumerator(IEnumerable<T> sourceEnumerable, int batchSize)
         {
             if (batchSize <= 0)
@@ -17,6 +18,7 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
 
             this.batchSize = batchSize;
             this.sourceEnumerable = sourceEnumerable;
+            this.sourceEnumerator = sourceEnumerable.GetEnumerator();
         }
 
 
@@ -33,7 +35,14 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
 
         public bool MoveNext()
         {
-            
+            if (HasCurrentBatchEnded())
+            {
+                currentSourceIndex++;
+                currentBatchIndex++;
+                Current = new BatchEnumerable<T>(new BatchEnumerator<T>(sourceEnumerator, currentBatchIndex, batchSize));
+            }
+
+            return true;
         }
 
         public void Reset()
@@ -45,7 +54,7 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
 
         bool HasCurrentBatchEnded()
         {
-            return currentSourceIndex == -1 || currentSourceIndex % batchSize == 0;
+            return (currentSourceIndex + 1) % batchSize == 0;
         }
     }
 }

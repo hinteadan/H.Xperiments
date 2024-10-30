@@ -14,7 +14,7 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
                 throw new ArgumentOutOfRangeException(nameof(batchSize), "Batch Size cannot be equal or less than zero for obvious reasons");
 
             this.batchSize = batchSize;
-            this.sourceEnumerable = sourceEnumerable;
+            this.sourceEnumerable = sourceEnumerable ?? throw new ArgumentNullException(nameof(sourceEnumerable), "Source enumrable cannot be null");
         }
 
         public IEnumerator<IEnumerable<T>> GetEnumerator()
