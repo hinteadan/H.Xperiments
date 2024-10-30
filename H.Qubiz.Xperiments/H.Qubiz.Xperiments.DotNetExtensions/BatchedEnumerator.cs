@@ -8,6 +8,7 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
     {
         int currentSourceIndex = -1;
         int currentBatchIndex = -1;
+        bool hasMoreData = true;
         private readonly int batchSize;
         private readonly IEnumerable<T> sourceEnumerable;
         private readonly IEnumerator<T> sourceEnumerator;
@@ -35,11 +36,14 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
 
         public bool MoveNext()
         {
+            if (!hasMoreData)
+                return false;
+
             if (HasCurrentBatchEnded())
             {
                 currentSourceIndex++;
                 currentBatchIndex++;
-                Current = new BatchEnumerable<T>(new BatchEnumerator<T>(sourceEnumerator, currentBatchIndex, batchSize));
+                Current = new BatchEnumerable<T>(new BatchEnumerator<T>(sourceEnumerator, currentBatchIndex, batchSize, OnMoveNext));
             }
 
             return true;
@@ -55,6 +59,17 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
         bool HasCurrentBatchEnded()
         {
             return (currentSourceIndex + 1) % batchSize == 0;
+        }
+
+        void OnMoveNext(int indexInCurrentBatch, bool hasMoreData)
+        {
+            this.hasMoreData = hasMoreData;
+            if (!hasMoreData)
+            {
+                return;
+            }
+
+            currentSourceIndex++;
         }
     }
 }
