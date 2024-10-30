@@ -6,8 +6,8 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
 {
     internal class BatchedEnumerator<T> : IEnumerator<IEnumerable<T>>
     {
-        int sourceIndex = -1;
-        int batchIndex = -1;
+        int currentSourceIndex = -1;
+        int currentBatchIndex = -1;
         private readonly int batchSize;
         private readonly IEnumerable<T> sourceEnumerable;
         public BatchedEnumerator(IEnumerable<T> sourceEnumerable, int batchSize)
@@ -20,23 +20,32 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
         }
 
 
-        public IEnumerable<T> Current => throw new NotImplementedException();
-
-        object IEnumerator.Current => throw new NotImplementedException();
-
+        public IEnumerable<T> Current { get; private set; }
+        object IEnumerator.Current => Current;
         public void Dispose()
         {
-            throw new NotImplementedException();
+            currentBatchIndex = -1;
+            currentSourceIndex = -1;
+            Current = null;
         }
+
+
 
         public bool MoveNext()
         {
-            throw new NotImplementedException();
+            
         }
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            currentBatchIndex = -1;
+            currentSourceIndex = -1;
+            Current = null;
+        }
+
+        bool HasCurrentBatchEnded()
+        {
+            return currentSourceIndex == -1 || currentSourceIndex % batchSize == 0;
         }
     }
 }
