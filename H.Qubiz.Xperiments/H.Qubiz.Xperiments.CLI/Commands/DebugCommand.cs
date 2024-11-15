@@ -19,9 +19,11 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             {
                 await Task.Delay(0);
 
-                await Enumerable.Range(0, 13).ForEachBatch(async (batch, batchIndex) =>
+                await Enumerable.Range(0, 10).ForEachBatch(
+                    onBatch: async (batch, batchIndex) =>
                 {
-                }, onElement: async (x, index, batchIndex) =>
+                },
+                    onElement: async (x, index, batchIndex) =>
                 {
                 });
 
