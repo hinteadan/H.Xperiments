@@ -19,15 +19,32 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             {
                 await Task.Delay(0);
 
+                CallContext.SetData("A", 1);
+                CallContext.SetData("B", 2);
+
+                var xxx = ExecutionContext.Capture();
+                var xxy = SynchronizationContext.Current;
+
+                var user = Thread.CurrentPrincipal;
+
+                ThreadPool.GetMaxThreads(out int wt, out int iot);
+                ThreadPool.GetAvailableThreads(out int wt2, out int iot2);
+
+                await Task.Run(async () => {
+
+                    var xxx = ExecutionContext.Capture();
+
+                }).ConfigureAwait(continueOnCapturedContext: false);
+
                 await Enumerable.Range(0, 13).ForEachBatch(
-                    onBatch: async (batch, batchIndex) =>
+                    onBatch: async (batch, batchIndex, c) =>
                 {
                 },
-                    onElement: async (x, index, batchIndex) =>
+                    onElement: async (x, index, batchIndex, c) =>
                 {
                 }, batchSize: 50);
 
-                await NewRandomInts().ForEachBatch((batch, batchIndex) => { 
+                await NewRandomInts().ForEachBatch((batch, batchIndex, c) => { 
                 });
 
                 await foreach (int value in NewRandomInts())
