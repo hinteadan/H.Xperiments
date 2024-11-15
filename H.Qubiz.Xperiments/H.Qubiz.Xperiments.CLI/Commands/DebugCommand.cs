@@ -27,10 +27,13 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 {
                 }, batchSize: 50);
 
-                //await foreach(int value in NewRandomInts())
-                //{
-                //    Log($"{value}");
-                //}
+                await NewRandomInts().ForEachBatch((batch, batchIndex) => { 
+                });
+
+                await foreach (int value in NewRandomInts())
+                {
+                    Log($"{value}");
+                }
 
                 Log("Debug Command");
             }
