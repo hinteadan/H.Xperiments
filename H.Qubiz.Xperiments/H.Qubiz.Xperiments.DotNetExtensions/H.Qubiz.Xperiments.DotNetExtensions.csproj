@@ -8,4 +8,8 @@
 		<Compile Include="..\H.Qubiz.Xperiments.CLI\🤝Friends.cs" Link="🤝Friends.cs" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="9.0.0" />
+	</ItemGroup>
+
 </Project>
