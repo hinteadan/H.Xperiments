@@ -30,12 +30,6 @@ namespace H.Qubiz.Xperiments.CLI.Commands
                 ThreadPool.GetMaxThreads(out int wt, out int iot);
                 ThreadPool.GetAvailableThreads(out int wt2, out int iot2);
 
-                await Task.Run(async () => {
-
-                    var xxx = ExecutionContext.Capture();
-
-                }).ConfigureAwait(continueOnCapturedContext: false);
-
                 await Enumerable.Range(0, 13).ForEachBatch(
                     onBatch: async (batch, batchIndex, c) =>
                 {
