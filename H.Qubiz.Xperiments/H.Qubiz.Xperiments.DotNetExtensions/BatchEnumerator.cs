@@ -18,9 +18,9 @@ namespace H.Qubiz.Xperiments.DotNetExtensions
             this.onMoveNext = onMoveNext;
         }
 
-        public T Current => throw new NotImplementedException();
+        public T Current { get; private set; }
 
-        object IEnumerator.Current => throw new NotImplementedException();
+        object IEnumerator.Current => Current;
 
         public void Dispose()
         {
