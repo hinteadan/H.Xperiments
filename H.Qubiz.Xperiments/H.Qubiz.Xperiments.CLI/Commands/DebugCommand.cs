@@ -19,13 +19,13 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             {
                 await Task.Delay(0);
 
-                await Enumerable.Range(0, 10).ForEachBatch(
+                await Enumerable.Range(0, 13).ForEachBatch(
                     onBatch: async (batch, batchIndex) =>
                 {
                 },
                     onElement: async (x, index, batchIndex) =>
                 {
-                });
+                }, batchSize: 50);
 
                 //await foreach(int value in NewRandomInts())
                 //{
