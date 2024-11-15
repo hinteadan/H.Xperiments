@@ -2,9 +2,11 @@ using H.Necessaire;
 using H.Necessaire.Runtime.CLI.Commands;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
+using H.Qubiz.Xperiments.DotNetExtensions;
 
 namespace H.Qubiz.Xperiments.CLI.Commands
 {
@@ -17,10 +19,16 @@ namespace H.Qubiz.Xperiments.CLI.Commands
             {
                 await Task.Delay(0);
 
-                await foreach(int value in NewRandomInts())
+                await Enumerable.Range(0, 13).ForEachBatch(async (batch, batchIndex) =>
                 {
-                    Log($"{value}");
-                }
+                }, onElement: async (x, index, batchIndex) =>
+                {
+                });
+
+                //await foreach(int value in NewRandomInts())
+                //{
+                //    Log($"{value}");
+                //}
 
                 Log("Debug Command");
             }
