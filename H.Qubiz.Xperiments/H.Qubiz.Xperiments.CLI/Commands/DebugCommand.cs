@@ -7,17 +7,44 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using H.Qubiz.Xperiments.DotNetExtensions;
+using System.Collections;
 
 namespace H.Qubiz.Xperiments.CLI.Commands
 {
     internal class DebugCommand : CommandBase
     {
+        class DummyActivationTester
+        {
+
+            //public DummyActivationTester()
+            //{
+
+            //}
+            //public DummyActivationTester(int a, DateTime dateTime)
+            //{
+
+            //}
+        }
+
         public override async Task<OperationResult> Run()
         {
             Log("Debugging...");
             using (new TimeMeasurement(x => Log($"DONE Debugging in {x}")))
             {
                 await Task.Delay(0);
+
+                var x = typeof(List<int>).GetInterface(nameof(IEnumerable));
+                var xx = typeof(DateTime).GetInterface(nameof(IEnumerable));
+
+                var a = typeof(DummyActivationTester).GetConstructor([]);
+                var b = typeof(DummyActivationTester).GetConstructor([typeof(int)]);
+                var c = typeof(DummyActivationTester).GetConstructor([typeof(int), typeof(DateTime)]);
+
+                var ai = a.Invoke([]);
+
+                Activator.CreateInstance(typeof(DummyActivationTester), 1, DateTime.UtcNow);
+
+                return OperationResult.Win();
 
                 CallContext.SetData("A", 1);
                 CallContext.SetData("B", 2);

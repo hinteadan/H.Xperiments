@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="H.Necessaire.Runtime.CLI" Version="2.37.3" />
-    <PackageReference Include="RavenDB.Embedded" Version="6.2.0" />
+    <PackageReference Include="H.Necessaire.Runtime.CLI" Version="2.39.1" />
+    <PackageReference Include="RavenDB.Embedded" Version="6.2.1" />
   </ItemGroup>
 
 </Project>
