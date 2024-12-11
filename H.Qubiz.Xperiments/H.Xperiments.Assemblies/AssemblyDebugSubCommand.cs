@@ -17,7 +17,7 @@ namespace H.Xperiments.Assemblies
                 AssemblyLoadContext assemblyLoadContextA = new AssemblyLoadContext("A", isCollectible: true);
                 AssemblyLoadContext assemblyLoadContextB = new AssemblyLoadContext("B", isCollectible: true);
 
-                //assemblyLoadContextA.LoadFromAssemblyPath(@"C:\Wrk\Playground\H.Xperiments\H.Qubiz.Xperiments\H.Qubiz.Xperiments.RavenDb\bin\Debug\net8.0\H.Qubiz.Xperiments.RavenDb.dll");
+                //assemblyLoadContextA.LoadFromAssemblyPath(@"C:\Wrk\Playground\H.Xperiments\H.Qubiz.Xperiments\H.Qubiz.Xperiments.RavenDb\bin\Debug\net9.0\H.Qubiz.Xperiments.RavenDb.dll");
                 var assembly = assemblyLoadContextA.LoadFromAssemblyName(new AssemblyName("H.Qubiz.Xperiments.RavenDb"));
 
                 var xxx = assemblyLoadContextDefault.LoadFromAssemblyName(new AssemblyName("H.Qubiz.Xperiments.RavenDb"));
