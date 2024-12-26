@@ -1,6 +1,5 @@
 ﻿using H.Necessaire;
-using H.Necessaire.Runtime.CLI;
-using H.Necessaire.Runtime.CLI.Commands;
+using H.Necessaire.CLI.Commands;
 using Raven.Embedded;
 
 namespace H.Qubiz.Xperiments.RavenDb
@@ -11,12 +10,12 @@ namespace H.Qubiz.Xperiments.RavenDb
     {
         public override async Task<OperationResult> Run(params Note[] args)
         {
-            CLIPrinter.PrintLog("Running RavenDB serve-embedded Command...");
-            using (new TimeMeasurement(x => CLIPrinter.PrintLog($"DONE Running RavenDB serve-embedded Command in {x}")))
+            await Logger.LogInfo("Running RavenDB serve-embedded Command...");
+            using (new TimeMeasurement(x => Logger.LogInfo($"DONE Running RavenDB serve-embedded Command in {x}").ConfigureAwait(false).GetAwaiter().GetResult()))
             {
                 EmbeddedServer.Instance.StartServer();
 
-                CLIPrinter.PrintLog($"Running embedded RavenDB Server @ {await EmbeddedServer.Instance.GetServerUriAsync()}");
+                await Logger.LogInfo($"Running embedded RavenDB Server @ {await EmbeddedServer.Instance.GetServerUriAsync()}");
 
                 if (args?.Any(a => a.ID.Is("open-studio")) == true)
                     EmbeddedServer.Instance.OpenStudioInBrowser();

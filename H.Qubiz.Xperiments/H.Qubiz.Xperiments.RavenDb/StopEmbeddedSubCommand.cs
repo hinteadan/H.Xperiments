@@ -1,12 +1,6 @@
 ﻿using H.Necessaire;
-using H.Necessaire.Runtime.CLI;
-using H.Necessaire.Runtime.CLI.Commands;
+using H.Necessaire.CLI.Commands;
 using Raven.Embedded;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace H.Qubiz.Xperiments.RavenDb
 {

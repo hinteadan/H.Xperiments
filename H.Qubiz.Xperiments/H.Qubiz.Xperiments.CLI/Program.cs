@@ -1,19 +1,18 @@
 using H.Necessaire.CLI;
 using H.Necessaire.Runtime.CLI;
+using System.Threading.Tasks;
 
 namespace H.Qubiz.Xperiments.CLI
 {
     internal class Program
     {
-        public static void Main()
+        public static async Task Main()
         {
-            new CliApp()
+            await new CliApp()
                 .WithEverything()
                 .WithDefaultRuntimeConfig()
                 .With(x => x.Register<CLIDependencyGroup>(() => new CLIDependencyGroup()))
-                .Run(askForCommandIfEmpty: true)
-                .GetAwaiter()
-                .GetResult()
+                .Run()
                 ;
         }
     }

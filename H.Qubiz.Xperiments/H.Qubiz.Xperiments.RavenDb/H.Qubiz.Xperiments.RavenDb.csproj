@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="H.Necessaire.Runtime.CLI" Version="2.39.1" />
-    <PackageReference Include="RavenDB.Embedded" Version="6.2.1" />
+    <PackageReference Include="H.Necessaire.Runtime.CLI" Version="2.43.0" />
+    <PackageReference Include="RavenDB.Embedded" Version="6.2.2" />
   </ItemGroup>
 
 </Project>

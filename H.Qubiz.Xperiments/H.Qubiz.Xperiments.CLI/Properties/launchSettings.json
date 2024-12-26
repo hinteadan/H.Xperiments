@@ -2,8 +2,7 @@
   "profiles": {
 
     "CLI - cli": {
-      "commandName": "Project",
-      "commandLineArgs": "cli"
+      "commandName": "Project"
     },
 
 

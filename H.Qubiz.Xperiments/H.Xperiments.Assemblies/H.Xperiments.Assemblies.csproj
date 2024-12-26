@@ -10,7 +10,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="H.Necessaire.Runtime.CLI" Version="2.39.1" />
+		<PackageReference Include="H.Necessaire.Runtime.CLI" Version="2.43.0" />
 	</ItemGroup>
 
 </Project>
