@@ -2,7 +2,6 @@
 using H.Necessaire;
 using System;
 using System.IO;
-using System.Linq;
 
 namespace H.Xperiments.Couchbase.BLL
 {

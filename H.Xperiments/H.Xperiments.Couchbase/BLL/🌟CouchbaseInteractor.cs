@@ -1,4 +1,5 @@
-﻿using H.Necessaire;
+﻿using Couchbase.Lite.Logging;
+using H.Necessaire;
 using System.IO;
 
 namespace H.Xperiments.Couchbase.BLL
@@ -11,6 +12,12 @@ namespace H.Xperiments.Couchbase.BLL
         {
             this.databaseName = databaseName;
             this.databaseFolderPath = databaseFolderPath;
+
+            LogLevel logLevel = LogLevel.Warning;
+#if DEBUG
+            logLevel = LogLevel.Debug;
+#endif
+            LogSinks.File = new FileLogSink(logLevel, Path.Combine(this.databaseFolderPath.IsEmpty() ? "" : this.databaseFolderPath, "CouchbaseLogs"));
         }
 
         public CouchbaseOperations NewOperationScope(string collectionName, string scopeName)
