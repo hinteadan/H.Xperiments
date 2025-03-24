@@ -95,14 +95,10 @@ namespace H.Xperiments.Couchbase.BLL
 
         string GetDatabaseRootFolderPath()
         {
-            if (Database.Path.IsEmpty())
+            if (Database.Config.Directory.IsEmpty())
                 return null;
 
-            string databasePath = Database.Path;
-            if (databasePath[databasePath.Length - 1].In(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar))
-                databasePath = databasePath.Substring(0, databasePath.Length - 1);
-
-            return Directory.GetParent(databasePath).FullName;
+            return Database.Config.Directory;
         }
     }
 }
