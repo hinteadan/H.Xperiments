@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+	
+	<ItemGroup>
+		<Compile Include="..\H.Xperiments.CLI\🤝Friends.cs" Link="🤝Friends.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="H.Necessaire.Runtime.CLI" Version="2.43.24" />
+	</ItemGroup>
+
+</Project>

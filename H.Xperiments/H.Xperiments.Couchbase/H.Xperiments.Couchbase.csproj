@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\H.Xperiments.CLI\🤝Friends.cs" Link="🤝Friends.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Couchbase.Lite" Version="3.2.2" />
+	<PackageReference Include="H.Necessaire.Runtime.CLI" Version="2.43.24" />
+  </ItemGroup>
+
+</Project>
